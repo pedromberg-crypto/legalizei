@@ -24,7 +24,7 @@ export const TOOLS: DefinicaoTool[] = [
       'nao crave anexo nem aliquota, pergunte o que a pessoa faz no dia a dia e oriente ' +
       'por ai. ' +
       '🔴 SE A BUSCA RETORNAR VAZIA: NUNCA presuma que a casa atende. Se não encontrou, você não sabe. Responda que não encontrou a profissão pelo nome e peça para o cliente detalhar o que faz no dia a dia. ' +
-      '🔴 NUNCA olhe apenas a flag atende_me. Você OBRIGATORIAMENTE deve cruzar com o TITULO. Se o cliente disse "médico" e o banco retornou "Aluguel de material médico", NÃO DEDUZA que ele atende. Liste as opções pro cliente e peça para ele confirmar. ' +
+      '🔴 DÚVIDA DE CNAE: Se o título retornado não for EXATAMENTE o que o cliente disse (ex: pediu "médico" e voltou "Aluguel de material médico"), NUNCA crave que atende ou não atende. Devolva a dúvida dizendo: "Você quis dizer [Nome do Título Retornado]?". Se o cliente disser que não, diga: "Me conta mais um pouco do seu dia a dia pra eu procurar novamente sua atividade". ' +
       '🔴 LEIA COM CUIDADO: `casa_atende_mei: false` significa QUE A CASA NAO CONFIRMOU ' +
       'essa atividade no MEI, e NUNCA que a atividade e proibida no MEI. Sao coisas ' +
       'diferentes: uma e escopo comercial nosso, a outra e regra federal. Por isso vem ' +

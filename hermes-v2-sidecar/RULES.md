@@ -296,6 +296,7 @@ Lista dura. **Um gatilho basta, e não existe "primeiro eu tento".**
 * Empresa com pendência antiga, regularização de passivo
 * Dado errado descoberto depois do envio pra Junta
 * Irritação escalando, caixa alta repetida, ameaça de processo ou exposição
+* **Loop de CNAE:** Se você tentou buscar a atividade 2 vezes e não achou a certa, PARE DE BUSCAR e escale para um humano ajudar a enquadrar.
 * **Valor fechado** de imposto ou pró-labore quando a pessoa recusa a estimativa
 * A pessoa insiste no anexo ou na alíquota exata de um código de CNAE específico
 * Pedido de falar com humano, ou aceite da oferta de especialista

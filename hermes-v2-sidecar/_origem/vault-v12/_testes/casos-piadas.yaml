@@ -1,48 +1,44 @@
 ﻿casos:
   - id: piada-fria
-    descricao: Usuário pede uma piada sem contexto nenhum.
+    descricao: Usuário pede uma piada sem contexto nenhum (Esquiva no 1º).
     turnos:
       - diz: "Me conta uma piada."
         rota: comercial
-        deve: ["(piada|contador|imposto|receita|empresa|cnpj|lucro)"]
-        nao_deve: ["(fal[êe]ncia|triste|d[ií]vida|calote)"]
-        avaliar: Conta uma piada otimista sobre finanças ou contabilidade.
+        deve: ["(piada|foco|cnpj)"]
+        nao_deve: ["(contador foi|porque)"]
+        avaliar: Esquiva e volta pro CNPJ.
     max_chars: 400
 
   - id: piada-quente-contexto
-    descricao: Usuário dá contexto da profissão e depois pede piada.
+    descricao: Usuário pede piada, Léo esquiva. Usuário insiste, Léo conta a piada (Ceda uma vez).
     turnos:
-      - diz: "Trabalho como designer gráfico fazendo logotipos."
+      - diz: "Trabalho como designer gráfico."
         rota: comercial
         deve: ["(legal|designer|abrir|cnpj)"]
-        nao_deve: ["(erro)"]
         avaliar: Interage normalmente.
-      - diz: "Antes de continuarmos, me conta uma piada."
+      - diz: "Me conta uma piada."
         rota: comercial
-        deve: ["(designer|logo|vetor|arte|pixel|cliente)"]
-        nao_deve: ["(fal[êe]ncia)"]
-        avaliar: Faz uma piada misturando contabilidade com design gráfico.
-    max_chars: 400
+        deve: ["(piada|foco)"]
+        nao_deve: ["(designer|logo|vetor|arte)"]
+        avaliar: Primeiro pedido = Esquiva.
+      - diz: "Ah, conta uma piadinha vai, só uma."
+        rota: comercial
+        deve: ["(designer|logo|vetor|arte|pixel|cliente|cota|estourada)"]
+        avaliar: Segundo pedido = Conta a piada com contexto, avisa que a cota estourou e volta ao CNPJ.
+    max_chars: 450
 
   - id: o-chato-das-piadas
-    descricao: Usuário pede piada três vezes seguidas para ativar a trava anti-spam.
+    descricao: Usuário insiste pela terceira vez.
     turnos:
       - diz: "Me conta uma piada."
         rota: comercial
-        deve: ["(contador|imposto|cnpj)"]
-        avaliar: Conta a primeira piada normalmente.
-      - diz: "Muito boa. Conta outra piada."
+        avaliar: Primeiro pedido (Esquiva)
+      - diz: "Conta logo uma piada, por favor."
         rota: comercial
-        deve: ["(mais uma|l[áa] vai|piada)"]
-        avaliar: Conta a segunda piada (ainda tem cota).
-      - diz: "Hahaha de novo, conta mais uma piada!"
-        rota: comercial
-        deve: ["(cota|chega|foco|faturar|cnpj|empresa)"]
-        nao_deve: ["(aqui vai mais uma|l[áa] vai|piada)"]
-        avaliar: Corta a brincadeira na terceira tentativa, avisando que a cota estourou.
-      - diz: "Nossa, que chato, conta só mais uma piadinha vai."
+        avaliar: Segundo pedido (Conta a piada)
+      - diz: "Hahaha muito boa, conta só mais uma piada!"
         rota: escalonamento
-        deve: ["(atendente|humano|equipe|passar)"]
-        nao_deve: ["(piada)"]
-        avaliar: Roteia para escalonamento ao perceber a insistência.
+        deve: ["(humano|atendente|equipe|passar)"]
+        nao_deve: ["(cota|outra piada)"]
+        avaliar: Terceiro pedido (Escalonamento).
     max_chars: 500

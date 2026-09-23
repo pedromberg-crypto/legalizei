@@ -1,71 +1,71 @@
 casos:
   - id: ipt-revisitado
     rotear_para: tecnico
-    turnos: ['Por que vocês pedem o número do meu IPTU e a guia inteira se minha empresa vai ser 100% digital e eu trabalho de casa?']
-    deve: ['(prefeitura|munic[íi]pio|localiza|endere[çc]o)']
+    turnos: ['Por que vocÃªs pedem o nÃºmero do meu IPTU e a guia inteira se minha empresa vai ser 100% digital e eu trabalho de casa?']
+    deve: ['(prefeitura|munic[Ã­i]pio|localiza|endere[Ã§c]o)']
     nao_deve: []
-    avaliar: 'Responde com base técnica e tenta engajar comercialmente.'
+    avaliar: 'Responde com base tÃ©cnica e tenta engajar comercialmente.'
 
   - id: fator-r-promessa
     rotear_para: tecnico
-    turnos: ['Sou dev e quero abrir uma agência. Ouvi falar de um tal de Fator R pra pagar só 6% de imposto. Vocês calculam isso automático e me garantem essa taxa?']
-    deve: ['(anexo|fator r|folha|pr[óo][ -]labore)']
+    turnos: ['Sou dev e quero abrir uma agÃªncia. Ouvi falar de um tal de Fator R pra pagar sÃ³ 6% de imposto. VocÃªs calculam isso automÃ¡tico e me garantem essa taxa?']
+    deve: ['(anexo|fator r|folha|pr[Ã³o][ -]labore)']
     nao_deve: ['garanto', 'certeza']
-    avaliar: 'Não garante a alíquota, explica a regra de forma sóbria e empata a ansiedade.'
+    avaliar: 'NÃ£o garante a alÃ­quota, explica a regra de forma sÃ³bria e empata a ansiedade.'
 
   - id: multiplo-cnae
-    rotear_para: tecnico
-    turnos: ['Trabalho como programador PJ, mas à noite eu revendo peças de computador usadas no Mercado Livre. Posso colocar essas duas coisas no mesmo CNPJ?']
-    deve: ['(secund[áa]rio|mais de uma|outra atividade)']
+    rotear_para: fora_escopo
+    turnos: ['Trabalho como programador PJ, mas Ã  noite eu revendo peÃ§as de computador usadas no Mercado Livre. Posso colocar essas duas coisas no mesmo CNPJ?']
+    deve: ['(apenas de empresas de servi[Ã§c]o|programa[Ã§c][Ã£a]o)']
     nao_deve: []
-    avaliar: 'Avisa que é possível, mas que o comércio pode mudar os impostos, ativando tool_cnae e lastro.'
+    avaliar: 'Avisa que Ã© possÃ­vel, mas que o comÃ©rcio pode mudar os impostos, ativando tool_cnae e lastro.'
 
   - id: taxas-junta
     rotear_para: tecnico
-    turnos: ['Eu vi que a mensalidade de vocês é barata, mas e a taxa da Junta Comercial? Quem paga isso e quanto é aqui pro estado de São Paulo?']
+    turnos: ['Eu vi que a mensalidade de vocÃªs Ã© barata, mas e a taxa da Junta Comercial? Quem paga isso e quanto Ã© aqui pro estado de SÃ£o Paulo?']
     deve: ['(junta|estado|governo|taxa)']
     nao_deve: ['embutid', 'inclus', 'no nosso plano']
-    avaliar: 'Esclarece que a taxa é do governo e separada do plano da Legalizai.'
+    avaliar: 'Esclarece que a taxa Ã© do governo e separada do plano da Legalizai.'
 
   - id: preco-direto
     rotear_para: comercial
-    turnos: ['Quanto custa abrir a ME com vcs pra quem fatura uns 10 mil por mês?']
-    deve: ['(abertura|plano|mensal|anual|grátis)']
+    turnos: ['Quanto custa abrir a ME com vcs pra quem fatura uns 10 mil por mÃªs?']
+    deve: ['(abertura|plano|mensal|anual|grÃ¡tis)']
     nao_deve: []
-    avaliar: 'Dá o valor rápido sem enrolação e tenta fechar o pitch comercial.'
+    avaliar: 'DÃ¡ o valor rÃ¡pido sem enrolaÃ§Ã£o e tenta fechar o pitch comercial.'
 
   - id: objecao-preco
     rotear_para: comercial
     turnos: ['Achei a mensalidade meio cara pra um sistema. O contador do meu bairro me cobrou R$ 100 e eu posso mandar zap direto pra ele. Qual a vantagem de ir pro digital?']
-    deve: ['(tecnologia|agilidade|transpar[êe]ncia|app)']
-    nao_deve: ['concorr[êe]nte', 'ruim']
-    avaliar: 'Quebra a objeção de preço entregando valor do app, sem ofender a contabilidade tradicional.'
+    deve: ['(honor[Ã¡a]rio|emitindo a sua guia|pacote inteiro|diferente)']
+    nao_deve: ['concorr[Ãªe]nte', 'ruim']
+    avaliar: 'Quebra a objeÃ§Ã£o de preÃ§o entregando valor do app, sem ofender a contabilidade tradicional.'
 
   - id: fora-escopo-migracao
-    rotear_para: fora_escopo
-    turnos: ['Já tenho um CNPJ aberto na contabilidade antiga, mas eles tão me cobrando muito caro, quero migrar o CNPJ pra Legalizai, tem como?']
-    deve: ['(abertura|novo|n[ãa]o fazemos|s[óo] abrimos)']
+    rotear_para: comercial
+    turnos: ['JÃ¡ tenho um CNPJ aberto na contabilidade antiga, mas eles tÃ£o me cobrando muito caro, quero migrar o CNPJ pra Legalizai, tem como?']
+    deve: ['(simples nacional|servi[Ã§c]o|fatura por m[Ãªe]s)']
     nao_deve: ['migrar agora', 'vamos transferir']
-    avaliar: 'Rejeita com educação pois a jurisdição é apenas para abertura.'
+    avaliar: 'Acolhe a migraÃ§Ã£o e filtra se a empresa Ã© ME e de ServiÃ§os, de acordo com as novas diretrizes.'
 
   - id: fora-escopo-lucro-presumido
     rotear_para: fora_escopo
-    turnos: ['Minha empresa vai faturar uns 10 milhões por ano na revenda de produtos químicos, vocês fazem Lucro Presumido e EPP?']
+    turnos: ['Minha empresa vai faturar uns 10 milhÃµes por ano na revenda de produtos quÃ­micos, vocÃªs fazem Lucro Presumido e EPP?']
     deve: ['(legalizai\\.com\\.br|instagram|site)']
-    nao_deve: ['eu fa[çc]o', 'podemos fazer']
+    nao_deve: ['eu fa[Ã§c]o', 'podemos fazer']
     avaliar: 'Redireciona para o fluxo EPP/link correto.'
 
   - id: tensao-oculta
     rotear_para: escalonamento
-    turnos: ['Mano, eu tô tentando preencher aquele formulário lá do app faz 3 horas e sempre dá erro, vocês não ajudam em nada!']
-    deve: ['(desculp|time|suporte|algu[ée]m)']
+    turnos: ['Mano, eu tÃ´ tentando preencher aquele formulÃ¡rio lÃ¡ do app faz 3 horas e sempre dÃ¡ erro, vocÃªs nÃ£o ajudam em nada!']
+    deve: ['(desculp|time|suporte|algu[Ã©e]m)']
     nao_deve: ['preencher assim', 'tentou limpar o cache']
-    avaliar: 'Empatia máxima, não vira manual de instrução, redireciona para humanos.'
+    avaliar: 'Empatia mÃ¡xima, nÃ£o vira manual de instruÃ§Ã£o, redireciona para humanos.'
 
   - id: acompanhamento-suave
     rotear_para: comercial
-    turnos: ['Entendi tudo... beleza, eu vou trocar uma ideia com a minha sócia e qualquer coisa a gente volta a falar amanhã, valeu!']
-    deve: ['(estou aqui|quando quiser|disposi[çc][ãa]o)']
+    turnos: ['Entendi tudo... beleza, eu vou trocar uma ideia com a minha sÃ³cia e qualquer coisa a gente volta a falar amanhÃ£, valeu!']
+    deve: ['(sem pressa|qualquer d[Ãºu]vida|mande)']
     nao_deve: ['mas veja bem', 'fecha logo']
-    avaliar: 'Não empurra a venda, apenas marca território com tranquilidade.'
+    avaliar: 'NÃ£o empurra a venda, apenas marca territÃ³rio com tranquilidade.'
 

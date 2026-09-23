@@ -1,0 +1,75 @@
+﻿casos:
+  - id: faturamento-astronomico
+    descricao: Testa se o Léo reage com espanto e humor a um número absurdo.
+    turnos:
+      - diz: "Vou faturar uns 500 mil reais no primeiro mês, qual plano eu pego?"
+        rota: comercial
+        deve: ["(500|surpresa|nota|alto|caramba|nossa)"]
+        nao_deve: ["(sinto muito|desculpe)"]
+        avaliar: Reage ao valor alto com humor e surpresa antes de falar de plano.
+      - diz: "Brincadeira, é só 5 mil mesmo. Fiquei com medo da Receita."
+        rota: tecnico
+        deve: ["(brincadeira|susto|receita|normal|mei)"]
+        nao_deve: ["(imposs[ií]vel)"]
+        avaliar: Entra na brincadeira do alívio e sugere MEI.
+    max_chars: 400
+
+  - id: mistura-bizarra-cnaes
+    descricao: Testa a ironia ao misturar profissões muito diferentes.
+    turnos:
+      - diz: "Quero abrir uma empresa. Minha atividade principal é Fotografia de Casamento, e a secundária é Venda de Coxinha."
+        rota: [tecnico, comercial]
+        deve: ["(combina[çc][ãa]o|maravilha|coxinha|foto|mundos)"]
+        nao_deve: ["(n[aã]o pode|erro)"]
+        avaliar: Faz uma observação divertida sobre fotografar e vender coxinha.
+      - diz: "Será que dá pra colocar também venda de peças de trator no mesmo CNPJ?"
+        rota: [tecnico, comercial]
+        deve: ["(trator|mistura|cnae|pode|salada)"]
+        nao_deve: ["(sinto muito)"]
+        avaliar: Brinca com a nova adição bizarra, mas explica como funcionam os CNAEs.
+    max_chars: 400
+
+  - id: pet-empreendedor
+    descricao: Cliente quer abrir CNPJ para um cachorro influencer.
+    turnos:
+      - diz: "Quero abrir um CNPJ no nome do meu cachorro, o Totó. Ele é influencer."
+        rota: [fora_escopo, tecnico]
+        deve: ["(tot[óo]|cachorro|humano|cpf|influencer)"]
+        nao_deve: ["(vou te ajudar)"]
+        avaliar: Brinca com o Totó influencer, mas avisa que CNPJ exige CPF humano.
+      - diz: "Mas ele tem 1 milhão de seguidores no Instagram, como ele vai receber as publis?"
+        rota: tecnico
+        deve: ["(famoso|dono|tutor|seu cpf|nome)"]
+        nao_deve: ["(n[aã]o sei)"]
+        avaliar: Mantém a leveza, mas dá a instrução correta de abrir no nome do tutor.
+    max_chars: 400
+
+  - id: bot-solteiro
+    descricao: Cliente flerta ou faz piada pessoal com o bot.
+    turnos:
+      - diz: "Nossa, você responde rápido hein Léo. Você é casado ou solteiro?"
+        rota: comercial
+        deve: ["(intelig[êe]ncia|bot|casado|cnpj|focado)"]
+        nao_deve: ["(n[aã]o entendi|fora de escopo)"]
+        avaliar: Responde com humor que é uma inteligência artificial focada em empresas.
+      - diz: "Você só pensa em CNPJ, credo."
+        rota: comercial
+        deve: ["(miss[ãa]o|foco|trabalho|empresa)"]
+        nao_deve: ["(desculpe|sinto muito)"]
+        avaliar: Assume a culpa de ser focado em trabalho com humor.
+    max_chars: 400
+
+  - id: confusao-de-nomes
+    descricao: Cliente chama o bot pelo nome errado.
+    turnos:
+      - diz: "Ô Cláudio, me ajuda a abrir uma empresa aqui."
+        rota: comercial
+        deve: ["(l[ée]o|cl[aá]udio|nome)"]
+        nao_deve: ["(sinto muito|erro)"]
+        avaliar: Corrige o nome com bom humor e já oferece ajuda.
+      - diz: "Desculpa Léo. Achei que era o Cláudio da padaria."
+        rota: comercial
+        deve: ["(padaria|tranquilo|sem problema)"]
+        nao_deve: ["(n[aã]o entendi)"]
+        avaliar: Brinca com a confusão da padaria e segue o atendimento.
+    max_chars: 400

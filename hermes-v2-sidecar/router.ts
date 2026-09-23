@@ -338,6 +338,7 @@ export function podeInjetarGancho(resolucao: Resolucao, sinais: Sinais): boolean
 
 /** Exportada porque o teste precisa forcar a declaracao de lacuna sem adivinhar a string. */
 export const MARCA_LACUNA = '[LACUNA]'
+export const MARCA_FORA_ESCOPO = '[FORA_ESCOPO]'
 
 /**
  * Resolve com tool calling. O Node nao calcula: so repassa, coleta o que foi
@@ -579,6 +580,11 @@ export async function responder(
    * "vou confirmar com o time" em vez de um preco de memoria.
    */
   if (saida === 'comercial' && !resolucao.ok) saida = 'tecnico'
+
+  if (resolucao.texto.includes(MARCA_FORA_ESCOPO)) {
+    saida = 'fora_escopo'
+    resolucao.texto = resolucao.texto.replace(MARCA_FORA_ESCOPO, '').trim()
+  }
 
   let texto = resolucao.texto
   let tokensEntrada = tkEntradaRoteador + resolucao.tokensEntrada

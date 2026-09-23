@@ -369,7 +369,7 @@ async function resolver(
 
   const lastroInjetado: string[] = []
   let lastroTentado = false
-  const mensagens: MensagemLlm[] = [...historico, { papel: 'cliente', texto: entrada.texto }]
+  const mensagens: MensagemLlm[] = [...historico.slice(-30), { papel: 'cliente', texto: entrada.texto }]
   const cartoesUsados: string[] = []
   const fatosLidos: string[] = []
   // 🔑 Nome de TODA chamada, antes de executar. E o unico registro que separa

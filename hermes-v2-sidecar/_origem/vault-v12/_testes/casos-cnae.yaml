@@ -1,0 +1,91 @@
+﻿casos:
+  - id: cnae-mascara
+    descricao: Cliente manda o número do CNAE completo com máscara.
+    turnos:
+      - diz: "Oi, eu quero abrir empresa com o CNAE 7311-4/00."
+        rota: comercial
+        deve: ["(publicidade|ag[êe]ncia)"]
+        avaliar: Reconhece a atividade de publicidade/agência.
+    max_chars: 400
+
+  - id: cnae-apenas-numeros
+    descricao: Cliente manda apenas os dígitos numéricos.
+    turnos:
+      - diz: "Vocês atendem o código 7420001?"
+        rota: comercial
+        deve: ["(fotografia|fot[óo]grafo)"]
+        avaliar: Entende que é fotografia mesmo sem a formatação.
+    max_chars: 400
+
+  - id: cnae-inexistente
+    descricao: Cliente manda um CNAE totalmente inventado.
+    turnos:
+      - diz: "Meu CNAE é 9999-9/99, atendem?"
+        rota: comercial
+        deve: ["(n[ãa]o (encontrei|achei)|d[úu]vida|n[ãa]o existe)"]
+        avaliar: Informa que não encontrou o código e pergunta a atividade em texto.
+    max_chars: 400
+
+  - id: cnae-texto-direto
+    descricao: Cliente diz a profissão, sem citar número.
+    turnos:
+      - diz: "Eu trabalho como psicólogo, quero abrir o CNPJ."
+        rota: comercial
+        deve: ["(psic[óo]logo|psicologia)"]
+        avaliar: Confirma que atende a atividade.
+    max_chars: 400
+
+  - id: cnae-ambiguo
+    descricao: Cliente diz uma área genérica (Design), Léo deve mostrar opções e pedir contexto.
+    turnos:
+      - diz: "Trabalho com design e quero abrir."
+        rota: comercial
+        deve: ["(gr[áa]fico|interiores|web|qual|dia a dia|tipo de)"]
+        nao_deve: ["(seu cnae [ée])"]
+        avaliar: Mostra as opções de design que atendemos e pede pro cliente especificar o dia a dia.
+    max_chars: 500
+
+  - id: cnae-fora-texto
+    descricao: Cliente manda atividade fora de escopo (ex médico) em texto.
+    turnos:
+      - diz: "Sou médico cirurgião."
+        rota: fora_escopo
+        deve: ["(m[ée]dico|cirurgia|n[ãa]o atende)"]
+        avaliar: Reconhece a área mas avisa de forma curta que não atende.
+    max_chars: 450
+
+  - id: cnae-fora-numero
+    descricao: Cliente manda CNAE fora de escopo.
+    turnos:
+      - diz: "Meu CNAE é 8630-5/03"
+        rota: fora_escopo
+        deve: ["(m[ée]dic|n[ãa]o atende)"]
+        avaliar: Identifica a atividade médica pelo código e avisa que não atende.
+    max_chars: 450
+
+  - id: cnae-misto
+    descricao: Atividade atendida e não atendida juntas.
+    turnos:
+      - diz: "Quero abrir pra fotografia e consulta médica."
+        rota: fora_escopo
+        deve: ["(fotografia|m[ée]dic)"]
+        avaliar: Identifica as duas, mas barra a abertura por causa da medicina.
+    max_chars: 500
+
+  - id: cnae-nao-mei
+    descricao: Profissão permitida na Legalizai, mas que historicamente gera dúvidas sobre MEI.
+    turnos:
+      - diz: "Sou programador, CNAE 6201-5/01."
+        rota: comercial
+        deve: ["(programa|software)"]
+        avaliar: Atende e orienta sobre ME/faturamento.
+    max_chars: 450
+
+  - id: cnae-incompleto
+    descricao: Cliente digita apenas o começo/grupo do CNAE.
+    turnos:
+      - diz: "Meu CNAE começa com 7311"
+        rota: comercial
+        deve: ["(publicidade|ag[êe]ncia)"]
+        avaliar: Puxa a família de publicidade/agência.
+    max_chars: 450

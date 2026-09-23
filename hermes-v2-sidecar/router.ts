@@ -363,6 +363,8 @@ async function resolver(
     `Se a resposta depender de algo que nenhuma tool devolveu, escreva ${MARCA_LACUNA} ` +
       `no inicio da mensagem e diga em uma linha que vai confirmar com o time. ` +
       `Nao preencha o buraco com conhecimento geral.`,
+      `SUA RESPOSTA NUNCA DEVE ULTRAPASSAR 400 CARACTERES. É um teto duro de sistema. Seja direto e cirúrgico.` +
+        `\nResponda estritamente o que foi perguntado. Não empurre explicações extras ou aulas tributárias (Fator R, Anexos, regras do MEI) se o cliente não perguntou sobre isso ou não informou faturamento. Fale do benefício, não da matemática.`,
   ].filter(Boolean).join('\n\n')
 
   const lastroInjetado: string[] = []

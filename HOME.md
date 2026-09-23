@@ -10,6 +10,19 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-22 — **79º flow: CNAE CIRÚRGICO, [FORA_ESCOPO] NO ROTEADOR E TESTES DE FUNCIONALIDADES.**
+>
+> 🧭 **Três rodadas de refinamento no Léo para blindar a operação e aprimorar a personalidade.**
+>
+> **(1) 🤡 ESCALAÇÃO DE PIADAS (O LOOPHOLE MEDIDO).** A persona do Léo estava tão "vendedora" que bloqueava pedidos diretos por piada. Adicionamos uma "escada" em `PERSONA.md`: 1. Esquiva humorada pro foco -> 2. Se insistir, conta piada contextualizada de finanças/contabilidade e volta pro assunto tenso -> 3. Se insistir mais, escalona. Testes (`casos-piadas`) passaram, validando o meio-termo ideal entre o vendedor sério e a brincadeira.
+>
+> **(2) 🛑 O MISTÉRIO DO CNAE: DO BLOQUEIO À CIRURGIA.** Descobrimos que `consultar_cnae` não era chamada porque havia um resquício no `RULES.md` proibindo seu uso. Ligamos a ferramenta, mas o modelo ainda teimava em rotear clientes rejeitados para `tecnico`.
+>
+> **(3) 🔧 A MARCA [FORA_ESCOPO] NO ROTEADOR (O SEQUESTRO DA ROTA).** Identificamos uma falha de arquitetura: a rota era decidida pelo classificador *antes* de as tools rodarem (onde o banco retorna `casa_atende_me: false`). Para corrigir sem mudar a fundação, ensinamos o LLM a injetar a marca `[FORA_ESCOPO]` no `RULES.md`, e criamos um interceptor no `router.ts` que sequestra e força a rota para `fora_escopo` ao detectar a palavra, apagando-a para o cliente. Custo final validado e absurdamente barato devido ao Cache do Gemini (US$ 0.014 a bateria de 10).
+>
+> **(4) 🗂️ TESTES DE FUNCIONALIDADE.** Subimos `casos-funcionalidades.yaml` para provar que a `buscar_cartao` consegue descrever emissão de NF, barra abertura de filial estrangeira e se recusa a fazer folha completa e IRPF. O Léo bateu recorde de precisão técnica limitando as promessas aos 58 cartões do produto.
+>
+> ---
 > **Última atualização:** 2026-09-22 — **78º flow: A BASE DO LÉO PAROU DE SER INVISÍVEL, E O MOTOR DE TESTES DO APP VIROU MÁQUINA.**
 >
 > 🧭 **Dia de duas frentes, e as duas terminaram medindo em vez de supondo.** 12 commits, ~11h.

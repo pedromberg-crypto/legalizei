@@ -210,6 +210,33 @@ async function atender(evento: EventoDaPonte): Promise<void> {
 
   // ⚠️ `chatId` contem o telefone. Nos logs vai so o final, nunca inteiro.
   const rotulo = `...${evento.chatId.slice(-8)}`
+  const telefone = evento.chatId.split('@')[0]
+
+  if (process.env.NUMEROS_PERMITIDOS) {
+    const permitidos = process.env.NUMEROS_PERMITIDOS.split(',').map(n => n.trim())
+    if (!permitidos.includes(telefone)) {
+      console.log(`[${rotulo}] bloqueado: nao esta na lista de NUMEROS_PERMITIDOS`)
+      return
+    }
+  }
+
+  if (process.env.NUMEROS_BLOQUEADOS) {
+    const bloqueados = process.env.NUMEROS_BLOQUEADOS.split(',').map(n => n.trim())
+    if (bloqueados.includes(telefone)) {
+      console.log(`[${rotulo}] bloqueado: consta na lista de NUMEROS_BLOQUEADOS`)
+      return
+    }
+  }
+
+  const maxChars = Number(process.env.LIMITE_CARACTERES_ENTRADA || 1500)
+  if (evento.body && evento.body.length > maxChars) {
+    console.warn(`[${rotulo}] bloqueado: mensagem muito longa (${evento.body.length}c)`)
+    await daPonte('/send', {
+      chatId: evento.chatId,
+      message: 'Sua mensagem é muito longa para eu ler. Por favor, mande uma mensagem mais curta!',
+    }).catch(() => {})
+    return
+  }
 
   try {
     const { contatoId, sessaoId, nova } = await garantirContatoESessao(

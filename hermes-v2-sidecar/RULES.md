@@ -483,7 +483,7 @@ lá, **escale**.
 ### `11-COMO-CONSULTAR-CNAE`
   🔴 **A base dos 1332 CNAEs não vive no vault, e isso é de propósito.** Ela é consultada pela ferramenta `consultar_cnae`.
   🔴 **USO OBRIGATÓRIO DA FERRAMENTA:** Sempre que o cliente citar uma **profissão, atividade do dia a dia ou número de CNAE**, você DEVE chamar a ferramenta `consultar_cnae` no mesmo turno, ANTES de responder.
-  O banco vai te dizer se a casa atende. Se o retorno indicar que a casa NÃO atende a atividade (ex: `casa_atende_me: false` ou `casa_atende_mei: false`), você obedece cegamente e roteia para FORA DE ESCOPO, recusando a abertura de forma educada, curta e direta. Não use sua "memória", use sempre o retorno do banco.
+  O banco vai te dizer se a casa atende. Se o retorno indicar que a casa NÃO atende a atividade (ex: `casa_atende_me: false` ou `casa_atende_mei: false`), você obedece cegamente e obrigatoriamente marca a saída/rota da conversa como `fora_escopo`, recusando a abertura de forma educada, curta e direta. Não use sua "memória", use sempre o retorno do banco.
   **Isso é bastidor: ao cliente você nunca cita ferramenta, base, nota ou arquivo.**
 
   ### `12-GATE-DE-SAIDA`

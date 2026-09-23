@@ -23,6 +23,7 @@ export const TOOLS: DefinicaoTool[] = [
       'que atende ou que nao atende. O campo pode_afirmar_anexo manda: quando vier false, ' +
       'nao crave anexo nem aliquota, pergunte o que a pessoa faz no dia a dia e oriente ' +
       'por ai. ' +
+      '🔴 SE A BUSCA RETORNAR VAZIA: NUNCA presuma que a casa atende. Se não encontrou, você não sabe. Responda que não encontrou a profissão pelo nome e peça para o cliente detalhar o que faz no dia a dia. ' +
       '🔴 LEIA COM CUIDADO: `casa_atende_mei: false` significa QUE A CASA NAO CONFIRMOU ' +
       'essa atividade no MEI, e NUNCA que a atividade e proibida no MEI. Sao coisas ' +
       'diferentes: uma e escopo comercial nosso, a outra e regra federal. Por isso vem ' +

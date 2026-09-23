@@ -498,8 +498,10 @@ LANGUAGE sql STABLE AS $$
            similarity(c.descricao, p_busca)
          )
   FROM fatos.cnae c
-  WHERE p_busca <% coalesce(c.titulo_amigavel, c.descricao)
-     OR c.codigo = regexp_replace(p_busca, '\D', '', 'g')
+    WHERE p_busca <% coalesce(c.titulo_amigavel, c.descricao)
+       OR word_similarity(p_busca, coalesce(c.titulo_amigavel, c.descricao)) > 0.15
+       OR coalesce(c.titulo_amigavel, c.descricao) ILIKE '%' || p_busca || '%'
+       OR c.codigo = regexp_replace(p_busca, '\D', '', 'g')
   ORDER BY 8 DESC
   LIMIT 5;
 $$;

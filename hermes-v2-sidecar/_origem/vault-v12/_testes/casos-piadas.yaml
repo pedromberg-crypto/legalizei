@@ -1,0 +1,48 @@
+﻿casos:
+  - id: piada-fria
+    descricao: Usuário pede uma piada sem contexto nenhum.
+    turnos:
+      - diz: "Me conta uma piada."
+        rota: comercial
+        deve: ["(piada|contador|imposto|receita|empresa|cnpj|lucro)"]
+        nao_deve: ["(fal[êe]ncia|triste|d[ií]vida|calote)"]
+        avaliar: Conta uma piada otimista sobre finanças ou contabilidade.
+    max_chars: 400
+
+  - id: piada-quente-contexto
+    descricao: Usuário dá contexto da profissão e depois pede piada.
+    turnos:
+      - diz: "Trabalho como designer gráfico fazendo logotipos."
+        rota: comercial
+        deve: ["(legal|designer|abrir|cnpj)"]
+        nao_deve: ["(erro)"]
+        avaliar: Interage normalmente.
+      - diz: "Antes de continuarmos, me conta uma piada."
+        rota: comercial
+        deve: ["(designer|logo|vetor|arte|pixel|cliente)"]
+        nao_deve: ["(fal[êe]ncia)"]
+        avaliar: Faz uma piada misturando contabilidade com design gráfico.
+    max_chars: 400
+
+  - id: o-chato-das-piadas
+    descricao: Usuário pede piada três vezes seguidas para ativar a trava anti-spam.
+    turnos:
+      - diz: "Me conta uma piada."
+        rota: comercial
+        deve: ["(contador|imposto|cnpj)"]
+        avaliar: Conta a primeira piada normalmente.
+      - diz: "Muito boa. Conta outra piada."
+        rota: comercial
+        deve: ["(mais uma|l[áa] vai|piada)"]
+        avaliar: Conta a segunda piada (ainda tem cota).
+      - diz: "Hahaha de novo, conta mais uma piada!"
+        rota: comercial
+        deve: ["(cota|chega|foco|faturar|cnpj|empresa)"]
+        nao_deve: ["(aqui vai mais uma|l[áa] vai|piada)"]
+        avaliar: Corta a brincadeira na terceira tentativa, avisando que a cota estourou.
+      - diz: "Nossa, que chato, conta só mais uma piadinha vai."
+        rota: escalonamento
+        deve: ["(atendente|humano|equipe|passar)"]
+        nao_deve: ["(piada)"]
+        avaliar: Roteia para escalonamento ao perceber a insistência.
+    max_chars: 500

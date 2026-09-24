@@ -30,7 +30,7 @@ tags: [cnae, fila, correcao, simples-nacional, tabela]
 ### 1. O export não foi regerado, e o motor ainda recusa 7 CNAEs
 As correções de 24/09 entraram na `cnae-matriz-v2.csv`, mas o `cnae-atendemos-certeza.csv` — que é o que o `apurador.anexoDoCnae()` consome — **é anterior a elas**. Na prática o motor segue em **80/87**, e os contadores `65/15/7` de `produto/me/viver/motor/regra/_tabelas.mjs` seguem valendo.
 
-> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar `71/16/0`, e o apurador calcular DAS para `7410-2/99`.
+> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`72/15/0`** (era `65/15/7`; o `9329-8/04` saiu do Fator R em 24/09), e o apurador calcular DAS para `7410-2/99`.
 > ⚠️ Regerar o export **toca a original** — só com o seu ok, e é a última etapa, depois que a tabela estiver definida.
 
 ### 2. `motivo_nao_atende` não existe — 1.245 "não" sem razão
@@ -42,6 +42,8 @@ O Léo responde *"não atendemos"* e **não sabe por quê**. Quando não sabe, i
 `Number("5%")` = `NaN` → `null` no `carregar-cnae.ts`. A coluna está na lista do loader, então o defeito é **silencioso**: parece importada. É resposta que ninguém mais dá em BH.
 
 > **Pronto quando:** o parser aceitar `"5%"` e o banco tiver 524 alíquotas — **ou** as 3 colunas de ISS saírem por decisão registrada. Deixar como está é a única opção ruim.
+>
+> 🕓 **Vigência: NÃO confirmada (24/09).** O Prompt A devolveu `VEREDITO: não localizei fonte específica` com `CONFIANÇA: fonte direta` — contradição no próprio formato. **Ausência de publicação não é fonte.** Segue em aberto se a Lei 8.725/2003 ou a tabela CTISS mudaram depois de 27/08.
 
 ---
 
@@ -50,11 +52,13 @@ O Léo responde *"não atendemos"* e **não sabe por quê**. Quando não sabe, i
 ### 4. Três CNAEs do §5º-F que a cascata quer mover
 Estão dentro dos 87, hoje `III-fixo` por residual. **Nada foi aplicado**: mover CNAE que já tem anexo é decisão fiscal, não faxina de script.
 
-| CNAE | Proposta | Força |
+| CNAE | Proposta | Estado depois do Prompt A (24/09) |
 |---|---|---|
-| `6391-7/00` agências de notícias | → **Fator R**, §5º-I X (*jornalismo*) | 🟡 a subclasse **exclui** jornalista independente (`9002-7/01`) — a exclusão do IBGE vale pra LC 123? |
-| `7210-0/00` P&D em ciências físicas e naturais | → **Fator R**, §5º-I **VI** | 🟢 o §5º-I VI nomeia **"pesquisa"** entre os serviços técnicos (eu tinha lido como XII/julgamento; é termo nomeado) |
-| `7220-7/00` P&D em ciências sociais e humanas | → **Fator R**, §5º-I VI ou XII | 🟡 "técnica" pesa menos, "científica" pesa mais — o anexo é o mesmo, o inciso muda |
+| `6391-7/00` agências de notícias | → **Fator R**, §5º-I X (*jornalismo*) | 🔴 **sem fonte.** *"O acervo da Receita é mudo sobre o 6391-7/00 no Simples"*, e ele chama de *"zona de altíssimo risco silenciada"*. **Vai pro contador** |
+| `7210-0/00` P&D em ciências físicas e naturais | → **Fator R**, §5º-I **VI** | 🟡 conclusão confirmada, **raciocínio recusado** (ele diz que o VI elenca "medicina" — revogada de lá em 2016). *"Pesquisa"* está mesmo no VI. **Decisão sua** |
+| `7220-7/00` P&D em ciências sociais e humanas | → **Fator R**, §5º-I **XII** | 🟡 confirmado: o VI puxa exatas, o XII cobre científica. Anexo idêntico. **Decisão sua** |
+
+⚠️ Os dois de P&D **mudam de III fixo para Fator R dentro dos 87**. Não apliquei: é o mesmo critério que me fez não mexer nos outros 51 residuais.
 
 ### 4b. 🔴 E dois que eu não tinha visto — os mais caros da fila
 Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Estão dentro dos 87**, hoje **III fixo por §5º-F**, e a subclasse do IBGE usa a palavra *publicidade* na própria definição — que o **§5º-I X** nomeia:
@@ -64,12 +68,24 @@ Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Est�
 | `7319-0/02` promoção de vendas | *"a promoção de vendas e **a publicidade** no local da venda"* |
 | `7319-0/03` marketing direto | *"**a publicidade** por mala direta, por telefone, em visitas de representantes"* |
 
-🔑 Na mesma classe `7319-0`, `7319-0/04` (consultoria em publicidade) e `7319-0/99` (outras de publicidade) **já estão em Fator R**. A classe está partida, e a linha que separa é *"serviço de publicidade"* × *"execução operacional"* — que não achei firmada em lugar nenhum do vault. **É a pergunta 1 do prompt.**
+🔑 Na mesma classe `7319-0`, `7319-0/04` (consultoria em publicidade) e `7319-0/99` (outras de publicidade) **já estão em Fator R**. A classe está partida, e a linha que separa é *"serviço de publicidade"* × *"execução operacional"*.
 
-> **Custo se estiver errado:** dizemos **6%** a um cliente de marketing que pode ser **15,5%**.
-> **Pronto quando:** cada um dos 5 tiver anexo gravado e linha no ADR — inclusive se a decisão for *fica como está*.
+✅ **RESPONDIDO em 24/09, e o risco não se realizou.** O Prompt A devolveu **III fixo, §5º-F** para os dois, com **SC COSIT nº 13/2022** — que é exatamente o que já está na tabela. **Nada a mudar.** E deu nome ao critério que faltava: *publicidade do §5º-I X exige **esforço intelectual/criativo** (estratégia, criação, plano de mídia); promoção é **execução** (entregar panfleto, ligar pro mailing)*. ⚠️ Esse critério voltou **sem fonte** (item 1c: *"a LC 123 não traz glossário"*) — serve de raciocínio, não de regra.
 
-### 5. `8020002` — ✅ **resolvido na leitura da subclasse, 24/09. Falta aplicar**
+### 4c. 🔴 `7319-0/99` — contradição que o próprio retorno acusou sem perceber
+Ele afirma que a **mesma SC COSIT 13/2022** pôs `7319-0/99` (*outras atividades de publicidade n.e.*) no **Anexo III fixo residual**. Nossa tabela tem **Fator R, §5º-I X**. Não estava na pergunta, não está nos 87 — mas é linha errada de um dos dois lados, e mexe no critério, porque *"outras atividades de publicidade"* soa mais perto de publicidade que de execução.
+
+> **Pronto quando:** o texto da SC 13/2022 for lido e a linha gravada de acordo.
+
+### 4d. 🔴 A viga mestra não foi conferida: **SC COSIT nº 13/2022**
+Citada **3 vezes** e sustenta sozinha os itens 1a, 1b e 1d. **Se ela não disser o que ele diz, os três caem juntos** — e `7319-0/02` e `7319-0/03` voltam a ser risco de 6% × 15,5% em 2 dos 87.
+
+> É pública em `normas.receita.fazenda.gov.br`.
+> **Pronto quando:** o texto estiver lido e salvo literal em `pesquisa/fontes/`, como manda a regra de leitura integral.
+
+> **Pronto quando (o bloco 4 inteiro):** cada CNAE com anexo gravado e linha no ADR — inclusive se a decisão for *fica como está*.
+
+### 5. ~~`8020002`~~ — ✅ **FECHADO em 24/09.** III fixo, §5º-B IX, aplicado e confirmado pelo Prompt A. Era o último `requer-revisao` da tabela: agora são **zero**.
 `OUTRAS ATIVIDADES DE SERVIÇOS DE SEGURANÇA`: a cascata dizia **IV** (§5º-C VI, *vigilância*) casando no título, e o irmão `8020001` dizia **III**. A subclasse do IBGE desempata: ela compreende *"a **instalação, reparação, reconstrução e ajuste mecânico de cofres, trancas e travas de segurança**"* — é **serralheria/chaveiro, não guarda patrimonial**. O §5º-B IX nomeia *"instalação, reparos e manutenção em geral"*.
 
 🔑 **Lição de método:** casar só na `descricao` evita o ruído do `atividades`, mas o **título mente** em CNAE guarda-chuva. A subclasse não serve pra regex — serve pra **ler**.
@@ -77,7 +93,7 @@ Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Est�
 > Veredito: **III fixo, §5º-B IX**. É o último `requer-revisao` da tabela inteira. Está no bloco B do [[prompt-a-incisos-lc123-cnaes-em-disputa]] para 2ª opinião.
 > **Pronto quando:** gravado + linha no ADR.
 
-### 6. `9329-8/04` — ✅ **mesmo padrão do fliperama, confirmado. Falta aplicar**
+### 6. ~~`9329-8/04`~~ — ✅ **FECHADO em 24/09.** III fixo, §5º-F, aplicado. ⚠️ Estava nos 87 como Fator R: o `piloto-pro-labore` deixa de pilotar esse CNAE.
 `EXPLORAÇÃO DE JOGOS ELETRÔNICOS RECREATIVOS` está como Fator R pelo §5º-D IV, que trata de *"elaboração de programas de computador, inclusive jogos eletrônicos"*. A subclasse diz *"a **exploração de estabelecimentos** de jogos eletrônicos recreativos"* — **operar fliperama, não desenvolver software**. Todos os irmãos da classe (sinuca, boliche, discoteca, recreação n.e.) são III.
 
 > Veredito: **III fixo, §5º-F**. ⚠️ Está **dentro dos 87**: muda de Fator R para III fixo, então o `piloto-pro-labore` para de pilotar esse CNAE.
@@ -108,6 +124,8 @@ A divisão do IBGE agrupa por lógica econômica; o cliente se descreve por prof
 ### 10. `mei_iss_fixo_das` e `mei_icms_fixo_das` nunca foram importados
 351 linhas no CSV, zero no banco. É quanto o MEI paga por mês — a pergunta nº 1 de quem quer ser MEI.
 
+> ✅ **O valor de 2026 fechou (24/09):** **R$86,05/mês** para serviço — 5% de **R$1.621,00** (salário mínimo, Decreto 12.797/2025) = R$81,05, mais **R$5,00** de ISS. 🔑 O R$1.621 **bate com a persona zero**, medida na conta real em 12/09: duas origens independentes. ⚠️ Muda todo ano: quem recalcula é o mesmo código do piso de pró-labore.
+>
 > **Pronto quando:** as duas colunas estiverem no loader, ou saírem por decisão registrada.
 
 ---

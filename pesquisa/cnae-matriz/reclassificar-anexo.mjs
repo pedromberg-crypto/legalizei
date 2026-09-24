@@ -154,8 +154,22 @@ const irmaoUnanime = (l) => {
 //    sozinha não o explica: o matcher de 27/08 viu "jogos eletrônicos" no
 //    §5º-D IV e ignorou que a subclasse diz "o ALUGUEL DE APARELHOS de jogos".
 //    Alugar fliperama não é elaborar software.
+/* 🔑 As três entradas abaixo têm a mesma causa e a mesma lição: **o título do
+   CNAE mente, e a subclasse desmente**. A cascata casa só na `descricao`
+   (porque casar no `atividades` é ruído), mas em CNAE guarda-chuva a descrição
+   sozinha engana. Quando isso acontece, a `subclasse_observacoes` não vira
+   regex — vira LEITURA, e o resultado entra aqui declarado. */
 const CORRECOES = {
   "7729201": [III, "§5º-F", "aluguel de aparelho não é elaboração de software (§5º-D IV não se aplica)"],
+  // Título diz "serviços de segurança" e a cascata mandava pro §5º-C VI (Anexo
+  // IV, vigilância). A subclasse diz "instalação, reparação, reconstrução e
+  // ajuste mecânico de cofres, trancas e travas": é chaveiro, não guarda.
+  // Confirmado pelo retorno do Prompt A (24/09) com inciso direto.
+  "8020002": [III, "§5º-B IX", "cofres e travas é instalação/reparo, não vigilância (§5º-C VI não se aplica)"],
+  // Mesmo padrão do 7729201: "exploração de ESTABELECIMENTOS de jogos
+  // eletrônicos" é operar fliperama, não elaborar programa. Todos os irmãos da
+  // classe (sinuca, boliche, discoteca, recreação n.e.) são III.
+  "9329804": [III, "§5º-F", "explorar fliperama não é elaboração de software (§5º-D IV não se aplica)"],
 };
 
 const fila = [];

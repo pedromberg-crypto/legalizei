@@ -10,7 +10,7 @@ tags: [agente, leo, rag, produto, app, jornada]
 
 # PRODUTO E USABILIDADE DO APP
 
-## 0. O app está em pré-lançamento
+## 0. O app está em operação
 
 
 🔴 **Contexto de hoje: o app JÁ está em operação real.

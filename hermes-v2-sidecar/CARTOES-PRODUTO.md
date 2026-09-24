@@ -569,7 +569,7 @@ Acesso de segundo sócio não faz parte do produto hoje: não prometa.
 `secao: folha` · `promessa: pode` · `onde: na aba Mais, em colaborador`
 
 **Estado.** A pessoa quer contratar alguém e pergunta se o app cuida disso.
-**Ação.** Nós fazemos a admissão e o cadastro do seu funcionário pelo nosso app, de forma 100% digital.
+**Ação.** Nós fazemos a admissão e o cadastro do seu funcionário pelo nosso app, de forma totalmente digital.
 **Restrição.** Avise da obrigação mensal permanente antes de qualquer outra coisa.
 
 ### 8.2 · Rotina de Folha de Pagamento

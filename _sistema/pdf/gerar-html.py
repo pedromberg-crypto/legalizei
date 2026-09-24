@@ -246,6 +246,17 @@ SUBTITULOS_POR_DOC = {
     "11": "os 2 gates, o placar honesto e o que falta travar",
     "12": "os 8 riscos e a defesa atual de cada um",
     },
+    "2026-09-24-anatomia-do-organico": {
+    "1": "as três camadas que se multiplicam",
+    "2": "quantos são, de uma vez",
+    "3": "os 4 blocos e o % de cada um",
+    "4": "os 13 ativos, um a um, e os 4 em standby",
+    "5": "os 9 ataques que o pilar de diferencial gira",
+    "6": "os 6 evergreen e os 5 sazonais",
+    "7": "os 7 mecanismos, e onde a escassez para",
+    "8": "a caixinha quinzenal, os 3 formatos e a escada de CTA",
+    "9": "o que está travado e as 4 decisões em aberto",
+    },
     "2026-09-21-apresentacao-trafego-organico": {
     "1": "um mês de veiculação em número fechado",
     "2": "a régua do nicho contábil e onde ficamos",

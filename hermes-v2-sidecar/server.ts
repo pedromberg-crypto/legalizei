@@ -219,13 +219,13 @@ async function atender(evento: EventoDaPonte): Promise<void> {
     if (!permitidos.includes(telefone)) {
       if (!avisadosPreLancamento.has(telefone)) {
         avisadosPreLancamento.add(telefone)
-        console.log(`[${rotulo}] bloqueado (novo numero, avisando pre-lancamento)`)
+        console.log(`[${rotulo}] bloqueado (${telefone}) (novo numero, avisando pre-lancamento)`)
         await daPonte('/send', {
           chatId: evento.chatId,
           message: 'Olá! Agradecemos o interesse, mas ainda estamos em fase de pré-lançamento e testes fechados. 🚀\n\nPara garantir uma promoção exclusiva de lançamento e acompanhar todas as nossas novidades, entre na nossa lista de espera no nosso site e siga nosso Instagram!\n\n🌐 Site: https://legalizai.com.br\n📸 Instagram: @legalizai',
         }).catch(() => {})
       } else {
-        console.log(`[${rotulo}] bloqueado (ja avisado)`)
+        console.log(`[${rotulo}] bloqueado (${telefone}) (ja avisado)`)
       }
       return
     }

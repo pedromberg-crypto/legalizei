@@ -164,6 +164,32 @@ Item 12 da SC COSIT 13/2022: *"a análise acima foi da permissão das atividades
 
 ## 🟠 Estrutura — a tabela nova, acordada em 24/09
 
+### 6b. 🆕 🔴 A busca do Léo ignora o campo onde estão as palavras que a pessoa digita
+Aberto em 24/09, ao responder o que se pode editar. `fatos.consultar_cnae`, em `hermes-v2-sidecar/seed/05-cnae-nomes-honestos.sql`:
+
+```sql
+WHERE p_busca <% coalesce(c.titulo_amigavel, c.descricao)
+   OR c.codigo = regexp_replace(p_busca, '\D', '', 'g')
+```
+
+Ela compara **só contra o `titulo_amigavel`** (com o título oficial de reserva). Fora da busca:
+
+| Campo | Tamanho médio | Está na busca? |
+|---|---|---|
+| `titulo_amigavel` | **29 chars** | ✅ é o único |
+| `termos_de_busca` (`atividades`) | **542 chars** | 🔴 **não** |
+| `descricao_amigavel` | 83 chars | 🔴 não |
+| `descricao_oficial` (subclasse) | 493 chars | 🔴 não |
+
+🔑 **O `termos_de_busca` é a lista do IBGE com os termos que a pessoa de fato usa** — `BARBEARIA`, `COIFFURE`, `MANICURA`, `CRIAÇÃO DE LOGO, LOGOTIPO`, `DESIGN DE TEMPLATES PARA USO NA INTERNET`. São 542 caracteres por CNAE de vocabulário real, e a busca **nunca olha para lá**. Ela compara a frase da pessoa contra 29 caracteres.
+
+É isso que faz *"dentista"* devolver `SISAL` e *"faço unhas em casa"* devolver `Pensão e casa de cômodos`: não é o trigrama que é ruim, é o alvo que é curto demais.
+
+⚠️ E tem efeito colateral imediato na lapidação: **mexer no `titulo_amigavel` move a busca; mexer no `descricao_amigavel` não move nada hoje.** O segundo serve para o Léo *responder*, não para *achar*.
+
+> **Pronto quando:** a busca considerar `termos_de_busca` e `descricao_amigavel`, com peso menor que o do título, e as consultas que hoje erram (`dentista`, `faço unhas em casa`, `sou personal trainer`) devolverem algo do ramo certo. 🔴 É mudança no **VPS** — jurisdição dele, critério de aceite daqui.
+
+
 ### 7. Campo vazio tem que ser alguma coisa
 Hoje "vazio" significa **quatro coisas diferentes** e não dá para distinguir olhando: *não se aplica* (dependente cujo pai disse não) · *não verificado* · *existe na fonte e nunca foi importado* · *coluna morta*. Foi assim que `registro_setorial` pareceu resolvido em **942 linhas onde ninguém olhou**.
 

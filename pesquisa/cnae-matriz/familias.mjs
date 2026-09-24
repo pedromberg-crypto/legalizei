@@ -1,5 +1,6 @@
 /* 🏷️ As famílias dos 87 CNAEs que atendemos.
-   🟡 PROPOSTA, aguardando validação do Pedro. Nada foi gravado na tabela.
+   ✅ Validado pelo Pedro em 24/09 e gravado nas colunas `familia` e
+   `familia_rotulo` da `cnae-matriz-v2.csv`.
 
    🔑 NÃO SÃO CATEGORIAS NOVAS. São as **mesmas 14 do dropdown do app**
    (`app/src/components/gate-telas.tsx`, constante `PILLS`), que o Pedro
@@ -58,10 +59,15 @@ export const FAMILIAS = {
     desambiguar: {
       pergunta: "Você cria a campanha e a estratégia, ou executa e veicula material que já vem pronto?",
       "fator-r": ["7311400", "7319004"],
-      "iii-fixo": ["5911102", "7312200", "7319002", "7319003", "7320300"],
+      "iii-fixo": ["5911102", "7312200", "7319002", "7319003"],
       fonte: "SC COSIT 13/2022 + SC COSIT 99/2017",
     },
-    cnaes: ["5911102", "7311400", "7312200", "7319002", "7319003", "7319004", "7320300"],
+    // 🔄 24/09: o `7320-3/00` (pesquisa de mercado e de opinião) saiu daqui
+    //    para `consult`. Dois motivos, e o primeiro é do cliente: a categoria
+    //    de destino tem "pesquisa" no PRÓPRIO NOME, então é onde quem faz
+    //    pesquisa de mercado vai clicar. O segundo é fiscal: ele virou Fator R
+    //    no mesmo dia, e `consult` é 100% Fator R.
+    cnaes: ["5911102", "7311400", "7312200", "7319002", "7319003", "7319004"],
   },
   edicao: {
     rotulo: "Edição e mídia",
@@ -71,7 +77,7 @@ export const FAMILIAS = {
   consult: {
     rotulo: "Consultoria, pesquisa e tradução",
     ex: "Faço consultoria, pesquisa ou tradução pra empresas",
-    cnaes: ["7210000", "7220700", "7490101", "7490104", "7490199"],
+    cnaes: ["7210000", "7220700", "7320300", "7490101", "7490104", "7490199"],
   },
   cursos: {
     rotulo: "Ensino e cursos",

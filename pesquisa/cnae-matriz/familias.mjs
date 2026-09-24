@@ -23,7 +23,17 @@
 export const FAMILIAS = {
   tech: {
     rotulo: "Tecnologia e software",
-    ex: "Desenvolvo sites, apps ou sistemas sob encomenda",
+    // 🔄 24/09 (validado pelo Pedro): o `ex` antigo era "Desenvolvo sites, apps
+    //    ou sistemas sob encomenda" e deixava de fora hospedagem, portal e
+    //    suporte técnico, que estão nesta mesma categoria. Quem dá suporte não
+    //    se reconhecia na frase e ia pro "não encontrei minha categoria".
+    ex: "Desenvolvo software, dou suporte de TI ou hospedo sites",
+    // 🔴 Esta categoria CARREGA a fronteira Fator R × III fixo.
+    desambiguar: {
+      pergunta: "Você mais desenvolve software sob encomenda, ou mais dá suporte e hospeda?",
+      "fator-r": ["6201501", "6201502", "6202300", "6203100", "6204000"],
+      "iii-fixo": ["6209100", "6311900", "6319400"],
+    },
     cnaes: ["6201501", "6201502", "6202300", "6203100", "6204000", "6209100", "6311900", "6319400"],
   },
   design: {
@@ -39,6 +49,18 @@ export const FAMILIAS = {
   mkt: {
     rotulo: "Marketing e publicidade",
     ex: "Cuido das redes sociais e faço publicidade pra clientes",
+    /* 🔴 Esta é a categoria mais cara do escopo: dentro dela convivem 6% e
+       15,5%. E o critério NÃO é semântico, é o que a SC COSIT 13/2022 fixou
+       (com a SC COSIT 99/2017 por trás): quem está no §5º-I X é quem faz o
+       trabalho INTELECTUAL de publicidade — estratégia, criação, plano de
+       mídia. Quem só executa ou veicula material já pronto é §5º-F, Anexo III
+       fixo. Sem esta pergunta o Léo chuta entre dobrar ou não a alíquota. */
+    desambiguar: {
+      pergunta: "Você cria a campanha e a estratégia, ou executa e veicula material que já vem pronto?",
+      "fator-r": ["7311400", "7319004"],
+      "iii-fixo": ["5911102", "7312200", "7319002", "7319003", "7320300"],
+      fonte: "SC COSIT 13/2022 + SC COSIT 99/2017",
+    },
     cnaes: ["5911102", "7311400", "7312200", "7319002", "7319003", "7319004", "7320300"],
   },
   edicao: {

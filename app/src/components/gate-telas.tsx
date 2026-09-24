@@ -93,7 +93,11 @@ export function mascaraCnae(v: string) {
 }
 
 export const PILLS = [
-  { id: "tech", label: "Tecnologia e software", ex: "Desenvolvo sites, apps ou sistemas sob encomenda" },
+  // 🔄 24/09: o texto era "Desenvolvo sites, apps ou sistemas sob encomenda" e
+  //    deixava de fora hospedagem, portal e suporte técnico, que estão nesta
+  //    mesma categoria — quem dá suporte não se reconhecia e ia pro "não
+  //    encontrei minha categoria". Espelho em `pesquisa/cnae-matriz/familias.mjs`.
+  { id: "tech", label: "Tecnologia e software", ex: "Desenvolvo software, dou suporte de TI ou hospedo sites" },
   { id: "design", label: "Design", ex: "Crio design gráfico, de interiores ou de produto" },
   { id: "foto", label: "Foto, vídeo e áudio", ex: "Fotografo, filmo e edito vídeo ou áudio" },
   { id: "mkt", label: "Marketing e publicidade", ex: "Cuido das redes sociais e faço publicidade pra clientes" },

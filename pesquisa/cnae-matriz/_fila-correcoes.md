@@ -17,7 +17,7 @@ tags: [cnae, fila, correcao, simples-nacional, tabela]
 | Arquivo | Papel | Regra |
 |---|---|---|
 | `cnae-matriz.csv` · `cnae-friendly.csv` | 🔒 **as originais** | **intocadas.** md5 conferido a cada rodada |
-| `cnae-matriz-v2.csv` | ✍️ **onde se edita** | 1.332 linhas × 40 colunas. É a fonte de trabalho |
+| `cnae-matriz-v2.csv` | ✍️ **onde se edita** | 1.332 linhas × **44 colunas** (eram 40; entraram `motivo_nao_atende`, `_fala`, `familia` e `familia_rotulo`). É a fonte de trabalho |
 | `cnae-amostra.csv` | 👁️ **onde se olha** | 🤖 **gerada** por `gerar-amostra.mjs`. Editar aqui é trabalho perdido: a próxima rodada reescreve do zero |
 | `cnae-atendemos-certeza.csv` | 📤 **o export que o motor lê** | ainda **não regerado** — ver item 1 |
 | `marca/decisoes-marca.md` | ⚖️ decisão travada | o *porquê*, datado |
@@ -177,10 +177,23 @@ Curadoria fechada em 24/09: 18 sobem para o Léo, o resto vira **curadoria** (fi
 > ⚠️ **Não anda no mesmo commit que correção de dado.** Em 24/09 escrevi `III`/`III-ou-V` (vocabulário novo) numa coluna que o apurador lê como `III-fixo` — 4 valores para 2 conceitos, motor teria parado. Revertido por md5.
 > **Pronto quando:** a tabela nova existir com as 18, e o `apurador` ler o vocabulário novo na mesma leva.
 
-### 9. `familia` — a categorização nossa
-A divisão do IBGE agrupa por lógica econômica; o cliente se descreve por profissão. A `divisao 96` junta cabeleireiro com lavanderia e agência funerária. Regra acordada: **aditiva, nunca substitutiva** (entra ao lado da `divisao_id`, que fica intacta), **derivada de mapa declarado** (`familias.mjs`), e **só nos 87**.
+### 9. ~~`familia`~~ — ✅ **FEITO em 24/09. E não era "nossa": são as 14 do dropdown do app.**
 
-> **Pronto quando:** cada um dos 87 tiver família, e a `divisao_id` continuar intacta.
+Eu tinha desenhado 14 famílias do zero **antes de ver a tela**. O Pedro apontou o `PILLS` do `gate-telas.tsx`: **3 com nome idêntico**, as outras 11 com o mesmo recorte e outro rótulo. Adotadas as do app, com o **mesmo `id`** — e o `gravar-familia.mjs` **lê o `.tsx`** e derruba a rodada se id, rótulo ou exemplo divergirem.
+
+```
+ 8 Tecnologia e software      3 Design                   7 Foto, vídeo e áudio
+ 7 Marketing e publicidade    6 Edição e mídia           5 Consultoria/pesquisa/tradução
+ 9 Ensino e cursos            8 Arte, cultura e patrimônio   5 Eventos e entretenimento
+ 7 Apoio administrativo       8 Aluguel de equipamentos  10 Reparos e manutenção
+ 1 Salão e beleza             2 Hospedagem                1 órfão declarado
+```
+
+🔑 **O ganho não é o que eu tinha vendido.** Só 6 de 14 respondem anexo E MEI sem abrir a linha. O ganho real é a **busca**: a tela pergunta a categoria *antes* de achar o código, e isso leva o espaço de busca de **1.332 para ~6 linhas** — o buraco que faz "dentista" devolver `SISAL` hoje no Léo.
+
+❓ **As 2 categorias que carregam a fronteira 6% × 15,5%** (`tech` e `mkt`) ganharam **pergunta de desambiguação declarada** no campo `desambiguar`. A do marketing tem fonte: **SC COSIT 13/2022 + 99/2017**.
+
+🟡 **`Salão e beleza` com 1 CNAE é sinal de escopo, não de rótulo:** o irmão `9602-5/02` (estética, depilação, limpeza de pele) está fora por `exige-alvara-previo`. Só deu pra ver porque o `motivo_nao_atende` nasceu no mesmo dia.
 
 ### 10. `mei_iss_fixo_das` e `mei_icms_fixo_das` nunca foram importados
 351 linhas no CSV, zero no banco. É quanto o MEI paga por mês — a pergunta nº 1 de quem quer ser MEI.

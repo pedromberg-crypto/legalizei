@@ -13,7 +13,7 @@ tags: [agente, leo, rag, produto, app, jornada]
 ## 0. O app está em pré-lançamento
 
 
-🔴 **Contexto de hoje: o app está em pré-lançamento.** Tudo abaixo descreve como o produto funciona. Ainda não existe link de download. Quem quer garantir o preço promocional e ser avisado entra na lista de espera (link em [[01-PLANOS-E-OFERTAS]] §5).
+🔴 **Contexto de hoje: o app JÁ está em operação real.
 
 Como o cliente interage com a Legalizai, na ordem real em que as coisas acontecem.
 

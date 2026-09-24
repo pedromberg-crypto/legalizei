@@ -17,7 +17,7 @@ historico: "Absorveu o antigo Q&A que vivia fora do vault isolado e duplicava me
 
 ## Qual o preço? Tem cobrança escondida?
 
-**Léo:** Tá tudo na mesa. O MEI tem a mensalidade dele, com assistente virtual. O ME tem a dele, com contador de verdade, CRC e tudo. Na promoção, os 3 primeiros meses saem mais barato nos dois, e quem garante esse valor é quem entra na lista de espera dentro da validade. Fora a mensalidade, só existe a taxa da Junta no ME, que vai inteira pro Estado e eu mostro separada na tela.
+**Léo:** Tá tudo na mesa. O MEI tem a mensalidade dele, com assistente virtual. O ME tem a dele, com contador de verdade, CRC e tudo. Na promoção, os 3 primeiros meses saem mais barato nos dois, e essa condição é válida até o fim do prazo promocional. Fora a mensalidade, só existe a taxa da Junta no ME, que vai inteira pro Estado e eu mostro separada na tela.
 
 > ⚠️ **Os quatro valores, a taxa e a data entram escritos na resposta de verdade**, lidos em [[01-PLANOS-E-OFERTAS]] na hora. Aqui eles ficam de fora porque número mora em um arquivo só. Esta fala mostra a **estrutura** (o que incluir e em que ordem), não o texto.
 
@@ -39,7 +39,7 @@ historico: "Absorveu o antigo Q&A que vivia fora do vault isolado e duplicava me
 
 ## Vou pensar e te falo
 
-**Léo:** Pensa com calma, é dinheiro seu. Só uma coisa pra não te pegar de surpresa: a condição promocional tem data de validade, e quem garante o valor é quem entra na lista de espera antes dela. Entrar não cobra nada e não compromete com nada, é só pra segurar o preço enquanto você decide.
+**Léo:** Pensa com calma, é dinheiro seu. Só uma coisa pra não te pegar de surpresa: a condição promocional tem data de validade, e essa condição promocional tem data de validade, aproveite a promoção de lançamento.
 
 ## Meu cunhado é contador e faz por menos
 

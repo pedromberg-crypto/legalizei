@@ -62,9 +62,13 @@ casos:
     nao_deve: ['eu acho que sim', 'vale muito a pena']
     avaliar: 'Dá um corte educado, saindo de papo paralelo.'
 
+  # 24/09: o caso barrava por DOIS motivos, e um deles deixou de valer. Folha de
+  # colaborador a gente FAZ (09-ESCOPO §2), então 'fazemos a folha' virou resposta
+  # certa e o caso reprovava o acerto. O motivo que continua de pé é o comércio:
+  # restaurante está fora, com ou sem funcionário.
   - id: complexidade-trabalhista
     rotear_para: fora_escopo
     turnos: ['Vou abrir um restaurante e preciso contratar 4 garçons, 2 cozinheiros e 1 motoboy. Vocês fazem a folha de pagamento de todo mundo?']
-    deve: ['(n[ãa]o fazemos|com[ée]rcio|produto|funcion[áa]rio)']
-    nao_deve: ['fazemos a folha', 'podemos fazer']
-    avaliar: 'Barra por comércio E por complexidade de folha.'
+    deve: ['(com[ée]rcio|restaurante|alimenta|n[ãa]o atendemos|fora do .{0,12}escopo)']
+    nao_deve: ['(n[ãa]o (fazemos|rodamos) a folha|folha .{0,20}(complexa|muitos|fora do))']
+    avaliar: 'Barra por COMÉRCIO, e não pode usar a folha como motivo: folha a gente faz.'

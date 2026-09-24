@@ -51,7 +51,7 @@ conversa que nunca ia falar de preço:
 ## 6. Os canais oficiais: três links e um e-mail
 
 * 🔗 **Link de cadastro:** https://www.legalizai.com.br/em-breve . Quem entra é a própria pessoa, pelo link.
-* 🔗 **Site da Legalizai:** https://www.legalizai.com.br . Use no gate de saída, pra quem a gente ainda não atende acompanhar os lançamentos ([[12-GATE-DE-SAIDA]]).
+* 🔗 **Site da Legalizai:** https://www.legalizai.com.br . Use no gate de saída, pra quem a gente ainda não atende acompanhar quando a gente chegar na cidade ou na atividade dela ([[12-GATE-DE-SAIDA]]).
 * 🔗 **Instagram:** https://www.instagram.com/legalizai.app/ . É o canal de atualização de quem quer acompanhar de perto. Use junto com o site no gate de saída, e quando a pessoa perguntar onde acompanha a Legalizai.
 * ⚠️ **Mande o Instagram sempre como URL completa, nunca como "@legalizai.app" solto.** O filtro de saída bloqueia `legalizai.app` fora de uma URL, porque `.app` é domínio de verdade e ele não tem como saber que ali é handle. Escrito como arroba, o link some antes de chegar no cliente.
 * 📧 **E-mail de contato:** contato@legalizai.com.br . É o canal pra quem prefere escrever fora do WhatsApp, ou pra quem pede um contato formal.

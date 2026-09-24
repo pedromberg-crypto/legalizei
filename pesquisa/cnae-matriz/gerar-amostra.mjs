@@ -28,8 +28,15 @@ const i = (n) => cab.indexOf(n);
 const col = (l, n) => (l[i(n)] ?? "").trim();
 
 // quem tem título amigável
+// 🔑 24/09 — o friendly deixa de ser so um FLAG e entra como CONTEUDO. As duas
+//    tabelas viram uma: `titulo_amigavel` e `descricao_amigavel` passam a ser
+//    colunas da amostra, vazias em quem ainda nao tem, que e exatamente o que
+//    precisamos enxergar pra preencher.
 const amig = parse(readFileSync(AMIGAVEL, "utf8").replace(/^﻿/, "")).slice(1);
-const temTitulo = new Set(amig.map((l) => (l[0] ?? "").replace(/\D/g, "")));
+const amigavel = new Map(
+  amig.filter((l) => l[0]).map((l) => [(l[0] ?? "").replace(/\D/g, ""), { titulo: (l[1] ?? "").trim(), descricao: (l[2] ?? "").trim() }]),
+);
+const temTitulo = new Set(amigavel.keys());
 // quem o motor não apura (essa coluna NÃO existe na matriz — vive no outro CSV)
 const cert = parse(readFileSync(CERTEZA, "utf8").replace(/^﻿/, ""));
 const cc = cert[0];
@@ -153,13 +160,30 @@ for (const l of dados) {
 
 // ── saída ──────────────────────────────────────────────────────────────────
 const linhasSaida = dados.filter((l) => escolhidos.has(col(l, "cnae")));
-const novoCab = [...cab, "_motivo_da_amostra", "_tem_titulo_amigavel", "_motor_apura"];
+// As duas do friendly entram logo depois de `descricao`, que e onde a leitura
+// humana espera: codigo, nome oficial, nome de gente, explicacao de gente.
+const posDescricao = cab.indexOf("descricao") + 1;
+const novoCab = [
+  ...cab.slice(0, posDescricao),
+  "titulo_amigavel",
+  "descricao_amigavel",
+  ...cab.slice(posDescricao),
+  "_motivo_da_amostra",
+  "_motor_apura",
+];
 const csv = [
   novoCab.map(escapar).join(","),
   ...linhasSaida.map((l) => {
     const c = col(l, "cnae");
-    return [...l, escolhidos.get(c), temTitulo.has(c) ? "sim" : "nao", semMotor.has(c) ? "nao" : "-"]
-      .map((v) => escapar(String(v ?? ""))).join(",");
+    const a = amigavel.get(c) ?? { titulo: "", descricao: "" };
+    return [
+      ...l.slice(0, posDescricao),
+      a.titulo,
+      a.descricao,
+      ...l.slice(posDescricao),
+      escolhidos.get(c),
+      semMotor.has(c) ? "nao" : "-",
+    ].map((v) => escapar(String(v ?? ""))).join(",");
   }),
 ].join("\n") + "\n";
 writeFileSync(SAIDA, csv, "utf8");

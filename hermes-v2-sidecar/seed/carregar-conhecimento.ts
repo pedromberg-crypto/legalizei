@@ -47,7 +47,7 @@ const AQUI = dirname(fileURLToPath(import.meta.url))
 export const RAIZ = acharRaiz(AQUI)
 const REFERENCES = join(RAIZ, '_origem', 'vault-v12', 'skills-legalizai', 'base-legalizai', 'references')
 
-const ESPERADO_CARTOES = 58
+const ESPERADO_CARTOES = 55
 
 /**
  * 🔴 O PORTAO DAS NOTAS (22/09).

@@ -8,7 +8,11 @@ superado_por:
 tags: [cnae, mei, simples-nacional, escopo, fonte-primaria]
 ---
 
-# 🟢 CNAEs que atendemos com certeza (87 atendíveis · **80 cobráveis** · 51 MEI)
+# 🟢 CNAEs que atendemos com certeza (87 atendíveis · **87 cobráveis** · 51 MEI)
+
+> ✅ **24/09 — OS 7 DA FILA FECHARAM, E O `requer-revisao` DEIXOU DE EXISTIR.** O bloco de 18/09 abaixo segue valendo em tudo, **menos** no diagnóstico do motor: eram 80 cobráveis, agora são **87**. A causa não era dúvida jurídica, era premissa errada do classificador de 27/08 — a LC 123 tem **dois residuais que se completam** (§5º-F → III fixo · §5º-I XII, o intelectual → Fator R), então **não achar inciso nominado é a resposta**, não a falta dela. Fechados: `7410-2/99` §5º-I VI (a lei nomeia *"design, desenho"*) · `7490-1/99` §5º-I XII · `5911-1/02` §5º-B XV · `8592-9/99` §5º-B I · `7729-2/99`, `8211-3/00` e `8219-9/99` §5º-F. Mais um defeito: `7729-2/01` estava em Fator R porque o matcher viu *"jogos eletrônicos"* no §5º-D IV e ignorou que a subclasse diz *"o **aluguel de aparelhos** de jogos"*. Aplicado em `cnae-matriz-v2.csv`; ⚠️ **o export ainda não foi regerado** — item 1 de [[_fila-correcoes]]. ADR: [[decisoes-marca]] 24/09. Script: `reclassificar-anexo.mjs`.
+>
+> 📋 **O que ainda falta na tabela vive em [[_fila-correcoes]]** — 13 itens, com porquê e critério de pronto.
 
 > 🔄 **REVALIDAÇÃO 18/09 (pedido do Pedro).** O funil inteiro foi reproduzido contra os 1.332 do IBGE e cruzado com o que não existia em 27/08: o **escopo travado em 12/09** (só Anexos III e V) e a **persona travada em 13/09**. Resultado dos testes novos: **0 Anexo IV** entre os 87 (a base tem 51) · **0 com ICMS** · 0 divergência MEI entre export e matriz · as 7 seções são todas de serviço · e o funil reproduz exato (632 → 540 → 523 → 120 → 94 → 87). **O trabalho de 27/08 passou em tudo.**
 >

@@ -47,7 +47,7 @@ Retorno esperado:
 | `atende_mei_certeza` | idem pro MEI. Hoje são 51 |
 | `mei_permitido` | se a ocupação existe na lista oficial do MEI. Hoje 351 dos 1332 permitem |
 | `mei_ocupacoes` | o nome oficial da ocupação, útil pra confirmar com o cliente |
-| `anexo_fator_r_grupo` | `III-fixo` (472) · `fator-r-dinamico` (47) · `IV` (51) · `requer-revisao` (62) |
+| `anexo_fator_r_grupo` | `III-fixo` (nunca fale de Fator R para eles) · `fator-r-dinamico` (Fator R decide) · `IV` (51) · `requer-revisao` (62) |
 | `anexo_fator_r_confianca` | `alta` (118) · `media` (452) · `baixa` (62) · vazio (700) |
 | `exige_conselho` | 39 códigos exigem registro em conselho de classe, o que adiciona etapa na abertura |
 | `iss_bh_aliquota` | ISS de BH, preenchido em 524 códigos |

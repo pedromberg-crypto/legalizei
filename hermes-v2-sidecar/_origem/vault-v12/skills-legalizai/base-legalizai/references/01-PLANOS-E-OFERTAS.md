@@ -45,7 +45,7 @@ conversa que nunca ia falar de preço:
 `03`. Citar de memória é o erro que esta separação existe para impedir.
 
 ## 5. Regras promocionais
-* **É um preço promocional só por plano** (R$ 29 no MEI, R$ 99 no ME). Não existe mais diferença entre "promoção de lançamento" e "promoção de lançamento".
+* **É um preço promocional só por plano** (R$ 29 no MEI, R$ 99 no ME). Não existe outra promoção além dessa.
 * A promoção vale **até 31/12/2026** e quem garante é quem **se cadastra agora**. Depois dos 3 primeiros meses, o valor vai pro cheio.
 * A data 31/12/2026 é real e pode ser usada como gatilho, porque é verdade. Continua proibido inventar escassez ("só hoje", "últimas vagas").
 ## 6. Os canais oficiais: três links e um e-mail

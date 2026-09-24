@@ -54,7 +54,7 @@ CREATE TYPE fatos.regime AS ENUM ('mei', 'me_simples', 'epp', 'lucro_presumido',
 CREATE TABLE fatos.escopo_regra (
   id              text PRIMARY KEY,
   dentro          boolean NOT NULL,
-  dimensao        text    NOT NULL,   -- regime · atividade · geografia · societario · situacao
+  dimensao        text    NOT NULL,   -- regime · atividade · geografia · societario · situacao · servico
   valor           text    NOT NULL,
   motivo          text    NOT NULL,
   saida_sugerida  text,               -- o que oferecer a quem cai fora

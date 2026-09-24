@@ -54,6 +54,12 @@ INSERT INTO fatos.escopo_regra (id, dentro, dimensao, valor, motivo, saida_suger
    'Nao faz parte do produto hoje. 🔑 E legal no nosso regime e mesmo assim nao existe aqui: '
    'e o filtro que a trava de escopo nao pega.',
    NULL, '09-ESCOPO-E-LIMITES §2'),
+  ('folha-colaborador', true, 'servico', 'folha de pagamento de colaborador',
+   'Admissao, holerite, ferias, rescisao, guias trabalhistas e eSocial sao do nosso time. '
+   '🔴 Sem esta linha o agente lia a tabela, nao achava folha, e concluia FORA por analogia '
+   'com o beneficio do socio logo acima. Corrigir o cartao nao resolvia: consultar_escopo e '
+   'a tool mais chamada e buscar_cartao ficou em zero chamadas em 28 turnos.',
+   NULL, '09-ESCOPO-E-LIMITES §2'),
   ('situacao-abertura', true, 'situacao', 'empresa nascendo (abertura)', 'Escopo.', NULL, '09-ESCOPO-E-LIMITES §2'),
   ('situacao-migracao', true, 'situacao', 'migracao de quem ja tem CNPJ', 'Escopo.', NULL, '09-ESCOPO-E-LIMITES §2'),
   ('situacao-regularizacao', false, 'situacao', 'empresa abandonada, baixa de CNPJ, divida antiga, passivo',

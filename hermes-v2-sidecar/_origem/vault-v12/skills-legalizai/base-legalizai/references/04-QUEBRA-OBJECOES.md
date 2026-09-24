@@ -39,7 +39,7 @@ historico: "Absorveu o antigo Q&A que vivia fora do vault isolado e duplicava me
 
 ## Vou pensar e te falo
 
-**Léo:** Pensa com calma, é dinheiro seu. Só uma coisa pra não te pegar de surpresa: a condição promocional tem data de validade, e essa condição promocional tem data de validade, aproveite a promoção de lançamento.
+**Léo:** Pensa com calma, é dinheiro seu. Só uma coisa pra não te pegar de surpresa: a condição promocional tem data de validade, e ela vale até 31/12/2026. Depois disso o valor vai pro cheio.
 
 ## Meu cunhado é contador e faz por menos
 

@@ -12,3 +12,40 @@
 # Saida das rodadas de E2E: texto integral das respostas do modelo, por dia.
 # Fica fora do git para nao versionar transcricao de rodada paga.
 _testes-saida/
+
+# Scripts de uso único, feitos na hora e nunca apagados: um UPDATE no banco, um
+# patch por regex num .md, um SELECT pra conferir. São descartáveis por
+# construção, e ficam soltos na raiz porque quem os escreve está no meio de
+# outra coisa.
+#
+# 🔴 Entraram aqui em 24/09/2026 porque me pegaram DUAS vezes no mesmo dia: um
+# `git add -A` varreu 76 deles para dentro de um commit que devia ter 3 arquivos.
+# Ignorar não é apagar — eles continuam no disco, e continuam sendo o único
+# registro de mudanças feitas direto no banco, que não aparecem em diff nenhum.
+apply_*.mjs
+calc*.cjs
+calc_*.mjs
+check*.mjs
+check_*.cjs
+clean_*.cjs
+count.mjs
+fix*.cjs
+fix*.mjs
+force_*.cjs
+gerar_*.cjs
+get_*.cjs
+get_*.mjs
+patch_*.cjs
+patch_*.mjs
+reset.mjs
+run_*.cjs
+test_*.cjs
+test_*.mjs
+the_*.cjs
+wipe_*.mjs
+teste-rodada-*.yaml
+
+# Saida de rodada que caiu na RAIZ em vez de `_testes-saida/`. Mesmo conteudo,
+# lugar errado: o runner escreve onde foi chamado.
+e2e-*.json
+local_report.json

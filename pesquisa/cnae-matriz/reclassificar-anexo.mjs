@@ -188,6 +188,16 @@ const CORRECOES = {
   // Ementa e conclusão. Só troca a fonte: o anexo já estava certo.
   "7319002": [III, "§5º-F (SC COSIT 13/2022, ementa)", "ementa nomeia expressamente"],
   "7319003": [III, "§5º-F (SC COSIT 13/2022, ementa)", "ementa nomeia expressamente"],
+
+  /* 🔬 P&D experimental — saíam do §5º-F residual, que era leitura por
+     eliminação. O §5º-I VI nomeia **"pesquisa"** entre os serviços técnicos
+     (cartografia, topografia, testes, suporte e análises técnicas, pesquisa,
+     design, desenho), e onde o "técnico" não alcançar, o §5º-I XII alcança
+     pelo "científica". Nos dois caminhos o anexo é o mesmo: Fator R.
+     ⚠️ Lastro MENOR que o do grupo 73.1: aqui é leitura da lei + confirmação
+     do Prompt A, **sem Solução de Consulta**. Declarado no ADR. */
+  "7210000": [FR, "§5º-I VI", "o §5º-I VI nomeia 'pesquisa' entre os serviços técnicos"],
+  "7220700": [FR, "§5º-I XII", "ciências sociais: o VI puxa exatas, o XII cobre 'científica'"],
 };
 
 const fila = [];

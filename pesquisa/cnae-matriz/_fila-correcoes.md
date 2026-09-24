@@ -30,7 +30,7 @@ tags: [cnae, fila, correcao, simples-nacional, tabela]
 ### 1. O export não foi regerado, e o motor ainda recusa 7 CNAEs
 As correções de 24/09 entraram na `cnae-matriz-v2.csv`, mas o `cnae-atendemos-certeza.csv` — que é o que o `apurador.anexoDoCnae()` consome — **é anterior a elas**. Na prática o motor segue em **80/87**, e os contadores `65/15/7` de `produto/me/viver/motor/regra/_tabelas.mjs` seguem valendo.
 
-> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`73/14/0`** (era `65/15/7`; em 24/09 o `9329-8/04` e o `7312-2/00` saíram do Fator R), e o apurador calcular DAS para `7410-2/99`.
+> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`71/16/0`** (era `65/15/7`; em 24/09 o `9329-8/04` e o `7312-2/00` saíram do Fator R, e os 2 de P&D entraram), e o apurador calcular DAS para `7410-2/99`.
 > ⚠️ Regerar o export **toca a original** — só com o seu ok, e é a última etapa, depois que a tabela estiver definida.
 
 ### 2. `motivo_nao_atende` não existe — 1.245 "não" sem razão
@@ -49,16 +49,17 @@ O Léo responde *"não atendemos"* e **não sabe por quê**. Quando não sabe, i
 
 ## 🟡 Decisão — precisa do Pedro, e é barato
 
-### 4. Três CNAEs do §5º-F que a cascata quer mover
-Estão dentro dos 87, hoje `III-fixo` por residual. **Nada foi aplicado**: mover CNAE que já tem anexo é decisão fiscal, não faxina de script.
+### 4. Três CNAEs do §5º-F que a cascata queria mover — **2 aplicados, 1 no contador**
 
-| CNAE | Proposta | Estado depois do Prompt A (24/09) |
-|---|---|---|
-| `6391-7/00` agências de notícias | → **Fator R**, §5º-I X (*jornalismo*) | 🔴 **sem fonte.** *"O acervo da Receita é mudo sobre o 6391-7/00 no Simples"*, e ele chama de *"zona de altíssimo risco silenciada"*. **Vai pro contador** |
-| `7210-0/00` P&D em ciências físicas e naturais | → **Fator R**, §5º-I **VI** | 🟡 conclusão confirmada, **raciocínio recusado** (ele diz que o VI elenca "medicina" — revogada de lá em 2016). *"Pesquisa"* está mesmo no VI. **Decisão sua** |
-| `7220-7/00` P&D em ciências sociais e humanas | → **Fator R**, §5º-I **XII** | 🟡 confirmado: o VI puxa exatas, o XII cobre científica. Anexo idêntico. **Decisão sua** |
+| CNAE | Estado |
+|---|---|
+| `7210-0/00` P&D em ciências físicas e naturais | ✅ **APLICADO 24/09** → Fator R, **§5º-I VI**. O inciso nomeia *"pesquisa"* entre os serviços técnicos |
+| `7220-7/00` P&D em ciências sociais e humanas | ✅ **APLICADO 24/09** → Fator R, **§5º-I XII**. O VI puxa exatas, o XII cobre *"científica"* |
+| `6391-7/00` agências de notícias | 🔴 **ABERTO.** *"O acervo da Receita é mudo sobre o 6391-7/00 no Simples"* — o próprio Prompt A chamou de *"zona de altíssimo risco silenciada"*. **Vai pro contador** |
 
-⚠️ Os dois de P&D **mudam de III fixo para Fator R dentro dos 87**. Não apliquei: é o mesmo critério que me fez não mexer nos outros 51 residuais.
+⚠️ **Os dois de P&D têm lastro MENOR que o do grupo 73.1.** Lá existe SC COSIT com ementa; aqui é **leitura da lei + confirmação do Prompt A, sem Solução de Consulta**. O anexo é o mesmo pelos dois caminhos (VI ou XII), o que reduz o risco — mas se o contador discordar, é aqui que se mexe primeiro.
+
+🔑 Efeito: o `piloto-pro-labore` **passa a pilotar mais 2** CNAEs.
 
 ### 4b. 🔴 E dois que eu não tinha visto — os mais caros da fila
 Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Estão dentro dos 87**, hoje **III fixo por §5º-F**, e a subclasse do IBGE usa a palavra *publicidade* na própria definição — que o **§5º-I X** nomeia:

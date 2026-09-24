@@ -93,6 +93,35 @@ O PDF da SC COSIT 13/2022 (`pesquisa/fontes/2026-09-24-sc-cosit-13-2022-OFICIAL.
 
 ### ~~4d~~ — ✅ **FECHADO.** A viga mestra foi conferida no PDF oficial da RFB, e sustentou: a transcrição do Gemini bateu **palavra por palavra**, inclusive nos 2 pontos que eu tinha marcado como suspeitos — que são do **original**, não da transcrição.
 
+### 4f. 🆕 🔴 A varredura dos 50 achou **3 que mudam de anexo** — e um é incoerência que nós criamos hoje
+
+Li a `subclasse_observacoes` dos 50 que estavam em `§5º-F residual` dentro dos 87. Três a lei **nomeia**, e nenhum deles é III fixo:
+
+| CNAE | O que a lei nomeia | Vira |
+|---|---|---|
+| ⭐ **`7320-3/00`** pesquisas de mercado e de opinião pública | §5º-I VI nomeia **"pesquisa"**; e a subclasse é *"estudos sobre potencial de mercado… análises estatísticas"* | **Fator R** |
+| ⭐ **`8591-1/00`** ensino de esportes | §5º-D **III** nomeia *"academias de atividades físicas, desportivas, natação, **escolas de esportes**"*; a subclasse é *"ensino de esportes em **escolas esportivas**… futebol, natação, artes marciais"* | **Fator R** |
+| ⭐ **`8592-9/01`** ensino de dança | §5º-D **II** nomeia *"**academias de dança**, capoeira, ioga, artes marciais"*; a subclasse inclui *"as atividades das **academias** e cursos de danças folclóricas e populares"* | **Fator R** |
+
+🔴 **O `7320-3/00` é incoerência nossa, de hoje.** Aplicamos *"pesquisa" → Fator R* em `7210-0/00` e `7220-7/00` (P&D) **na mesma sessão**, e deixamos pesquisa de mercado em III fixo. Ou os três são Fator R, ou os três não são.
+
+⚠️ **Tensão real nos dois de ensino:** o §5º-B I põe *"escolas livres"* em III fixo **"exceto as do §5º-D II-III (= academias)"*. A subclasse do IBGE cobre os dois casos — professor independente de dança e academia de dança estão no mesmo código. A lei separa por **forma de organização**, o CNAE não.
+
+> **Pronto quando:** os 3 tiverem anexo gravado e linha no ADR. **Não apliquei** — mudam de III para Fator R dentro dos 87 e ligam o `piloto-pro-labore` neles.
+
+### 4g. 🆕 🟡 E **3 conflitos** que a varredura expôs
+
+| CNAE | O conflito |
+|---|---|
+| ⭐ **`6209-1/00`** suporte técnico, **manutenção** e outros serviços em TI | 🔑 o título tem os dois lados: §5º-I VI nomeia *"**suporte** e análises técnicas e **tecnológicas**"* (Fator R) e §5º-B IX nomeia *"reparos e **manutenção em geral**"* (III fixo). A subclasse é *help-desk* e *"assessoramento ao usuário"* — puxa pro VI |
+| ⭐ **`9002-7/01`** artistas plásticos, **jornalistas** independentes e escritores | colisão **tripla**: §5º-B XV (artístico → III) × §5º-I X (jornalismo → Fator R) × §5º-I XII (intelectual artística → Fator R). Um código, três profissões, dois regimes |
+| ⭐ **`6391-7/00`** agências de notícias | já estava na fila: *"o acervo da Receita é mudo"*. **Contador** |
+
+> **Pronto quando:** cada um tiver inciso escolhido com razão no ADR.
+
+### 4h. 🆕 🟡 Cinco confirmados em III, **com ressalva anotada**
+`5811-5/00`, `5812-3/01`, `5812-3/02`, `5813-1/00`, `5819-1/00` (**edição** de livros, jornais, revistas, cadastros) — nenhum inciso nomeia "edição", e três deles dizem na subclasse que *"a receita inclui também a **venda de espaços para publicidade**"*. Não os torna publicidade (a atividade é editorial), mas é o tipo de linha que um fiscal olha duas vezes. Também `8230-0/01` (organização de feiras × §5º-I IX *"organização"*), `9002-7/02` (restauração de obras de arte), `9319-1/01` (produção de eventos esportivos × §5º-I XII *"desportiva"*) e `7420-0/01` (fotografia comercial × §5º-B XV).
+
 ### 4e. 🆕 🔴 Cessão de mão de obra veda o Simples, e a tabela não tem onde guardar isso
 Item 12 da SC COSIT 13/2022: *"a análise acima foi da permissão das atividades citadas considerando sua **natureza, não o modo de exercício**. Como elas são tributadas pelo Anexo III, caso sejam prestadas **mediante cessão de mão de obra, são vedadas**"*.
 

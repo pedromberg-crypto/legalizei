@@ -198,7 +198,57 @@ const CORRECOES = {
      do Prompt A, **sem Solução de Consulta**. Declarado no ADR. */
   "7210000": [FR, "§5º-I VI", "o §5º-I VI nomeia 'pesquisa' entre os serviços técnicos"],
   "7220700": [FR, "§5º-I XII", "ciências sociais: o VI puxa exatas, o XII cobre 'científica'"],
+
+  /* 📚 VARREDURA DOS 50 (24/09) — os que estavam em `§5º-F residual` dentro dos
+     87 e a lei na verdade NOMEIA. O anexo não muda (todos III); o que muda é a
+     PROVA: sai "não achei previsão" e entra o inciso. Importa porque §5º-F é
+     classificação por eliminação, e foi exatamente a premissa que caiu hoje. */
+  // §5º-B I nomeia "idiomas", "gerencial", "artes" e "escolas livres"
+  "8593700": [III, "§5º-B I", "o inciso nomeia 'idiomas'"],
+  "8599604": [III, "§5º-B I", "o inciso nomeia 'gerencial'"],
+  "8592903": [III, "§5º-B I", "ensino de música: 'artes' / escola livre"],
+  "8599603": [III, "§5º-B I", "curso de informática: escola livre"],
+  // §5º-B XV nomeia "produções cinematográficas, audiovisuais"
+  "5912001": [III, "§5º-B XV", "dublagem é serviço de produção audiovisual"],
+  "5912002": [III, "§5º-B XV", "mixagem sonora é serviço de produção audiovisual"],
+  "7420004": [III, "§5º-B XV", "filmagem de festas e eventos é produção audiovisual"],
+  // §5º-B IX nomeia "instalação, reparos e manutenção em geral"
+  "9529101": [III, "§5º-B IX", "reparação de calçados e artigos de viagem"],
+  "9529102": [III, "§5º-B IX", "chaveiro: cópia de chaves e conserto de fechaduras"],
+  "9529103": [III, "§5º-B IX", "reparação de relógios"],
+  "9529104": [III, "§5º-B IX", "reparação de bicicletas"],
+  "9529105": [III, "§5º-B IX", "reparação de artigos do mobiliário"],
+  "9529106": [III, "§5º-B IX", "reparação de jóias"],
+  // Continua §5º-F, mas agora com Solução de Consulta em vez de eliminação:
+  // a SC COSIT 99/2017 (citada dentro da 13/2022) diz que a receita de
+  // veiculação de material publicitário em portal da internet é Anexo III.
+  "6319400": [III, "§5º-F (SC COSIT 99/2017)", "veiculação em portal de internet é Anexo III"],
 };
+
+/* 📖 A VARREDURA DOS 50, a outra metade (24/09).
+   Estes 36 foram lidos um a um na `subclasse_observacoes` e CONFIRMADOS no
+   §5º-F residual — nenhum inciso os nomeia e nenhum é atividade intelectual.
+
+   🔴 Por que precisam de marca: a fonte deles dizia, e continuaria dizendo,
+   "residual, nenhuma previsao em IV/V" — exatamente igual à de um CNAE que
+   ninguém nunca abriu. "Conferido e confirmado" e "nunca olhado" ficavam com
+   o mesmo texto, que é o mesmo defeito do campo vazio que engana o Léo.
+   A marca `conferido 2026-09-24` separa os dois estados.
+
+   ⚠️ 6 destes ficam com RESSALVA escrita na fila, não são confirmação limpa:
+   6209100 (suporte técnico × manutenção), 6391700 (agência de notícias),
+   9002701 (artista/jornalista/escritor), e os de edição/eventos. */
+const REVISTOS_5F = [
+  "7729202", "7729203", "5590601", "5590603", "5811500", "5812301", "5812302",
+  "5813100", "5819100", "6209100", "6311900", "6391700", "7722500", "7723300",
+  "7320300", "7420001", "7420003", "7420005", "7721700", "7733100", "8591100",
+  "8220200", "8592901", "8219901", "8230001", "8291100", "8292000", "8299703",
+  "8299707", "9609202", "9002702", "9002701", "9102302", "9319101", "9329803",
+  "9602501",
+];
+for (const cod of REVISTOS_5F) {
+  CORRECOES[cod] = [III, "§5º-F (residual, conferido 2026-09-24)", "lido na subclasse: nenhum inciso nomeia, não é atividade intelectual"];
+}
 
 const fila = [];
 for (const l of dados) {

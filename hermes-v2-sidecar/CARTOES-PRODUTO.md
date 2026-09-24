@@ -578,34 +578,12 @@ Acesso de segundo sócio não faz parte do produto hoje: não prometa.
 não é processar folha. Avise da obrigação mensal permanente antes de qualquer outra
 coisa, e confirme com o time o que está disponível hoje.
 
-### 8.2 · Lançamentos do mês e fechamento da competência
-`secao: folha` · `promessa: nao` · `onde: não está no app hoje`
+### 8.2 · Rotina de Folha de Pagamento
+`secao: folha` · `promessa: pode` · `onde: acompanhamento direto com o time`
 
-**Estado.** A pessoa já tem colaborador e quer fechar a folha do mês.
-**Ação.** Hoje isso não está no app.
-**Restrição.** 🔴 Não prometa. Ofereça falar com o time.
-
-### 8.3 · Holerite e demonstrativo de pagamento
-`secao: folha` · `promessa: nao` · `onde: não está no app hoje`
-
-**Estado.** A pessoa precisa entregar holerite ao colaborador.
-**Ação.** Hoje o app não gera holerite.
-**Restrição.** 🔴 Não prometa, nem como "em breve".
-
-### 8.4 · Guias da folha
-`secao: folha` · `promessa: nao` · `onde: não está no app hoje`
-
-**Estado.** A pessoa quer saber como paga os encargos do colaborador.
-**Ação.** Hoje o app não emite as guias da folha.
-**Restrição.** 🔴 Não cite sigla nem valor de encargo de cabeça. Não prometa emissão.
-
-### 8.5 · Obrigações mensais da folha
-`secao: folha` · `promessa: nao` · `onde: não está no app hoje`
-
-**Estado.** A pessoa ouviu falar das declarações mensais de quem tem funcionário e quer
-saber se é o app que cuida.
-**Ação.** Hoje essas obrigações da folha não são cobertas pelo app.
-**Restrição.** 🔴 Não confunda com a rotina do sócio, que é coberta. Confirme com o time.
+**Estado.** A pessoa já tem colaborador e quer saber como funciona a folha de pagamento, encargos, férias e rescisão.
+**Ação.** Eu cuido da rotina de folha de pagamento dos seus funcionários. Faço o cálculo de férias, rescisão, emito holerites e te entrego as guias de encargos (como eSocial, INSS, FGTS) prontas para você pagar.
+**Restrição.** 🔴 Não prometa gestão de ponto eletrônico avançada ou dissídio complexo de sindicatos específicos, mas a rotina mensal de DP (holerite, férias, recisão e guias) está inclusa no nosso serviço.
 
 ### 8.6 · Declaração de mês sem movimento
 `secao: folha` · `promessa: nao` · `onde: não está no app hoje`

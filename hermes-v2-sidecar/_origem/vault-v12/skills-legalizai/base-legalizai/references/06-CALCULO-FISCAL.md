@@ -42,7 +42,7 @@ Pro ME que a gente atende, só existem **duas faixas**:
 
 * 🔴 **Consequência:** quem descobre o problema tarde **não conserta no mês seguinte**. Numa simulação nossa, corrigir em setembro só devolveu o Anexo III em **agosto do ano seguinte**: 11 meses pagando a alíquota alta já com a folha certa.
 * **É por isso que o sistema ajusta o pró-labore desde o mês 1, sozinho.** Não é comodidade, é a única intervenção que funciona.
-* 🔴 Só fale de Fator R pra atividade que ele decide. Pra Anexo III fixo, não existe esse risco (ver [[09-ESCOPO-E-LIMITES]] §4).
+* 🔴 NUNCA puxe o assunto do Fator R do nada. Só explique Fator R se o cliente perguntar explicitamente sobre ele, ou se a atividade dele depender do Fator R. (ver [[09-ESCOPO-E-LIMITES]] §4).
 
 Fala de referência:
 "O Fator R olha os 12 meses pra trás. Por isso eu não espero você perceber o problema: eu já vou ajustando o seu pró-labore todo mês pra sua empresa nunca chegar perto do degrau."

@@ -598,6 +598,7 @@ Acesso de segundo sócio não faz parte do produto hoje: não prometa.
 
 **Estado.** A pessoa está decidindo se contrata alguém e quer saber o custo real.
 **Ação.** Contratar cria obrigação mensal permanente (INSS, FGTS, etc). Nosso time te ajuda a simular os custos antes de você fechar a contratação.
+**Restrição.** 🔴 Passe para o time humano fazer a simulação, não calcule impostos trabalhistas de cabeça.
 
 ### 8.9 · A folha somando no Fator R junto com o pró-labore
 `secao: folha` · `promessa: parcial` · `onde: nos bastidores, sem tela própria`

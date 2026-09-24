@@ -181,6 +181,8 @@ const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms))
 //  O ATENDIMENTO DE UMA MENSAGEM
 // ════════════════════════════════════════════════════════════════════════════
 
+const avisadosPreLancamento = new Set<string>()
+
 const llm = criarLlm({ cache: process.env.SEM_CACHE !== '1' })
 const embedder = criarEmbedder()
 
@@ -215,7 +217,16 @@ async function atender(evento: EventoDaPonte): Promise<void> {
   if (process.env.NUMEROS_PERMITIDOS) {
     const permitidos = process.env.NUMEROS_PERMITIDOS.split(',').map(n => n.trim())
     if (!permitidos.includes(telefone)) {
-      console.log(`[${rotulo}] bloqueado: nao esta na lista de NUMEROS_PERMITIDOS`)
+      if (!avisadosPreLancamento.has(telefone)) {
+        avisadosPreLancamento.add(telefone)
+        console.log(`[${rotulo}] bloqueado (novo numero, avisando pre-lancamento)`)
+        await daPonte('/send', {
+          chatId: evento.chatId,
+          message: 'Olá! Agradecemos o interesse, mas ainda estamos em fase de pré-lançamento e testes fechados. 🚀\n\nPara garantir uma promoção exclusiva de lançamento e acompanhar todas as nossas novidades, entre na nossa lista de espera no nosso site e siga nosso Instagram!\n\n🌐 Site: https://legalizai.com.br\n📸 Instagram: @legalizai',
+        }).catch(() => {})
+      } else {
+        console.log(`[${rotulo}] bloqueado (ja avisado)`)
+      }
       return
     }
   }

@@ -33,10 +33,23 @@ As correções de 24/09 entraram na `cnae-matriz-v2.csv`, mas o `cnae-atendemos-
 > **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`71/16/0`** (era `65/15/7`; em 24/09 o `9329-8/04` e o `7312-2/00` saíram do Fator R, e os 2 de P&D entraram), e o apurador calcular DAS para `7410-2/99`.
 > ⚠️ Regerar o export **toca a original** — só com o seu ok, e é a última etapa, depois que a tabela estiver definida.
 
-### 2. `motivo_nao_atende` não existe — 1.245 "não" sem razão
-O Léo responde *"não atendemos"* e **não sabe por quê**. Quando não sabe, improvisa — é o mesmo mecanismo que fez ele mandar cliente de folha de pagamento procurar outro contador. O dado para derivar já está na tabela (`risco_baixo_cgsim`, `vedado_simples`, `exige_conselho`, comércio/indústria), só não foi consolidado em coluna.
+### 2. ~~`motivo_nao_atende`~~ — ✅ **FEITO em 24/09.** Duas colunas novas: `motivo_nao_atende` (vocabulário fechado) e `motivo_nao_atende_fala` (a frase que o Léo diz).
 
-> **Pronto quando:** toda linha com `atende_me = nao` tiver um motivo de vocabulário fechado, e nenhum motivo for campo vazio.
+Derivado pelo `derivar-motivo.mjs`, seguindo a **ordem do funil** — o motivo certo é o *primeiro* filtro que barrou, não qualquer um que bata. Comércio que também exigiria alvará tem **um** motivo: comércio.
+
+```
+comercio-ou-industria      700     anexo-iv                52
+paga-icms                   21     vedado-simples          91
+ambiguo-simples             14     exige-alvara-previo    337
+exige-conselho              25     exige-registro-setorial  5
+atendemos                   87     sem-motivo-derivavel     0  ✅
+```
+
+🔑 **A trava achou um degrau que eu não tinha:** `3831-9/99` e `3832-7/00` passavam em todos os filtros e mesmo assim não eram atendidos. Motivo real (18/09): **pagam ICMS**, e o escopo de 12/09 põe ICMS fora. Sem a trava eu teria gravado 2 linhas com motivo vazio — o defeito que a coluna existe pra matar.
+
+⚠️ O texto é o que o Léo **fala**: sem sigla, sem "CGSIM", sem "Anexo VI". Quem precisa da norma é a coluna de fonte, não o cliente.
+
+Nasceu porque o Léo respondia *"não atendemos"* e **não sabia por quê** — e quando não sabe, improvisa. É o mesmo mecanismo que fez ele mandar cliente de folha de pagamento procurar outro contador.
 
 ### 3. ISS de BH: 524 alíquotas existem no CSV e valem `null` no banco
 `Number("5%")` = `NaN` → `null` no `carregar-cnae.ts`. A coluna está na lista do loader, então o defeito é **silencioso**: parece importada. É resposta que ninguém mais dá em BH.

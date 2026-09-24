@@ -10,6 +10,25 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-24 — **80º flow: O `requer-revisao` MORREU, E O MOTOR APURA 87/87.**
+>
+> 🧭 **A pergunta do Pedro que derrubou a categoria:** *"como a gente consegue ter dúvida sobre um CNAE de design? É o mais padrão e simples de todos."* Estava certo, e a resposta já vivia no vault.
+>
+> **(1) 🔑 A LC 123 TEM DOIS RESIDUAIS, E ENTRE ELES NÃO SOBRA BURACO.** O **§5º-F** ("demais serviços sem previsão expressa" → III fixo) e o **§5º-I XII** ("outras atividades de natureza **intelectual**, técnica, científica, artística ou cultural, desde que não sujeitas ao III ou IV" → Fator R) se completam. **Não achar inciso nominado É a resposta**, não a falta dela. `requer-revisao` nunca deveria ter sido estado terminal.
+>
+> **(2) OS 7 FECHADOS, TODOS COM LASTRO NO VAULT.** `7410-2/99` design → **§5º-I VI**, que nomeia *"design, desenho"* em letra · `7490-1/99` → **§5º-I XII** · `5911-1/02` filmes para publicidade → **§5º-B XV** (produção audiovisual; publicidade é o cliente, não o serviço) · `8592-9/99` arte e cultura → **§5º-B I** · `7729-2/99`, `8211-3/00`, `8219-9/99` → **§5º-F**. 🔑 **Motor: 80/87 → 87/87.** Zero `requer-revisao` nos 87.
+>
+> **(3) 🧬 COERÊNCIA DE CLASSE, MEDIDA ANTES DE USAR.** 106 classes onde os irmãos de 5 dígitos concordam × **15 onde divergem (12%)** — e as 15 são a lei dividindo mesmo (advocacia é IV, auxiliares da justiça é III). O irmão **confirma ou veta, nunca decide sozinho**: por isso `8020002` ficou de fora, com a contradição declarada.
+>
+> **(4) 🐛 UM DEFEITO DE TABELAMENTO NO CAMINHO.** `7729-2/01` estava em Fator R porque o matcher viu *"jogos eletrônicos"* no §5º-D IV e ignorou que a subclasse diz *"o **aluguel de aparelhos** de jogos"*. Alugar fliperama não é elaborar software. ⚠️ Conferir `9329-8/04`.
+>
+> **(5) 🔴 UMA RODADA MINHA SAIU ERRADA E FOI REVERTIDA ANTES DE GRAVAR.** A 1ª versão do classificador casava termos contra `atividades` e produziu **101 mudanças, quase todas lixo** (`CONSTRUÇÃO DE RODOVIAS` → III porque a lista dela contém *"instalação de"*). Duas travas nasceram disso: casa **só na `descricao`**, e **nunca reescreve linha já `IV`**. E a 2ª aplicação escreveu vocabulário novo (`III`, `III-ou-V`) numa coluna que o `apurador` lê como `III-fixo` — revertido por md5 e regravado no vocabulário do arquivo.
+>
+> **(6) OS 449 §5º-F REPROCESSADOS.** Só **54 estão dentro dos 87**. A cascata **confirma 51 em III** e propõe 3: `6391-7/00` agências de notícias (§5º-I X, evidência forte) e `7210-0/00`/`7220-7/00` P&D experimental (§5º-I XII, julgamento). **Nada aplicado** — mover CNAE que já tinha anexo é decisão fiscal, não faxina de script.
+>
+> **🔴 ABERTO:** os 3 acima esperam decisão · `8020002` com cascata × irmão em contradição · **o export `cnae-atendemos-certeza.csv` ainda NÃO foi regerado** (as originais seguem intactas por combinação), então o motor só vira 87/87 quando ele for · os 2 documentos de BH (Decreto 17.245 com 111 de 276 itens, Portaria SMSA 0221 não obtida) seguem sendo a lacuna real, e não se resolvem com pesquisa.
+>
+> ---
 > **Última atualização:** 2026-09-22 — **79º flow: CNAE CIRÚRGICO, [FORA_ESCOPO] NO ROTEADOR E TESTES DE FUNCIONALIDADES.**
 >
 > 🧭 **Três rodadas de refinamento no Léo para blindar a operação e aprimorar a personalidade.**

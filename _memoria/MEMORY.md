@@ -23,6 +23,8 @@
 - [Motor fiscal: arredonda por TRIBUTO](legalize-motor-fiscal-arredonda-por-tributo.md) — 13/09: DAS = soma de 6 parcelas.
 - [Estado recorrente de CNPJ: derivado nao se guarda](legalize-estado-recorrente-cnpj.md) — 14/09: 3 telas com 3 faturamentos.
 - [Escopo: ME Simples, Anexos III e V](legalize-escopo-me-simples-anexos-3-5.md) — 12/09 travado: virou dado + script nos 3.
+- [A LC 123 tem DOIS residuais, e o `requer-revisao` morreu](legalize-dois-residuais-lc123.md) — 24/09: "nao achei inciso" E a resposta; motor 80/87 -> 87/87.
+- [Irmao de classe confirma ou veta, nunca decide](legalize-coerencia-de-classe-cnae.md) — 24/09: 106 concordam x 15 divergem; casar contra `atividades` deu 101 mudancas lixo.
 - [Etiquetas dos Anexos III/IV/V](legalize-anexos-simples-etiquetas.md) — referencia fiscal (tabela, reparticao, Fator R, CPP).
 - [Pesquisa fiscal BH 2026](legalize-pesquisa-fiscal-bh-2026.md) — bloco consolidado em `fiscal-simples-bh-2026.md`.
 - [Lucro 2026 (Lei 15.270/2025) + Carta CFC](legalize-lucro-2026-e-carta-cfc.md) — 10/09: lucro sacado vai pra EFD-Reinf.

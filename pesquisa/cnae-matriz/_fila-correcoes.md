@@ -52,21 +52,36 @@ Estão dentro dos 87, hoje `III-fixo` por residual. **Nada foi aplicado**: mover
 
 | CNAE | Proposta | Força |
 |---|---|---|
-| `6391-7/00` agências de notícias | → **Fator R**, §5º-I X (*jornalismo*) | 🟢 inciso nomeado |
-| `7210-0/00` P&D em ciências físicas e naturais | → **Fator R**, §5º-I XII | 🟡 julgamento |
-| `7220-7/00` P&D em ciências sociais e humanas | → **Fator R**, §5º-I XII | 🟡 julgamento |
+| `6391-7/00` agências de notícias | → **Fator R**, §5º-I X (*jornalismo*) | 🟡 a subclasse **exclui** jornalista independente (`9002-7/01`) — a exclusão do IBGE vale pra LC 123? |
+| `7210-0/00` P&D em ciências físicas e naturais | → **Fator R**, §5º-I **VI** | 🟢 o §5º-I VI nomeia **"pesquisa"** entre os serviços técnicos (eu tinha lido como XII/julgamento; é termo nomeado) |
+| `7220-7/00` P&D em ciências sociais e humanas | → **Fator R**, §5º-I VI ou XII | 🟡 "técnica" pesa menos, "científica" pesa mais — o anexo é o mesmo, o inciso muda |
 
-> **Pronto quando:** cada um tiver anexo gravado e linha no ADR — inclusive se a decisão for *fica como está*.
+### 4b. 🔴 E dois que eu não tinha visto — os mais caros da fila
+Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Estão dentro dos 87**, hoje **III fixo por §5º-F**, e a subclasse do IBGE usa a palavra *publicidade* na própria definição — que o **§5º-I X** nomeia:
 
-### 5. `8020002` — a cascata e o irmão se contradizem
-`OUTRAS ATIVIDADES DE SERVIÇOS DE SEGURANÇA`: a cascata diz **IV** (§5º-C VI, *vigilância*), o irmão `8020001` (monitoramento eletrônico) diz **III**. Não foi gravado, por regra: irmão contradiz, a linha vira fila. **Não atendemos nenhum dos dois** — não bloqueia.
+| CNAE | O que a subclasse diz |
+|---|---|
+| `7319-0/02` promoção de vendas | *"a promoção de vendas e **a publicidade** no local da venda"* |
+| `7319-0/03` marketing direto | *"**a publicidade** por mala direta, por telefone, em visitas de representantes"* |
 
-> **Pronto quando:** houver inciso escolhido com razão no ADR. Se for IV, sai do escopo por regra (12/09).
+🔑 Na mesma classe `7319-0`, `7319-0/04` (consultoria em publicidade) e `7319-0/99` (outras de publicidade) **já estão em Fator R**. A classe está partida, e a linha que separa é *"serviço de publicidade"* × *"execução operacional"* — que não achei firmada em lugar nenhum do vault. **É a pergunta 1 do prompt.**
 
-### 6. `9329-8/04` — mesmo padrão do fliperama, a conferir
-`EXPLORAÇÃO DE JOGOS ELETRÔNICOS RECREATIVOS` está como Fator R. O `7729-2/01` estava igual e era **falso positivo**: o matcher via *"jogos eletrônicos"* no §5º-D IV, que trata de **elaborar software**, não de explorar máquina. Explorar arcade provavelmente também não é.
+> **Custo se estiver errado:** dizemos **6%** a um cliente de marketing que pode ser **15,5%**.
+> **Pronto quando:** cada um dos 5 tiver anexo gravado e linha no ADR — inclusive se a decisão for *fica como está*.
 
-> **Pronto quando:** o inciso for conferido contra a subclasse e gravado.
+### 5. `8020002` — ✅ **resolvido na leitura da subclasse, 24/09. Falta aplicar**
+`OUTRAS ATIVIDADES DE SERVIÇOS DE SEGURANÇA`: a cascata dizia **IV** (§5º-C VI, *vigilância*) casando no título, e o irmão `8020001` dizia **III**. A subclasse do IBGE desempata: ela compreende *"a **instalação, reparação, reconstrução e ajuste mecânico de cofres, trancas e travas de segurança**"* — é **serralheria/chaveiro, não guarda patrimonial**. O §5º-B IX nomeia *"instalação, reparos e manutenção em geral"*.
+
+🔑 **Lição de método:** casar só na `descricao` evita o ruído do `atividades`, mas o **título mente** em CNAE guarda-chuva. A subclasse não serve pra regex — serve pra **ler**.
+
+> Veredito: **III fixo, §5º-B IX**. É o último `requer-revisao` da tabela inteira. Está no bloco B do [[prompt-a-incisos-lc123-cnaes-em-disputa]] para 2ª opinião.
+> **Pronto quando:** gravado + linha no ADR.
+
+### 6. `9329-8/04` — ✅ **mesmo padrão do fliperama, confirmado. Falta aplicar**
+`EXPLORAÇÃO DE JOGOS ELETRÔNICOS RECREATIVOS` está como Fator R pelo §5º-D IV, que trata de *"elaboração de programas de computador, inclusive jogos eletrônicos"*. A subclasse diz *"a **exploração de estabelecimentos** de jogos eletrônicos recreativos"* — **operar fliperama, não desenvolver software**. Todos os irmãos da classe (sinuca, boliche, discoteca, recreação n.e.) são III.
+
+> Veredito: **III fixo, §5º-F**. ⚠️ Está **dentro dos 87**: muda de Fator R para III fixo, então o `piloto-pro-labore` para de pilotar esse CNAE.
+> **Pronto quando:** gravado + linha no ADR.
 
 ---
 
@@ -102,8 +117,21 @@ A divisão do IBGE agrupa por lógica econômica; o cliente se descreve por prof
 ### 11. Os 395 `§5º-F` que não atendemos
 Dos 449 residuais, **54 estão dentro dos 87** (51 confirmados em III, 3 no item 4). Os outros **395 são de CNAE que não atendemos** — revisar o anexo deles não responde nada enquanto o veredito for "não".
 
-### 12. `registro_setorial`: 942 de 1.332 em `nao-verificado`
-O eixo só foi cruzado para os 387 do footprint do líder. **Dentro dos 87 está 100% verificado** (`nao` nas 87), então não trava. Vira item real se o escopo crescer. Ver item 7.
+### 12. `registro_setorial`: 942 em `nao-verificado` — ⚫ **e isso não vale nada, medido em 24/09**
+O eixo só foi cruzado para os 387 do footprint do líder, e 942 linhas ficaram sem checar. Parecia a maior lacuna da tabela. **Não é.**
+
+Exigindo que a linha passe em **todos os outros filtros** e só trave neste, sobram **69** — e os 69 são:
+
+```
+36  C · INDÚSTRIAS DE TRANSFORMAÇÃO
+31  G · COMÉRCIO
+ 2  E · ÁGUA, ESGOTO E RESÍDUOS
+ 0  serviço
+```
+
+🔑 **Zero serviço.** Os CNAEs de serviço que importam já foram verificados (os 87 estão 100% `nao`); o resto está fora por comércio/indústria, que é decisão de escopo, não lacuna. **Verificar os 942 compraria nenhum CNAE novo** enquanto o escopo for serviço.
+
+> **Pronto quando:** nada. Fica declarado como lacuna conhecida e sem prêmio. Só reabre se o escopo passar a incluir comércio ou indústria — e aí o item volta valendo 69.
 
 ### 13. As 15 classes onde os irmãos divergem
 Medido em 24/09: 106 concordam × 15 divergem (12%), e as 15 parecem ser **a lei dividindo mesmo** (`6911-7/01` advocacia é IV, `6911-7/02` auxiliares da justiça é III, porque o §5º-C VII nomeia só advocacia). Vale uma passada de olho, sem pressa.

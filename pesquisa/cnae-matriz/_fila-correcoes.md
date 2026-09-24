@@ -30,7 +30,7 @@ tags: [cnae, fila, correcao, simples-nacional, tabela]
 ### 1. O export não foi regerado, e o motor ainda recusa 7 CNAEs
 As correções de 24/09 entraram na `cnae-matriz-v2.csv`, mas o `cnae-atendemos-certeza.csv` — que é o que o `apurador.anexoDoCnae()` consome — **é anterior a elas**. Na prática o motor segue em **80/87**, e os contadores `65/15/7` de `produto/me/viver/motor/regra/_tabelas.mjs` seguem valendo.
 
-> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`72/15/0`** (era `65/15/7`; o `9329-8/04` saiu do Fator R em 24/09), e o apurador calcular DAS para `7410-2/99`.
+> **Pronto quando:** o export tiver os 87 com `anexo_fator_r_grupo` preenchido e zero `requer-revisao`, o `_tabelas.mjs` marcar **`73/14/0`** (era `65/15/7`; em 24/09 o `9329-8/04` e o `7312-2/00` saíram do Fator R), e o apurador calcular DAS para `7410-2/99`.
 > ⚠️ Regerar o export **toca a original** — só com o seu ok, e é a última etapa, depois que a tabela estiver definida.
 
 ### 2. `motivo_nao_atende` não existe — 1.245 "não" sem razão
@@ -70,18 +70,36 @@ Achados em 24/09 ao montar o [[prompt-a-incisos-lc123-cnaes-em-disputa]]. **Est�
 
 🔑 Na mesma classe `7319-0`, `7319-0/04` (consultoria em publicidade) e `7319-0/99` (outras de publicidade) **já estão em Fator R**. A classe está partida, e a linha que separa é *"serviço de publicidade"* × *"execução operacional"*.
 
-✅ **RESPONDIDO em 24/09, e o risco não se realizou.** O Prompt A devolveu **III fixo, §5º-F** para os dois, com **SC COSIT nº 13/2022** — que é exatamente o que já está na tabela. **Nada a mudar.** E deu nome ao critério que faltava: *publicidade do §5º-I X exige **esforço intelectual/criativo** (estratégia, criação, plano de mídia); promoção é **execução** (entregar panfleto, ligar pro mailing)*. ⚠️ Esse critério voltou **sem fonte** (item 1c: *"a LC 123 não traz glossário"*) — serve de raciocínio, não de regra.
+✅ **RESPONDIDO em 24/09, e o risco não se realizou.** O Prompt A devolveu **III fixo, §5º-F** para os dois, com **SC COSIT nº 13/2022** — que é exatamente o que já está na tabela. **Nada a mudar.** E deu nome ao critério que faltava: *publicidade do §5º-I X exige **esforço intelectual/criativo** (estratégia, criação, plano de mídia); promoção é **execução** (entregar panfleto, ligar pro mailing)*. ⚖️ **E o critério TEM fonte** — o Prompt A dizia *"não localizei fonte específica"*, mas ela está **dentro da própria SC 13/2022** (item 7): **SC COSIT nº 99, de 27/01/2017** — *"não se considera que exerce a atividade de publicidade a empresa que **se limita a publicar material de divulgação já elaborado** e apenas repassado para exposição ao público"*. 🔑 Só apareceu porque o documento foi aberto: a resposta que faltava estava dentro da resposta que veio.
 
-### 4c. 🔴 `7319-0/99` — contradição que o próprio retorno acusou sem perceber
-Ele afirma que a **mesma SC COSIT 13/2022** pôs `7319-0/99` (*outras atividades de publicidade n.e.*) no **Anexo III fixo residual**. Nossa tabela tem **Fator R, §5º-I X**. Não estava na pergunta, não está nos 87 — mas é linha errada de um dos dois lados, e mexe no critério, porque *"outras atividades de publicidade"* soa mais perto de publicidade que de execução.
+### 4c. ~~`7319-0/99`~~ — ✅ **FECHADO em 24/09 no PDF oficial. E não era só ele: `7312-2/00` também estava errado, e está nos 87.**
 
-> **Pronto quando:** o texto da SC 13/2022 for lido e a linha gravada de acordo.
+O PDF da SC COSIT 13/2022 (`pesquisa/fontes/2026-09-24-sc-cosit-13-2022-OFICIAL.md`, 4 páginas, 7.514 caracteres, 100%) parte o grupo 73.1 por **história, não por semântica**:
 
-### 4d. 🔴 A viga mestra não foi conferida: **SC COSIT nº 13/2022**
-Citada **3 vezes** e sustenta sozinha os itens 1a, 1b e 1d. **Se ela não disser o que ele diz, os três caem juntos** — e `7319-0/02` e `7319-0/03` voltam a ser risco de 6% × 15,5% em 2 dos 87.
+| CNAE | | Antes | Agora |
+|---|---|---|---|
+| `7311-4/00` agências de publicidade | vedado até 2014 | Fator R §5º-I X | ✅ já estava certo |
+| `7319-0/01` estandes | vedado até 2014 | Fator R §5º-D IX | Fator R **§5º-I X** |
+| `7319-0/04` consultoria em publicidade | vedado até 2014 | Fator R §5º-I IX | Fator R **§5º-I X** |
+| ⭐ **`7312-2/00`** agenciamento de espaços | **nunca vedado** | **Fator R** | 🔴 **III fixo §5º-F** |
+| ⭐ `7319-0/02` promoção de vendas | nunca vedado | III fixo | ✅ + fonte da ementa |
+| ⭐ `7319-0/03` marketing direto | nunca vedado | III fixo | ✅ + fonte da ementa |
+| `7319-0/99` outras de publicidade | **nunca vedado** | **Fator R** | 🔴 **III fixo §5º-F** |
 
-> É pública em `normas.receita.fazenda.gov.br`.
-> **Pronto quando:** o texto estiver lido e salvo literal em `pesquisa/fontes/`, como manda a regra de leitura integral.
+🔴 **O custo do `7312-2/00`:** estava nos 87 como Fator R. O `piloto-pro-labore` forçava pró-labore pra bater 28% num CNAE que **não muda de anexo** — INSS e folha a mais, sem ganho nenhum.
+
+⚖️ **Declarado:** a ementa e a conclusão nomeiam **só** `/02` e `/03`. O `7312-2/00` e o `/99` vêm do **item 10**, alcançados pela conclusão do item 11 (*"as atividades citadas no item 10"*) — **fundamentação, não ementa**. Se o contador discordar, são essas duas que voltam.
+
+### ~~4d~~ — ✅ **FECHADO.** A viga mestra foi conferida no PDF oficial da RFB, e sustentou: a transcrição do Gemini bateu **palavra por palavra**, inclusive nos 2 pontos que eu tinha marcado como suspeitos — que são do **original**, não da transcrição.
+
+### 4e. 🆕 🔴 Cessão de mão de obra veda o Simples, e a tabela não tem onde guardar isso
+Item 12 da SC COSIT 13/2022: *"a análise acima foi da permissão das atividades citadas considerando sua **natureza, não o modo de exercício**. Como elas são tributadas pelo Anexo III, caso sejam prestadas **mediante cessão de mão de obra, são vedadas**"*.
+
+🔑 A nossa tabela classifica **atividade**. Isto é **modo de exercício** — não existe coluna pra ele, e **vale para qualquer CNAE de serviço**, não só os de publicidade. Provavelmente não é coluna de CNAE: é pergunta de onboarding.
+
+⚠️ A SC cita `art. 17, XI`, mas o inciso de cessão/locação de mão de obra é o **XII** — e o próprio item 8 diz que o XI foi revogado pela LC 147/2014. **Contradição interna do documento da RFB.** Conferir antes de virar regra.
+
+> **Pronto quando:** existir decisão sobre onde essa pergunta mora (tabela, onboarding ou contrato), com o inciso conferido.
 
 > **Pronto quando (o bloco 4 inteiro):** cada CNAE com anexo gravado e linha no ADR — inclusive se a decisão for *fica como está*.
 

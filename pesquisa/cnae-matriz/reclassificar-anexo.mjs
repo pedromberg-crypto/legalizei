@@ -170,6 +170,24 @@ const CORRECOES = {
   // eletrônicos" é operar fliperama, não elaborar programa. Todos os irmãos da
   // classe (sinuca, boliche, discoteca, recreação n.e.) são III.
   "9329804": [III, "§5º-F", "explorar fliperama não é elaboração de software (§5º-D IV não se aplica)"],
+
+  /* 🔑 O grupo 73.1 (Publicidade) está PARTIDO, e o critério é histórico, não
+     semântico — quem estava na lista de vedados até 2014 entrou no Simples pelo
+     §5º-I X (Fator R); quem nunca esteve nunca foi alcançado por ele.
+     Fonte: SC COSIT nº 13, de 28/03/2022, texto oficial da RFB lido na íntegra
+     em `pesquisa/fontes/2026-09-24-sc-cosit-13-2022-OFICIAL.md`.
+     ⚖️ A EMENTA nomeia só 7319-0/02 e 7319-0/03. O 7312-2/00 e o 7319-0/99
+     vêm do item 10, alcançados pela conclusão do item 11 ("as atividades
+     citadas no item 10") — fundamentação, não ementa. Está declarado no ADR. */
+  "7312200": [III, "§5º-F (SC COSIT 13/2022, itens 10-11)", "nunca esteve vedado, logo o §5º-I X nunca o alcançou"],
+  "7319099": [III, "§5º-F (SC COSIT 13/2022, itens 10-11)", "nunca esteve vedado, logo o §5º-I X nunca o alcançou"],
+  // Estes dois a SC confirma em Fator R, e corrige o INCISO: entraram pelo
+  // §5º-I X em 2015 (item 9), não pelo §5º-D IX nem pelo §5º-I IX.
+  "7319001": [FR, "§5º-I X (SC COSIT 13/2022, item 9)", "vedado até 2014, entrou pelo §5º-I X"],
+  "7319004": [FR, "§5º-I X (SC COSIT 13/2022, item 9)", "vedado até 2014, entrou pelo §5º-I X"],
+  // Ementa e conclusão. Só troca a fonte: o anexo já estava certo.
+  "7319002": [III, "§5º-F (SC COSIT 13/2022, ementa)", "ementa nomeia expressamente"],
+  "7319003": [III, "§5º-F (SC COSIT 13/2022, ementa)", "ementa nomeia expressamente"],
 };
 
 const fila = [];
@@ -220,7 +238,9 @@ if (APLICAR) {
     // não-saber, e trocar um não-saber por um inciso registrado é ganho; o que
     // não pode é o inciso sumir. Ele fica escrito na coluna de fonte.
     if (s.irmao !== null && s.irmao !== s.anexo) continue;
-    if (s.antes === s.anexo) continue;
+    // Uma CORREÇÃO declarada reescreve mesmo quando o anexo não muda: às vezes
+    // o que estava errado era só a FONTE, e a fonte é a prova.
+    if (s.antes === s.anexo && !CORRECOES[s.cod]) continue;
     s.l[iG] = paraArquivo(s.anexo);
     s.l[iF] = `LC123 art18 ${s.inciso}`;
     s.l[iC] = "alta";

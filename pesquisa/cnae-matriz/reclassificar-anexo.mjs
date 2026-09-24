@@ -198,6 +198,13 @@ const CORRECOES = {
      do Prompt A, **sem Solução de Consulta**. Declarado no ADR. */
   "7210000": [FR, "§5º-I VI", "o §5º-I VI nomeia 'pesquisa' entre os serviços técnicos"],
   "7220700": [FR, "§5º-I XII", "ciências sociais: o VI puxa exatas, o XII cobre 'científica'"],
+  /* 🔴 Coerência, não descoberta. A varredura dos 50 achou este em III fixo
+     pelo residual, no MESMO dia em que os dois de P&D acima foram pro Fator R
+     por "pesquisa" estar nomeada no §5º-I VI. Deixar pesquisa de mercado em
+     III seria a tabela se contradizendo: ou as três são Fator R, ou nenhuma é.
+     A subclasse fecha: "estudos sobre potencial de mercado... análises
+     estatísticas dos resultados" é trabalho intelectual, não execução. */
+  "7320300": [FR, "§5º-I VI", "'pesquisa' nomeada no inciso, igual ao 7210-0/00 e 7220-7/00"],
 
   /* 📚 VARREDURA DOS 50 (24/09) — os que estavam em `§5º-F residual` dentro dos
      87 e a lei na verdade NOMEIA. O anexo não muda (todos III); o que muda é a
@@ -246,7 +253,13 @@ const REVISTOS_5F = [
   "8299707", "9609202", "9002702", "9002701", "9102302", "9319101", "9329803",
   "9602501",
 ];
+/* 🔴 `CORRECOES[cod] = ...` sobrescreve. O `7320-3/00` entrou nesta lista na
+   varredura (confirmado no residual) e DEPOIS foi movido pro Fator R por
+   coerência com o P&D — o laço desfazia a correção em silêncio, gravando 0
+   células e parecendo sucesso. Agora quem já tem correção declarada é pulado,
+   e a rodada avisa. */
 for (const cod of REVISTOS_5F) {
+  if (CORRECOES[cod]) { console.log(`   ⚠️ ${cod} está em REVISTOS_5F e tem correção própria — prevalece a correção`); continue; }
   CORRECOES[cod] = [III, "§5º-F (residual, conferido 2026-09-24)", "lido na subclasse: nenhum inciso nomeia, não é atividade intelectual"];
 }
 

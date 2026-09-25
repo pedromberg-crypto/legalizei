@@ -38,6 +38,25 @@ const morre = (t) => {
   process.exit(1)
 }
 
+/* 🔴 ESTE SCRIPT RODA DA MAQUINA DO PEDRO, NUNCA DE DENTRO DA VPS (25/09).
+   `legalize-vps` e apelido do `~/.ssh/config` local: dentro da VPS ele nao
+   resolve, e o que aparece e `Temporary failure in name resolution` com stack
+   trace de 15 linhas, que nao diz o que fazer. E o pior e que a pessoa ja fez
+   a coisa certa antes de chegar aqui: o `git pull` na VPS ja colocou os
+   arquivos no lugar, entao o envio e redundante e so falta a carga. */
+if (existsSync(VAULT_REMOTO)) {
+  console.error(
+    `\n🔴 Este script roda da máquina local, não de dentro da VPS.\n\n` +
+      `   Ele existe para LEVAR o conteúdo daqui para lá, e aqui é lá.\n` +
+      `   O \`git pull\` que você já deu colocou os arquivos no lugar.\n\n` +
+      `   O que falta é só a carga:\n\n` +
+      `       npm run seed:rag       # cartões e notas, vetorizados\n\n` +
+      `   Se você mexeu em PERSONA.md ou RULES.md, eles são prompt e não banco:\n` +
+      `   aí é \`npm run build\` e reiniciar o serviço.\n`,
+  )
+  process.exit(1)
+}
+
 const noVps = (cmd) =>
   execFileSync('ssh', ['-o', 'ConnectTimeout=20', VPS, cmd], {
     encoding: 'utf8',

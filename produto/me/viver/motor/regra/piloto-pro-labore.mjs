@@ -30,7 +30,7 @@
  * ── 🎯 EM QUEM ELE ENCOSTA ─────────────────────────────────────────────────
  *
  * Dos **87 CNAEs que atendemos**, só **15** são `fator-r-dinamico`. Os **65**
- * `III-fixo` já estão no Anexo III por decisão do governo e o Fator R não muda
+ * `III` já estão no Anexo III por decisão do governo e o Fator R não muda
  * nada neles — para esses o piloto devolve `atua: false`, e a tela **não pode
  * falar em 28%**, porque sugeriria um risco que não existe (`anexoDoCnae`).
  * Os **7** `requer-revisao` ele se recusa a pilotar.

@@ -58,9 +58,17 @@ const serie = (n, receita, proLabore, inicio = 1) =>
     proLaborePago: R(proLabore),
   }));
 
-const DINAMICO = { grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)" };
-const FIXO = { grupoAnexo: "III-fixo" };
-const REVISAO = { grupoAnexo: "requer-revisao" };
+const DINAMICO = { grupoAnexo: "III-ou-V" };
+const FIXO = { grupoAnexo: "III" };
+/* 🔄 24/09: era `requer-revisao`, que DEIXOU DE EXISTIR quando a cascata da
+   LC 123 passou a tratar os dois residuais como resposta. O que este teste
+   guarda continua valendo e ficou mais largo: grupo que o motor não conhece
+   é RECUSADO, nunca chutado. */
+const DESCONHECIDO = { grupoAnexo: "grupo-que-nao-existe" };
+/* 🔴 E a recusa que sobrou com nome próprio: Anexo IV está fora do escopo
+   (12/09), e recusar com o motivo certo vale mais que calcular um DAS que a
+   casa não vai emitir. */
+const ANEXO_IV = { grupoAnexo: "IV" };
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * G-P1 · A ida e a volta — o valor sugerido produz o Fator R prometido
@@ -194,10 +202,18 @@ titulo("G-P2 · OS 65 III-FIXO, OS 7 EM REVISÃO, E O MÊS SEM RECEITA");
 }
 
 {
-  const p = pilotar({ empresa: REVISAO, competenciasAnteriores: [], receitaDoMes: 5000 });
+  const p = pilotar({ empresa: DESCONHECIDO, competenciasAnteriores: [], receitaDoMes: 5000 });
   ok(
-    "requer-revisao: o piloto se RECUSA em vez de chutar",
+    "grupo desconhecido: o piloto se RECUSA em vez de chutar",
     p.atua === false && p.motivo === "cnae-indefinido" && !!p.erro
+  );
+}
+
+{
+  const p = pilotar({ empresa: ANEXO_IV, competenciasAnteriores: [], receitaDoMes: 5000 });
+  ok(
+    "Anexo IV: o piloto RECUSA com o motivo certo, e não calcula fora do escopo",
+    p.atua === false && p.motivo === "cnae-indefinido" && /fora do escopo/i.test(p.erro ?? "")
   );
 }
 
@@ -751,7 +767,7 @@ titulo("G-P6 · A EDIÇÃO MANUAL, E OS ALERTAS PERSONALIZADOS");
       acimaDoTeto.custo.contraSugerido > 0
   );
 
-  // 🔴 A COERÊNCIA QUE MAIS IMPORTA: para os 65 CNAEs `III-fixo`, baixar o
+  // 🔴 A COERÊNCIA QUE MAIS IMPORTA: para os 65 CNAEs `III`, baixar o
   // pró-labore NÃO derruba anexo nenhum, e o app não pode dizer que derruba.
   const fixo = avaliarProLaboreEscolhido({
     empresa: FIXO,

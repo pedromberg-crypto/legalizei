@@ -1,22 +1,25 @@
-/* Gera a TABELA DO LÉO — as 18 colunas, do jeito que vão subir.
+/* Gera as DUAS tabelas finais a partir da fonte de 44 colunas.
 
-   🔑 Isto é uma PRÉVIA GERADA, não a tabela final. A refatura de verdade
-   (item 8 da fila) renomeia as colunas na fonte, parte em duas tabelas, cria
-   as colunas geradas no banco e migra os 3 leitores. Enquanto isso não
-   acontece, este script mostra o resultado sem tocar em nada — para o Pedro
-   olhar a tabela que o Léo vai ler, e não a de 44 colunas com nomes herdados
-   de três pesquisas diferentes.
+     _entrega-leo/cnae.csv            18 colunas · 1.332 linhas · SOBE pro Léo
+     _entrega-leo/cnae-curadoria.csv  30 colunas · 1.332 linhas · FICA no repo
 
-   🔴 NÃO EDITAR A SAÍDA. Mesmo erro da `cnae-amostra.csv`: a próxima rodada
-   reescreve do zero. O que se edita é a fonte —
+   🔑 Por que duas e não uma: coluna de curadoria no banco do Léo é peso morto
+   que ele pode ler errado. A `anexo_fator_r_confianca` provou isso — media o
+   NOSSO dever de casa e ele leria como incerteza da lei. O que responde ao
+   cliente sobe; o que explica por que o CNAE entrou ou ficou de fora, não.
+
+   🔒 A divisão é SEM PERDA e conferida a cada rodada: 18 + 30 cobrem as 44 da
+   fonte, e o script derruba se sobrar coluna órfã.
+
+   🔴 NÃO EDITAR A SAÍDA. A próxima rodada reescreve do zero. O que se edita é
+   a fonte —
 
      valor de anexo, inciso, atende  →  cnae-matriz-v2.csv (via os scripts)
      título e descrição amigáveis    →  cnae-friendly-v2.csv  ✍️ direto
      família, rótulo e exemplo       →  familias.mjs  (espelhado do app)
      texto do motivo                 →  derivar-motivo.mjs
 
-   Uso:  node gerar-tabela-leo.mjs                 (só os 87)
-         node gerar-tabela-leo.mjs --tudo          (os 1.332) */
+   Uso:  node gerar-tabela-leo.mjs  [--so-87] */
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { FAMILIAS } from "./familias.mjs";
@@ -36,7 +39,7 @@ function parse(csv) {
 }
 const escapar = (v) => (/[",\n]/.test(v) ? '"' + v.replaceAll('"', '""') + '"' : v);
 
-const TUDO = process.argv.includes("--tudo");
+const SO87 = process.argv.includes("--so-87");
 const m = parse(readFileSync("cnae-matriz-v2.csv", "utf8").replace(/^﻿/, "")).filter((l) => l.length > 1);
 const cab = m[0], dados = m.slice(1);
 const g = (l, n) => (l[cab.indexOf(n)] ?? "").trim();
@@ -45,11 +48,20 @@ const am = parse(readFileSync("cnae-friendly-v2.csv", "utf8").replace(/^﻿/, ""
 const tit = new Map(am.map((l) => [(l[0] ?? "").replace(/\D/g, ""), (l[1] ?? "").trim()]));
 const des = new Map(am.map((l) => [(l[0] ?? "").replace(/\D/g, ""), (l[2] ?? "").trim()]));
 
-/* O vocabulário de ausência, que a tabela nova vai ter no schema e esta prévia
-   já antecipa: campo dependente NUNCA fica em branco, ele DECLARA que depende. */
+/* 🔑 O vocabulário de ausência. Campo dependente NUNCA fica em branco — ele
+   DECLARA que depende. Vazio significava quatro coisas diferentes na tabela
+   antiga e o Léo lia ausência como negação: foi assim que ele mandou cliente
+   de folha de pagamento procurar outro contador. */
 const NSA = "nao-se-aplica";
 
-const COLUNAS = [
+/* 🔄 O vocabulário do anexo muda AQUI e só aqui. A fonte guarda o nome antigo
+   (`III-fixo`, `fator-r-dinamico(III<->V, limiar 28%)`) porque é o que 8
+   arquivos do motor já leem; a tabela que sobe usa o nome curto. Quem traduz
+   é esta função, e os leitores foram migrados no mesmo commit. */
+const ANEXO_NOVO = { "III-fixo": "III", IV: "IV" };
+const traduzirAnexo = (v) => (!v ? NSA : ANEXO_NOVO[v] ?? (/dinamico/.test(v) ? "III-ou-V" : v));
+
+const LEO = [
   ["codigo", (l) => g(l, "cnae")],
   ["titulo_oficial", (l) => g(l, "descricao")],
   ["titulo_amigavel", (l) => tit.get(g(l, "cnae")) || NSA],
@@ -57,42 +69,81 @@ const COLUNAS = [
   ["descricao_amigavel", (l) => des.get(g(l, "cnae")) || NSA],
   ["termos_de_busca", (l) => g(l, "atividades") || NSA],
   ["familia", (l) => g(l, "familia")],
-  ["divisao_id", (l) => g(l, "divisao_id")],
-  // 🔧 gerada: o vocabulário novo, traduzido do que está gravado hoje
-  ["anexo", (l) => { const v = g(l, "anexo_fator_r_grupo"); return v === "III-fixo" ? "III" : v === "IV" ? "IV" : /dinamico/.test(v) ? "III-ou-V" : NSA; }],
-  // 🔧 gerada de `anexo`: é o sim/não que o Pedro pediu, e é impossível divergir
-  ["fator_r", (l) => { const v = g(l, "anexo_fator_r_grupo"); return !v ? NSA : /dinamico/.test(v) ? "sim" : "nao"; }],
+  ["divisao_id", (l) => g(l, "divisao_id").padStart(2, "0")],
+  ["anexo", (l) => traduzirAnexo(g(l, "anexo_fator_r_grupo"))],
+  // 🔧 derivada de `anexo`: é o sim/não binário, e é impossível divergir
+  ["fator_r", (l) => { const v = traduzirAnexo(g(l, "anexo_fator_r_grupo")); return v === NSA ? NSA : v === "III-ou-V" ? "sim" : "nao"; }],
   ["anexo_inciso", (l) => g(l, "anexo_fator_r_fonte").replace(/^LC123 art18 /, "") || NSA],
-  ["mei_ocupacoes", (l) => (g(l, "mei_permitido") === "sim" ? g(l, "mei_ocupacoes") : NSA)],
-  // 🔧 gerada: presença da ocupação É a permissão. Duas colunas não podem divergir se são uma só.
+  ["mei_ocupacoes", (l) => (g(l, "mei_ocupacoes") ? g(l, "mei_ocupacoes") : NSA)],
+  // 🔧 derivada: presença da ocupação É a permissão. Duas colunas não podem
+  //    divergir se na verdade são uma só.
   ["mei_permitido", (l) => (g(l, "mei_ocupacoes") ? "sim" : "nao")],
   ["atende_me", (l) => g(l, "atende_me_certeza")],
   ["atende_mei", (l) => g(l, "atende_mei_certeza")],
   ["motivo_nao_atende", (l) => g(l, "motivo_nao_atende")],
   ["exige_conselho", (l) => g(l, "exige_conselho")],
-  ["conselho_qual", (l) => (g(l, "exige_conselho") === "sim" ? g(l, "conselho_qual") : NSA)],
+  ["conselho_qual", (l) => (g(l, "exige_conselho") === "sim" ? g(l, "conselho_qual") || NSA : NSA)],
 ];
 
-const linhas = TUDO ? dados : dados.filter((l) => g(l, "atende_me_certeza") === "sim");
-const saida = linhas.map((l) => COLUNAS.map(([, f]) => String(f(l) ?? "")));
+/* As 30 que ficam. Não sobem porque não respondem ao cliente: são o RASTRO de
+   por que o CNAE entrou nos 87 ou ficou fora, e o `cnae-verifica-atende.cjs`
+   recalcula o veredito a partir delas. */
+const CURADORIA = [
+  "secao_id", "secao", "grupo_id", "grupo_descricao", "classe_id", "classe_observacoes",
+  "anexo_base", "anexo_just", "fator_r", "aliquota_inicial",
+  "contabilizei_atende", "contabilizei_just",
+  "mei_iss_fixo_das", "mei_icms_fixo_das",
+  "risco_baixo_cgsim", "risco_cgsim_desc_oficial",
+  "vedado_simples_cgsn_anexo_vi", "ambiguo_simples_cgsn_anexo_vii",
+  "anexo_fator_r_confianca",
+  "iss_bh_aliquota", "iss_bh_varia", "iss_bh_detalhe",
+  "conselho_fonte", "conselho_confianca",
+  "exige_registro_setorial", "registro_setorial_qual", "registro_setorial_fonte",
+  "motivo_nao_atende_fala", "familia_rotulo",
+];
 
-// ── trava: nenhuma célula vazia. É a regra que a tabela nova vai ter. ──────
+// ── trava 1: a divisão não pode perder coluna ─────────────────────────────
+const DE_ONDE = {
+  codigo: "cnae", titulo_oficial: "descricao", descricao_oficial: "subclasse_observacoes",
+  termos_de_busca: "atividades", anexo: "anexo_fator_r_grupo", anexo_inciso: "anexo_fator_r_fonte",
+  atende_me: "atende_me_certeza", atende_mei: "atende_mei_certeza",
+};
+const consumidas = new Set([
+  ...LEO.map(([n]) => DE_ONDE[n] ?? n),
+  ...CURADORIA,
+  "titulo_amigavel", "descricao_amigavel", // vêm do friendly, não da matriz
+]);
+const orfas = cab.filter((c) => !consumidas.has(c));
+if (orfas.length) {
+  console.log("🔴 colunas da fonte que não entram em nenhuma das duas tabelas: " + orfas.join(", "));
+  process.exit(1);
+}
+
+const linhas = SO87 ? dados.filter((l) => g(l, "atende_me_certeza") === "sim") : dados;
+
+// ── a tabela do Léo ───────────────────────────────────────────────────────
+const leo = linhas.map((l) => LEO.map(([, f]) => String(f(l) ?? "")));
 const vazias = [];
-saida.forEach((r, i) => r.forEach((v, j) => { if (!v) vazias.push(`${linhas[i][0]} · ${COLUNAS[j][0]}`); }));
+leo.forEach((r, i) => r.forEach((v, j) => { if (!v) vazias.push(`${linhas[i][0]} · ${LEO[j][0]}`); }));
+if (vazias.length) { console.log("🔴 célula vazia: " + vazias.slice(0, 10).join(" · ")); process.exit(1); }
 
-const ARQ = "_entrega-leo/" + (TUDO ? "cnae-leo-1332.csv" : "cnae-leo.csv");
-writeFileSync(ARQ, [COLUNAS.map(([n]) => n).map(escapar).join(","), ...saida.map((r) => r.map(escapar).join(","))].join("\n") + "\n", "utf8");
+const ARQ_LEO = SO87 ? "_entrega-leo/cnae-87.csv" : "_entrega-leo/cnae.csv";
+writeFileSync(ARQ_LEO, [LEO.map(([n]) => n).map(escapar).join(","), ...leo.map((r) => r.map(escapar).join(","))].join("\n") + "\n", "utf8");
+console.log(`${ARQ_LEO} · ${leo.length} linhas × ${LEO.length} colunas · 0 vazias ✅`);
 
-console.log(`${ARQ} · ${saida.length} linhas × ${COLUNAS.length} colunas`);
-console.log(`células vazias: ${vazias.length} ${vazias.length ? "🔴 " + vazias.slice(0, 8).join(" · ") : "✅"}`);
+// ── a curadoria ───────────────────────────────────────────────────────────
+if (!SO87) {
+  const cur = dados.map((l) => [g(l, "cnae"), ...CURADORIA.map((n) => g(l, n))]);
+  writeFileSync("_entrega-leo/cnae-curadoria.csv",
+    [["codigo", ...CURADORIA].map(escapar).join(","), ...cur.map((r) => r.map(escapar).join(","))].join("\n") + "\n", "utf8");
+  console.log(`_entrega-leo/cnae-curadoria.csv · ${cur.length} linhas × ${CURADORIA.length + 1} colunas`);
 
-if (!TUDO) {
-  const porFam = new Map();
-  for (const l of linhas) { const k = g(l, "familia"); porFam.set(k, (porFam.get(k) ?? 0) + 1); }
-  console.log("\nfamília".padEnd(34) + "n".padStart(3) + "   anexo");
-  for (const [k, f] of Object.entries(FAMILIAS)) {
-    const L = linhas.filter((l) => g(l, "familia") === k);
-    const anx = [...new Set(L.map((l) => (/dinamico/.test(g(l, "anexo_fator_r_grupo")) ? "III↔V" : "III")))].join(" + ");
-    console.log("  " + f.rotulo.padEnd(32) + String(porFam.get(k) ?? 0).padStart(3) + "   " + anx);
-  }
+  const at = linhas.filter((l) => g(l, "atende_me_certeza") === "sim");
+  console.log(`\n${at.length} atendidos · ${dados.length - at.length} não`);
+  const anx = new Map();
+  for (const l of at) { const k = traduzirAnexo(g(l, "anexo_fator_r_grupo")); anx.set(k, (anx.get(k) ?? 0) + 1); }
+  console.log("anexo nos 87: " + [...anx].map(([k, v]) => `${v} ${k}`).join(" · "));
+  const fam = new Map();
+  for (const l of at) { const k = g(l, "familia"); fam.set(k, (fam.get(k) ?? 0) + 1); }
+  console.log("famílias: " + Object.entries(FAMILIAS).map(([k, f]) => `${fam.get(k) ?? 0} ${f.rotulo}`).join(" · "));
 }

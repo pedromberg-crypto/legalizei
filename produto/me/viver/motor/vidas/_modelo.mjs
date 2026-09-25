@@ -443,7 +443,7 @@ export function retratoDoMes({ empresa, competencias, mesAlvo }) {
   // e não guarda nada: a decisão é derivada, como o RBT12 e o anexo. Regra do
   // §"derivado não se guarda", que este arquivo criou em 14/09.
   //
-  // ⚠️ Devolve `atua: false` sem drama nos 65 CNAEs `III-fixo`, nos meses sem
+  // ⚠️ Devolve `atua: false` sem drama nos 65 CNAEs `III`, nos meses sem
   // receita na janela e nos 7 `requer-revisao`. Silêncio é resultado legítimo.
   const piloto = pilotar({
     empresa,

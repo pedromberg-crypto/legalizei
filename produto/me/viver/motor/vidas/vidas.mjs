@@ -34,7 +34,7 @@
  *
  * ── 🎯 O QUE O CONJUNTO EXERCITA, E A PERSONA ZERO NÃO ─────────────────────
  *
- * · **10 CNAEs `III-fixo`** — a persona zero é `fator-r-dinamico`, e o ramo dos
+ * · **10 CNAEs `III`** — a persona zero é `fator-r-dinamico`, e o ramo dos
  *   65 de 87 CNAEs nunca rodou inteiro
  * · **Fator R CAINDO pro Anexo V** (P01) — nunca testado, e é onde o cliente
  *   paga 15,5% em vez de 6%
@@ -118,7 +118,7 @@ export const VIDAS = [
       razaoSocial: "BRUNO ALMEIDA SOUZA DESENVOLVIMENTO LTDA",
       dataAberturaCnpj: "2026-03-10",
       cnaePrincipal: "6201-5/01",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
     }),
     porque:
       "🔴 O CASO QUE FALTAVA: Fator R CAINDO pro Anexo V. Dev que fatura bem e se paga o mínimo — o padrão mais comum de quem não tem contador que avise. Ele fatura R$18k/mês em contrato e tira R$1.621, o que dá 9% de folha. Em setembro ele corrige e sobe o pró-labore. O motor tem que mostrar a alíquota dobrando e depois voltando.",
@@ -142,7 +142,7 @@ export const VIDAS = [
       razaoSocial: "SANDRA MOREIRA DESIGN LTDA",
       dataAberturaCnpj: "2026-01-15",
       cnaePrincipal: "7410-2/03",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       cltDoSocio: 6000, // a Sandra tem emprego CLT por fora
       sociosComProLabore: 2,
     }),
@@ -169,7 +169,7 @@ export const VIDAS = [
       razaoSocial: "RAFAEL LIMA PRODUCOES LTDA",
       dataAberturaCnpj: "2025-11-20",
       cnaePrincipal: "7420-0/04",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "🔑 SAZONALIDADE REAL: casamento e formatura concentram de maio a julho e de novembro a dezembro. Janeiro, fevereiro e março são secos. E como o CNAE é III-fixo, o pró-labore mínimo NÃO derruba o anexo — a tela não pode falar de folga de folha pra ele.",
@@ -196,7 +196,7 @@ export const VIDAS = [
       razaoSocial: "PRADO E MARTINS PUBLICIDADE LTDA",
       dataAberturaCnpj: "2026-02-02",
       cnaePrincipal: "7311-4/00",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       // 🔄 ERA 2, virou 1 em 16/09. O `personas-entrada-me` sempre disse que
       // aqui **administra só o titular** (qualificação 22 no DBE para o outro
       // sócio), e mesmo assim a vida pagava pró-labore aos dois. Era a tensão
@@ -226,7 +226,7 @@ export const VIDAS = [
       razaoSocial: "PAULA ANTUNES EDICOES LTDA",
       dataAberturaCnpj: "2026-05-08",
       cnaePrincipal: "5811-5/00",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "Edição é ciclo longo: meses de trabalho e a receita toda na entrega. O extremo oposto da recorrência, e ele testa se o RBT12 proporcional aguenta receita concentrada em poucos meses sem inflar a faixa.",
@@ -248,7 +248,7 @@ export const VIDAS = [
       razaoSocial: "NUNES TRADUCOES LTDA",
       dataAberturaCnpj: "2026-04-01",
       cnaePrincipal: "7490-1/01",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       sociosComProLabore: 3,
     }),
     porque:
@@ -272,7 +272,7 @@ export const VIDAS = [
       razaoSocial: "APARECIDA LIMA ENSINO LTDA",
       dataAberturaCnpj: "2026-01-20",
       cnaePrincipal: "8593-7/00",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "Mensalidade de aluno é a receita mais previsível que existe — e cai nas férias, porque aluno tranca em dezembro e janeiro. Ticket baixo, volume estável. É o caso em que o cliente NÃO precisa de conselho nenhum sobre pró-labore, e a tela tem que saber ficar quieta.",
@@ -297,7 +297,7 @@ export const VIDAS = [
       razaoSocial: "MARTA ANDRADE ARTES LTDA",
       dataAberturaCnpj: "2026-02-12",
       cnaePrincipal: "9002-7/01",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "🔴 O CASO DE GLOSA: artista vende quando expõe, e passa meses em zero. Com caixa apertado ela DECLARA o pró-labore e não paga em três competências — que é exatamente o que a Receita pega cruzando EFD-Reinf com DCTFWeb. Como o CNAE é III-fixo o anexo não muda, mas o motor tem que ACUSAR o risco assim mesmo.",
@@ -321,7 +321,7 @@ export const VIDAS = [
       razaoSocial: "LIMA EVENTOS LTDA",
       dataAberturaCnpj: "2025-09-01",
       cnaePrincipal: "8230-0/01",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
       cltDoSocio: 9000, // acima do teto do INSS: o pró-labore nao gera contribuicao
       sociosComProLabore: 2,
     }),
@@ -363,7 +363,7 @@ export const VIDAS = [
       razaoSocial: "JULIA PINTO ATENDIMENTO LTDA",
       dataAberturaCnpj: "2026-06-15",
       cnaePrincipal: "8220-2/00",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "Contrato mensal fixo com um cliente só. A curva mais chata do conjunto, e por isso útil: se algo variar no cálculo dela, o erro é do motor, não do cenário.",
@@ -384,7 +384,7 @@ export const VIDAS = [
       razaoSocial: "PINTO LOCACOES LTDA",
       dataAberturaCnpj: "2026-03-01",
       cnaePrincipal: "7733-1/00",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
       sociosComProLabore: 4,
     }),
     porque:
@@ -407,7 +407,7 @@ export const VIDAS = [
       razaoSocial: "BARRETO CHAVES LTDA",
       dataAberturaCnpj: "2026-07-05",
       cnaePrincipal: "9529-1/02",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
     }),
     porque:
       "Muito ticket pequeno, todo dia, valor baixo. É o perfil que mais tende a achar que 'não precisa de contador', e o DAS dele é de dezenas de reais — testa se o arredondamento por tributo se comporta em valores pequenos, onde o centavo pesa proporcionalmente mais.",
@@ -427,7 +427,7 @@ export const VIDAS = [
       razaoSocial: "PRADO BELEZA LTDA",
       dataAberturaCnpj: "2026-04-10",
       cnaePrincipal: "9602-5/01",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
       sociosComProLabore: 2,
     }),
     porque:
@@ -450,7 +450,7 @@ export const VIDAS = [
       razaoSocial: "SALES HOSPEDAGEM LTDA",
       dataAberturaCnpj: "2025-12-01",
       cnaePrincipal: "5590-6/03",
-      grupoAnexo: "III-fixo",
+      grupoAnexo: "III",
       cltDoSocio: 3000, // CLT parcial: sobra folga ate o teto
       // 🔄 ERA 3, virou 1 em 16/09. Mesmo caso da P04: o `personas-entrada-me`
       // diz **administra só o titular**, e a vida pagava aos três.
@@ -480,7 +480,7 @@ export const VIDAS = [
       razaoSocial: "VITOR PINTO CONSULTORIA EM TI LTDA",
       dataAberturaCnpj: "2025-06-01",
       cnaePrincipal: "6204-0/00",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
     }),
     porque:
       "🔴 A VIDA QUE FECHA A LACUNA DO ANEXO V. O P01 cai no V, mas nunca sai da FAIXA 1 — e na faixa 1 a parcela a deduzir é zero, então a efetiva é a nominal e metade da tabela nunca roda. O Vitor é consultor sênior: fatura de R$25k a R$42k, se paga o mínimo porque ninguém avisou, e o RBT12 dele ATRAVESSA os R$180 mil. Aí a parcela a deduzir de R$4.500 finalmente morde, a efetiva descola da nominal, e o motor tem que mostrar a alíquota subindo de 15,50% em direção a 16,75% sem nunca chegar lá. No fim ele encosta nos R$360 mil, que é o teto do ME — a porta de SAÍDA pra EPP, o único lugar onde EPP existe no nosso produto.",
@@ -518,7 +518,7 @@ export const VIDAS = [
       razaoSocial: "ELISA PRADO MARTINS AGENCIAMENTO LTDA",
       dataAberturaCnpj: "2025-01-15",
       cnaePrincipal: "7312-2/00",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       sociosComProLabore: 2,
     }),
     porque:
@@ -576,7 +576,7 @@ export const VIDAS = [
       //    contador disse ser raro, e que nenhuma das 16 exercitava.
       dataAberturaCnpj: "2026-09-16",
       cnaePrincipal: "6201-5/01",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       sociosComProLabore: 1,
       sociosTotal: 2,
     }),
@@ -587,7 +587,7 @@ export const VIDAS = [
       "persona nenhuma. ⚠️ Este comentário dizia 'as 16 vidas abriam sem " + // [HISTÓRICO]
       "faturar, todas, sem exceção', e isso era FALSO: a P03, a P07 e a P14 " +
       "já faturavam no mês 1. O caso não aparecia nelas porque as três são " +
-      "`III-fixo`, e sem Fator R não existe janela para ficar vazia. " +
+      "`III`, e sem Fator R não existe janela para ficar vazia. " +
       "Ele existia só em teste sintético meu, que é " +
       "exatamente o tipo de prova que o Pedro mandou parar de aceitar. " +
       "🔑 **O que só ela prova:** (1) faturar no mês da abertura é tributado " +
@@ -634,7 +634,7 @@ export const VIDAS = [
       razaoSocial: "RAFAEL PRADO DESENVOLVIMENTO LTDA",
       dataAberturaCnpj: "2026-03-05",
       cnaePrincipal: "6201-5/01",
-      grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+      grupoAnexo: "III-ou-V",
       sociosComProLabore: 1,
       sociosTotal: 1,
     }),

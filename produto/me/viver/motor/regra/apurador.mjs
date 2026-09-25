@@ -615,7 +615,7 @@ export function anualiza(valoresMensais) {
 /**
  * O CNAE já decide o anexo, ou precisa calcular?
  *
- * 🔑 **Dos 87 CNAEs que atendemos, 65 são `III-fixo`** — o Fator R não muda
+ * 🔑 **Dos 87 CNAEs que atendemos, 65 são `III`** — o Fator R não muda
  * nada neles. Rodar o cálculo é desperdício, e pior: a tela que fala em
  * "sua folha precisa chegar a 28%" para quem já é Anexo III **mente por
  * omissão**, porque sugere um risco que não existe.
@@ -631,11 +631,19 @@ export function anexoDoCnae(grupo) {
       erro: `Grupo desconhecido: "${grupo}". Os válidos estão em GRUPOS_ANEXO.`,
     };
   }
-  if (g.calculaFatorR === null) {
+  /* 🔄 24/09: a recusa por `requer-revisao` MORREU — a categoria deixou de
+     existir quando a cascata da LC 123 passou a tratar os dois residuais
+     (§5º-F e §5º-I XII) como resposta, e não como buraco. Eram 7 dos 87 que
+     não calculavam DAS; hoje são 0.
+
+     No lugar dela ficou a única recusa que continua legítima: Anexo IV está
+     FORA DO ESCOPO por decisão de 12/09. Recusar com o motivo certo é melhor
+     que calcular um DAS que a casa não vai emitir. */
+  if (g.foraDoEscopo) {
     return {
-      anexo: null,
+      anexo: g.anexo,
       calculaFatorR: null,
-      erro: "CNAE em `requer-revisao` — indefinido, não usar em produção.",
+      erro: "CNAE de Anexo IV — fora do escopo da casa (construção, limpeza, vigilância, advocacia).",
     };
   }
   return {

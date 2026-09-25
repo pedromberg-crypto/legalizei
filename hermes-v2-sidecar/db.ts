@@ -45,13 +45,38 @@ export interface LinhaCnae {
    */
   casa_atende_me: boolean
   casa_atende_mei: boolean
-  anexo: string | null
+  /** O nome oficial do IBGE, em caixa alta. Serve para desambiguar com o cliente. */
+  titulo_oficial: string
+  /** A categoria do dropdown do app — as mesmas 14, com o mesmo `id`. */
+  familia: string
+  /** `III` · `IV` · `III-ou-V` · `nao-se-aplica`. Nunca mais `requer-revisao`. */
+  anexo: string
+  /** 🔧 Gerada de `anexo`. O sim/nao do Fator R, sem chance de divergir. */
+  fator_r: boolean
+  /** O dispositivo da LC 123 que fundamenta o anexo. `§5º-F` e o residual. */
+  anexo_inciso: string
+  /**
+   * 🔴 Quando `casa_atende_me` e false, ISTO e a resposta.
+   *
+   * Sem ele o agente dizia "nao atendemos" e **improvisava o porque** — foi
+   * assim que mandou cliente de folha de pagamento procurar outro contador.
+   * Vocabulario fechado: `comercio-ou-industria`, `anexo-iv`, `paga-icms`,
+   * `vedado-simples`, `ambiguo-simples`, `exige-alvara-previo`,
+   * `exige-conselho`, `exige-registro-setorial`, `atendemos`.
+   */
+  motivo_nao_atende: string
   /** 🔴 O gate do anexo. false significa: nao crave anexo nem aliquota. */
   pode_afirmar_anexo: boolean
   /** 🔴 Sempre false: a lista de ocupacoes do MEI e do governo e nao esta aqui. */
   pode_afirmar_lista_mei: boolean
   exige_conselho: boolean
   semelhanca: number
+  /**
+   * Em qual degrau da busca a linha bateu: `codigo` e `sinonimo` sao exatos,
+   * `titulo` e forte, `termos` e o mais fraco (teto de 0.55, porque o campo
+   * tem referencia cruzada para outros CNAEs).
+   */
+  achou_por: string
 }
 
 export async function consultarCnae(busca: string): Promise<LinhaCnae[]> {

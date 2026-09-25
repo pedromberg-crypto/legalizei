@@ -31,8 +31,25 @@ import { RAIZ } from './carregar-conhecimento.js'
 
 /** A raiz do repo, um nivel acima de `hermes-v2-sidecar/`. */
 const REPO = dirname(RAIZ)
-const MATRIZ = join(REPO, 'pesquisa', 'cnae-matriz', 'cnae-matriz.csv')
-const AMIGAVEL = join(REPO, 'pesquisa', 'cnae-matriz', 'cnae-friendly.csv')
+/**
+ * 🔄 24/09 — A FONTE MUDOU, E ISSO ERA O BURACO.
+ *
+ * Ate aqui o loader lia `cnae-matriz.csv` e `cnae-friendly.csv`, que sao as
+ * ORIGINAIS, intocadas de proposito. Todo o trabalho de curadoria de 24/09
+ * aconteceu em copias (`-v2`), entao NADA dele chegava ao banco: o Leo seguia
+ * rodando com a tabela de antes.
+ *
+ * Agora a fonte e UMA so — a tabela ja curada, de 18 colunas, gerada por
+ * `pesquisa/cnae-matriz/gerar-tabela-leo.mjs` a partir das copias de trabalho.
+ * O join com os titulos amigaveis acontece la, na geracao, e nao mais aqui.
+ *
+ * 🔑 Consequencia pratica: sumiu o `LEFT JOIN` e sumiram os casts frageis. O
+ * `numeroOuNulo` sobre `iss_bh_aliquota` era o pior deles — `Number('5%')` da
+ * `NaN` e virava `null` CALADO, e 524 aliquotas de BH desapareciam parecendo
+ * importadas. A coluna nem sobe mais: e curadoria, fica no repo.
+ */
+const TABELA = join(REPO, 'pesquisa', 'cnae-matriz', '_entrega-leo', 'cnae.csv')
+const SINONIMOS = join(REPO, 'pesquisa', 'cnae-matriz', 'cnae-aliases.json')
 
 const LOTE = 200
 
@@ -138,68 +155,74 @@ const confianca = (t: string | undefined) => {
 
 const soDigitos = (t: string | undefined) => (t ?? '').replace(/\D/g, '')
 
+/** O vocabulario de ausencia. Campo dependente DECLARA que depende. */
+const NSA = 'nao-se-aplica'
+
 // ════════════════════════════════════════════════════════════════════════════
 //  3. A CARGA
 // ════════════════════════════════════════════════════════════════════════════
 
 const COLUNAS = [
-  'codigo', 'descricao', 'titulo_amigavel', 'descricao_amigavel', 'secao_id', 'divisao_id',
-  'anexo_base', 'anexo_fator_r_grupo', 'anexo_fator_r_fonte', 'anexo_fator_r_confianca',
-  'vedado_simples', 'ambiguo_simples', 'mei_permitido', 'mei_ocupacoes',
-  'iss_bh_aliquota', 'iss_bh_varia', 'risco_baixo_cgsim',
-  'exige_conselho', 'conselho_qual', 'exige_registro_setorial',
-  'atende_me_certeza', 'atende_mei_certeza',
+  'codigo', 'titulo_oficial', 'titulo_amigavel', 'descricao_oficial', 'descricao_amigavel',
+  'termos_de_busca', 'familia', 'divisao_id',
+  'anexo', 'anexo_inciso', 'mei_ocupacoes',
+  'atende_me', 'atende_mei', 'motivo_nao_atende',
+  'exige_conselho', 'conselho_qual',
 ] as const
 
+/**
+ * 🔑 `fator_r` e `mei_permitido` NAO estao na lista, e e de proposito: as duas
+ * sao colunas GERADAS no banco (`fator_r` sai de `anexo`, `mei_permitido` sai
+ * de `mei_ocupacoes`). Duas colunas que sao a mesma verdade nao podem divergir
+ * se so existe uma.
+ *
+ * ⚠️ E o vocabulario de ausencia vem PRONTO do CSV: campo dependente traz
+ * `nao-se-aplica` escrito, nunca vazio. Vazio significava quatro coisas
+ * diferentes na tabela antiga, e o agente lia ausencia como negacao — foi
+ * assim que ele mandou cliente de folha de pagamento procurar outro contador.
+ */
 export function montarLinhas(): unknown[][] {
-  const matriz = comoObjetos(readFileSync(MATRIZ, 'utf8'), 'cnae-matriz.csv')
-  const amigaveis = comoObjetos(readFileSync(AMIGAVEL, 'utf8'), 'cnae-friendly.csv')
-
-  const porCodigo = new Map<string, Record<string, string>>()
-  for (const a of amigaveis) porCodigo.set(soDigitos(a.code), a)
+  const tabela = comoObjetos(readFileSync(TABELA, 'utf8'), 'cnae.csv')
 
   const vistos = new Set<string>()
   const linhas: unknown[][] = []
 
-  for (const m of matriz) {
-    const codigo = soDigitos(m.cnae)
+  for (const c of tabela) {
+    const codigo = soDigitos(c.codigo)
     if (codigo.length !== 7) continue
 
     // Codigo repetido nao vira UPSERT dentro do mesmo lote: o Postgres recusa
-    // "ON CONFLICT DO UPDATE command cannot affect row a second time". Melhor
-    // descobrir aqui, com o codigo na mao, do que na metade da carga.
+    // "ON CONFLICT DO UPDATE command cannot affect row a second time".
     if (vistos.has(codigo)) continue
     vistos.add(codigo)
 
-    const a = porCodigo.get(codigo)
-
     linhas.push([
       codigo,
-      m.descricao ?? '',
-      vazioVira(a?.friendly_title),
-      vazioVira(a?.friendly_description),
-      (m.secao_id ?? '').trim() || null,
-      (m.divisao_id ?? '').trim().padStart(2, '0'),
-      vazioVira(m.anexo_base),
-      vazioVira(m.anexo_fator_r_grupo),
-      vazioVira(m.anexo_fator_r_fonte),
-      confianca(m.anexo_fator_r_confianca),
-      sim(m.vedado_simples_cgsn_anexo_vi),
-      sim(m.ambiguo_simples_cgsn_anexo_vii),
-      sim(m.mei_permitido),
-      vazioVira(m.mei_ocupacoes),
-      numeroOuNulo(m.iss_bh_aliquota),
-      sim(m.iss_bh_varia),
-      simOuNulo(m.risco_baixo_cgsim),
-      sim(m.exige_conselho),
-      vazioVira(m.conselho_qual),
-      sim(m.exige_registro_setorial),
-      sim(m.atende_me_certeza),
-      sim(m.atende_mei_certeza),
+      c.titulo_oficial ?? '',
+      c.titulo_amigavel ?? NSA,
+      c.descricao_oficial ?? NSA,
+      c.descricao_amigavel ?? NSA,
+      c.termos_de_busca ?? NSA,
+      c.familia ?? NSA,
+      (c.divisao_id ?? '').trim().padStart(2, '0'),
+      c.anexo ?? NSA,
+      c.anexo_inciso ?? NSA,
+      c.mei_ocupacoes ?? NSA,
+      sim(c.atende_me),
+      sim(c.atende_mei),
+      c.motivo_nao_atende ?? NSA,
+      sim(c.exige_conselho),
+      c.conselho_qual ?? NSA,
     ])
   }
 
   return linhas
+}
+
+/** Os sinonimos que a busca consulta ANTES de qualquer similaridade. */
+export function montarSinonimos(): [string, string][] {
+  const bruto = JSON.parse(readFileSync(SINONIMOS, 'utf8')) as { termo: string; codigo: string }[]
+  return bruto.map((a) => [a.termo.trim().toLowerCase(), soDigitos(a.codigo)])
 }
 
 export async function carregarCnae(): Promise<void> {
@@ -228,41 +251,75 @@ export async function carregarCnae(): Promise<void> {
         `INSERT INTO fatos.cnae (${COLUNAS.join(', ')})
          VALUES ${tuplas.join(',')}
          ON CONFLICT (codigo) DO UPDATE SET
-           descricao               = excluded.descricao,
-           titulo_amigavel         = excluded.titulo_amigavel,
-           descricao_amigavel      = excluded.descricao_amigavel,
-           anexo_base              = excluded.anexo_base,
-           anexo_fator_r_grupo     = excluded.anexo_fator_r_grupo,
-           anexo_fator_r_confianca = excluded.anexo_fator_r_confianca,
-           mei_permitido           = excluded.mei_permitido,
-           atende_me_certeza       = excluded.atende_me_certeza,
-           atende_mei_certeza      = excluded.atende_mei_certeza,
-           atualizado_em           = current_date`,
+           titulo_oficial     = excluded.titulo_oficial,
+           titulo_amigavel    = excluded.titulo_amigavel,
+           descricao_oficial  = excluded.descricao_oficial,
+           descricao_amigavel = excluded.descricao_amigavel,
+           termos_de_busca    = excluded.termos_de_busca,
+           familia            = excluded.familia,
+           anexo              = excluded.anexo,
+           anexo_inciso       = excluded.anexo_inciso,
+           mei_ocupacoes      = excluded.mei_ocupacoes,
+           atende_me          = excluded.atende_me,
+           atende_mei         = excluded.atende_mei,
+           motivo_nao_atende  = excluded.motivo_nao_atende,
+           exige_conselho     = excluded.exige_conselho,
+           conselho_qual      = excluded.conselho_qual,
+           atualizado_em      = current_date`,
         valores,
       )
       process.stdout.write(`\r  gravadas ${Math.min(i + LOTE, linhas.length)}/${linhas.length}`)
     }
 
-    // ── OS MESMOS PORTOES DO SQL, agora do lado de ca ────────────────────────
-    const { rows } = await cliente.query<{ total: number; altos: number; me: number }>(
-      `SELECT count(*)::int AS total,
-              count(*) FILTER (WHERE anexo_fator_r_confianca = 'alta')::int AS altos,
-              count(*) FILTER (WHERE atende_me_certeza)::int AS me
-         FROM fatos.cnae`,
-    )
-    const { total, altos, me } = rows[0]
-
-    if (total < 1300) throw new Error(`so ${total} linhas na tabela`)
-    if (altos === 0 || altos > total / 2) {
-      // ⚠️ Cerca de ordem de grandeza, nao valor exato: o numero muda quando a
-      //    contadora fechar os codigos em conflito. O que nao pode mudar
-      //    sozinho e a ORDEM: se todos virarem `alta`, o gate deixou de existir
-      //    e o agente passa a afirmar anexo de qualquer codigo.
-      throw new Error(`gate suspeito: ${altos} de ${total} com confianca alta`)
+    // ── OS SINONIMOS ────────────────────────────────────────────────────────
+    // 🔑 Camada NOSSA, separada do dado do IBGE de proposito. Existe porque
+    //    `psicologo` nao aparece em NENHUM campo da tabela — nem no titulo
+    //    oficial, nem no amigavel, nem nos 542 caracteres de termos de busca.
+    //    Nenhum peso de busca acha palavra que ninguem escreveu.
+    const sinonimos = montarSinonimos()
+    for (const [termo, cnae] of sinonimos) {
+      await cliente.query(
+        `INSERT INTO fatos.cnae_sinonimos (termo, cnae_codigo) VALUES ($1, $2)
+         ON CONFLICT (termo) DO UPDATE SET cnae_codigo = excluded.cnae_codigo`,
+        [termo, cnae],
+      )
     }
 
+    // ── OS PORTOES ──────────────────────────────────────────────────────────
+    const { rows } = await cliente.query<{
+      total: number
+      me: number
+      sem_anexo: number
+      sem_motivo: number
+      orfaos: number
+    }>(
+      `SELECT count(*)::int AS total,
+              count(*) FILTER (WHERE atende_me)::int AS me,
+              count(*) FILTER (WHERE atende_me AND anexo = 'nao-se-aplica')::int AS sem_anexo,
+              count(*) FILTER (WHERE coalesce(motivo_nao_atende, '') = '')::int AS sem_motivo,
+              (SELECT count(*)::int FROM fatos.cnae_sinonimos s
+                WHERE NOT EXISTS (SELECT 1 FROM fatos.cnae c WHERE c.codigo = s.cnae_codigo)) AS orfaos
+         FROM fatos.cnae`,
+    )
+    const { total, me, sem_anexo, sem_motivo, orfaos } = rows[0]
+
+    if (total < 1300) throw new Error(`so ${total} linhas na tabela`)
+
+    /* 🔴 O GATE MUDOU DE PERGUNTA em 24/09, e isso e o ponto.
+       O antigo media `confianca = 'alta'` — mas essa coluna media o NOSSO dever
+       de casa, e o agente a lia como incerteza da LEI. Ela virou curadoria e
+       nao sobe mais. A pergunta que substitui e direta: sobrou CNAE que a casa
+       atende sem anexo definido? Isso e exatamente o `requer-revisao` que
+       morreu hoje, e se ele voltar a carga para AQUI, nao em producao. */
+    if (sem_anexo > 0) throw new Error(`${sem_anexo} CNAE(s) atendidos SEM anexo definido`)
+    if (sem_motivo > 0) throw new Error(`${sem_motivo} linha(s) sem motivo_nao_atende`)
+    if (orfaos > 0) throw new Error(`${orfaos} sinonimo(s) apontam para CNAE que nao existe`)
+
     await cliente.query('COMMIT')
-    console.log(`\nCNAE: ${total} linhas · ${altos} com confianca alta · ${me} atendidos no ME`)
+    console.log(
+      `\nCNAE: ${total} linhas · ${me} atendidos no ME · ${sinonimos.length} sinonimos · ` +
+        `0 sem anexo · 0 sem motivo`,
+    )
   } catch (erro) {
     await cliente.query('ROLLBACK')
     throw erro

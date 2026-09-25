@@ -10,7 +10,7 @@
  * meu próprio cálculo — o pior tipo de teste, o que passa sempre.
  *
  * O que se afirma aqui são **relações que a lei obriga**:
- *   · CNAE `III-fixo` nunca perde o benefício do III, por menor que seja o pró-labore
+ *   · CNAE `III` nunca perde o benefício do III, por menor que seja o pró-labore
  *   · do 13º mês em diante o RBT12 é SOMA, não média × 12
  *   · pró-labore declarado e não pago não entra no Fator R
  *   · CLT acima do teto zera o INSS do pró-labore
@@ -557,7 +557,7 @@ console.log("\n── 8 · Quem fatura no mês em que abriu paga 15,5%, e quem p
     razaoSocial: "TESTE JANELA LTDA",
     dataAberturaCnpj: "2026-09-16",
     cnaePrincipal: "6201-5/01",
-    grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+    grupoAnexo: "III-ou-V",
   });
 
   // (a) Constituiu e faturou no mesmo mês.
@@ -719,7 +719,7 @@ console.log(
 
   // 🔴 O BUG QUE ISTO EXISTE PARA IMPEDIR: R$1.518 era EXATAMENTE o mínimo de
   //    dezembro/2025. Com piso único, o motor recusava um valor correto.
-  const emp = { grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)", cltDoSocio: 0 };
+  const emp = { grupoAnexo: "III-ou-V", cltDoSocio: 0 };
   const args = { empresa: emp, competenciasAnteriores: [], receitaDoMes: 0, rbt12DoMes: 0 };
 
   invariante(

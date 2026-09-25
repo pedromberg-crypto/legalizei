@@ -220,14 +220,32 @@ test('os tetos estao em centavos, e nao em reais', pular, async () => {
 //  5. O GATE DE CONFIANCA DO CNAE
 // ════════════════════════════════════════════════════════════════════════════
 
-test('o gate existe: nem todo CNAE autoriza afirmar anexo', pular, async () => {
+/**
+ * 🔄 24/09 — O GATE MUDOU DE PERGUNTA, e por isso este teste foi reescrito.
+ *
+ * O antigo media `anexo_fator_r_confianca = 'alta'`. Mas aquela coluna media o
+ * NOSSO dever de casa (quanto da classificacao tinha ficado pronta), e o agente
+ * a lia como incerteza da LEI. Ela virou curadoria e nao sobe mais.
+ *
+ * A pergunta que substitui e direta: sobrou CNAE que a casa ATENDE sem anexo
+ * definido? Isso e exatamente o `requer-revisao` que morreu em 24/09 — eram 7
+ * dos 87, incluindo design de UI/UX, e o apurador se recusava a calcular o DAS
+ * deles. Se voltar, o teste pega.
+ */
+test('todo CNAE que a casa atende tem anexo definido', pular, async () => {
   const { rows } = await pool.query(
-    `SELECT count(*) FILTER (WHERE anexo_fator_r_confianca = 'alta')::int AS altos,
-            count(*)::int AS total
+    `SELECT count(*)::int AS total,
+            count(*) FILTER (WHERE atende_me)::int AS atendidos,
+            count(*) FILTER (WHERE atende_me AND anexo = 'nao-se-aplica')::int AS sem_anexo,
+            count(*) FILTER (WHERE anexo = 'requer-revisao')::int AS revisao,
+            count(*) FILTER (WHERE coalesce(motivo_nao_atende, '') = '')::int AS sem_motivo
        FROM fatos.cnae`,
   )
-  const { altos, total } = rows[0]
+  const { total, atendidos, sem_anexo, revisao, sem_motivo } = rows[0]
   assert.ok(total > 1300, 'a matriz precisa estar carregada')
-  assert.ok(altos > 0, 'sem nenhum codigo confiavel o agente nunca responde')
-  assert.ok(altos < total / 2, 'se quase todos forem confiaveis, o gate deixou de existir')
+  assert.ok(atendidos > 50, 'sem CNAE atendido o agente nunca diz sim a ninguem')
+  assert.equal(sem_anexo, 0, 'CNAE atendido sem anexo e o requer-revisao voltando')
+  assert.equal(revisao, 0, 'a categoria requer-revisao deixou de existir em 24/09')
+  // 🔴 Sem motivo o agente diz "nao atendemos" e improvisa o porque.
+  assert.equal(sem_motivo, 0, 'toda linha precisa de motivo_nao_atende')
 })

@@ -26,7 +26,7 @@ export const EMPRESA = identidade({
   dataAberturaCnpj: "2025-12-12",
   cnaePrincipal: "7319-0/04", // Consultoria em publicidade
   // 🔑 É `fator-r-dinamico`: um dos 15 CNAEs de 87 em que o Fator R decide.
-  grupoAnexo: "fator-r-dinamico(III<->V, limiar 28%)",
+  grupoAnexo: "III-ou-V",
   municipio: "BH",
 });
 

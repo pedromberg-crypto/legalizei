@@ -473,13 +473,22 @@ export const FATOR_R_NUMERADOR = {
 /**
  * 🎯 OS TRÊS GRUPOS DE ANEXO — e é isto que evita rodar Fator R à toa.
  *
- * O Manual do PGDAS-D separa as atividades de serviço em três, e a nossa
- * `cnae-matriz.json` já carrega o grupo de cada CNAE no campo
- * `anexo_fator_r_grupo`. Dos **87 CNAEs que atendemos**:
+ * O Manual do PGDAS-D separa as atividades de serviço em três, e a tabela
+ * `_entrega-leo/cnae.csv` carrega o grupo de cada CNAE no campo **`anexo`**.
+ * Dos **87 CNAEs que atendemos**:
  *
- *   III-fixo ............ 65  → Anexo III sempre. Fator R NÃO muda nada
- *   fator-r-dinamico .... 15  → III ou V, decidido por cálculo, mês a mês
- *   requer-revisao ......  7  → indefinido, não usar em produção
+ *   III ......... 70  → Anexo III sempre. Fator R NÃO muda nada
+ *   III-ou-V .... 17  → III ou V, decidido por cálculo, mês a mês
+ *   IV ..........  0  → fora do escopo por decisão (12/09); existe na tabela
+ *                       inteira, nunca entre os que atendemos
+ *
+ * 🔄 **24/09 — o vocabulário mudou junto com a tabela.** Era `III`,
+ * `III-ou-V` e `requer-revisao`, lidos da
+ * `cnae-matriz.json` de 40 colunas. 🔑 **A categoria `requer-revisao` DEIXOU
+ * DE EXISTIR**: ela nascia de tratar "não achei inciso" como estado terminal,
+ * quando a LC 123 tem dois residuais que se completam (§5º-F → III fixo ·
+ * §5º-I XII, o intelectual → Fator R). Não achar inciso nominado É a
+ * resposta. Eram 7 CNAEs que o apurador se recusava a calcular; hoje são 0.
  *
  * 🔴 **Não existe CNAE de serviço "sempre Anexo V".** O V é *resultado* do
  * cálculo (< 28%), nunca classificação fixa por atividade. Qualquer tela que
@@ -503,13 +512,14 @@ export const FATOR_R_NUMERADOR = {
  *   ❌ "sobe para o Anexo III"     ✅ "passa a ter o benefício do Anexo III"
  *   ❌ "empresa do Anexo III"      ✅ "empresa do Anexo V tributada pelo III"
  *
- * ⚠️ **A chave `fator-r-dinamico(III<->V, limiar 28%)` fica como está**, e não
- * é exceção à regra acima: ela descreve **por qual tabela se tributa**, que
- * oscila mesmo. É identificador interno, usado como dado em 8 arquivos —
- * renomear seria refactor de risco sem ganho de clareza para ninguém.
+ * ⚠️ **A chave `III-ou-V` descreve por qual TABELA se tributa**, que oscila
+ * mesmo — não é exceção à regra de fala acima. Na tela continua sendo
+ * "benefício do Anexo III", nunca "cai para o V".
  */
 export const GRUPOS_ANEXO = {
-  "III-fixo": { anexo: "III", calculaFatorR: false, quantos: 65 },
-  "fator-r-dinamico(III<->V, limiar 28%)": { anexo: null, calculaFatorR: true, quantos: 15 },
-  "requer-revisao": { anexo: null, calculaFatorR: null, quantos: 7 },
+  III: { anexo: "III", calculaFatorR: false, quantos: 70 },
+  "III-ou-V": { anexo: null, calculaFatorR: true, quantos: 17 },
+  // 🔴 Fora do escopo por decisão (12/09). Fica declarado para o apurador
+  //    recusar com motivo em vez de cair no "grupo desconhecido".
+  IV: { anexo: "IV", calculaFatorR: false, quantos: 0, foraDoEscopo: true },
 };

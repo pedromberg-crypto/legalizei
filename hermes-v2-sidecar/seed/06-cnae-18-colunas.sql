@@ -38,13 +38,19 @@
 --
 --  ── ORDEM DE EXECUCAO ──────────────────────────────────────────────────────
 --
---    1. este arquivo   (psql -f, ou pelo editor do Supabase)
---    2. carregar-cnae  (node .build/seed/carregar-cnae.js) — recarrega as 1.332
---                       linhas ja curadas, da `_entrega-leo/cnae.csv`
+--    1. npm run sql seed/06-cnae-18-colunas.sql   ← a FORMA
+--    2. npm run seed:cnae                          ← os DADOS
+--    3. npm run sql seed/07-cnae-travas.sql        ← as TRAVAS
 --
---  🔴 A ORDEM IMPORTA: a carga escreve nas colunas novas e nos sinonimos. Rodar
---     ao contrario falha no INSERT, que e o comportamento certo — melhor falhar
---     na carga do que servir meia tabela.
+--  🔴 A ORDEM NAO E PREFERENCIA, E CORRECAO — e a primeira versao errou nisso.
+--     As travas moravam aqui, antes da carga. Mas trava guarda o dado NOVO, e
+--     antes da carga o banco ainda tem o VELHO: `cnae_atendido_tem_anexo` exige
+--     que todo CNAE atendido tenha anexo, e o banco tinha os 7 `requer-revisao`
+--     que morreram em 24/09. A migration abortou na VPS com
+--     `check constraint "cnae_anexo_valido" is violated by some row`, e estava
+--     certa em abortar — so estava no lugar errado da fila.
+--
+--     forma → dados → travas. Nessa ordem, e por esse motivo.
 -- ============================================================================
 
 BEGIN;
@@ -92,7 +98,35 @@ ALTER TABLE fatos.cnae
   DROP COLUMN IF EXISTS motor_apura,
   DROP COLUMN IF EXISTS motor_bloqueio;
 
--- 1.4 · as duas GERADAS
+-- 1.4 · 🔴 A TRADUCAO DO VOCABULARIO — e a primeira versao deste arquivo
+--        ESQUECEU dela, e por isso a migration abortou na VPS em 24/09:
+--
+--          check constraint "cnae_anexo_valido" is violated by some row
+--
+--        Renomear a coluna nao renomeia o CONTEUDO. O banco continuava com
+--        `III-fixo`, `fator-r-dinamico(III<->V, limiar 28%)` e `requer-revisao`
+--        gravados nas 1.332 linhas, e a trava so aceita o vocabulario novo.
+--
+--        🔑 A traducao acontece ANTES das geradas e das travas, porque
+--        `fator_r` sai de `anexo`: computar a coluna gerada sobre o valor
+--        antigo daria `false` em toda linha, calado.
+UPDATE fatos.cnae SET anexo = CASE
+  WHEN anexo = 'III-fixo'                 THEN 'III'
+  WHEN anexo LIKE 'fator-r-dinamico%'     THEN 'III-ou-V'
+  WHEN anexo = 'IV'                       THEN 'IV'
+  -- A categoria que morreu em 24/09. Aqui ela vira ausencia declarada; a carga
+  -- logo em seguida escreve o anexo de verdade, que hoje existe para os 87.
+  WHEN anexo = 'requer-revisao'           THEN 'nao-se-aplica'
+  WHEN coalesce(trim(anexo), '') = ''     THEN 'nao-se-aplica'
+  ELSE anexo
+END;
+
+-- O prefixo `LC123 art18 ` sai aqui: a tabela nova guarda so o inciso.
+UPDATE fatos.cnae
+   SET anexo_inciso = regexp_replace(anexo_inciso, '^LC123 art18 ', '')
+ WHERE anexo_inciso LIKE 'LC123 art18 %';
+
+-- 1.5 · as duas GERADAS
 --  🔑 Duas colunas que sao a mesma verdade nao podem divergir se so existe
 --     uma. `mei_permitido` era coluna propria e media exatamente "mei_ocupacoes
 --     esta preenchida" — 351 de 351, zero excecao. `fator_r` era a pergunta
@@ -104,7 +138,7 @@ ALTER TABLE fatos.cnae
   ADD COLUMN fator_r boolean
     GENERATED ALWAYS AS (anexo = 'III-ou-V') STORED;
 
--- 1.5 · o vocabulario de ausencia
+-- 1.6 · o vocabulario de ausencia
 --  🔴 Vazio significava QUATRO coisas diferentes na tabela antiga — nao se
 --     aplica, nao verificado, existe na fonte e nunca importado, coluna morta
 --     — e o agente lia ausencia como negacao. Campo dependente agora DECLARA
@@ -121,27 +155,23 @@ UPDATE fatos.cnae SET
   conselho_qual      = coalesce(nullif(trim(conselho_qual), ''),      'nao-se-aplica'),
   motivo_nao_atende  = coalesce(nullif(trim(motivo_nao_atende), ''),  'nao-se-aplica');
 
-ALTER TABLE fatos.cnae
-  ALTER COLUMN titulo_amigavel    SET NOT NULL,
-  ALTER COLUMN descricao_amigavel SET NOT NULL,
-  ALTER COLUMN descricao_oficial  SET NOT NULL,
-  ALTER COLUMN termos_de_busca    SET NOT NULL,
-  ALTER COLUMN familia            SET NOT NULL,
-  ALTER COLUMN anexo              SET NOT NULL,
-  ALTER COLUMN anexo_inciso       SET NOT NULL,
-  ALTER COLUMN mei_ocupacoes      SET NOT NULL,
-  ALTER COLUMN conselho_qual      SET NOT NULL,
-  ALTER COLUMN motivo_nao_atende  SET NOT NULL;
+/* 🔴 Os `NOT NULL` e os `CHECK` foram para `seed/07-cnae-travas.sql`, que roda
+   DEPOIS da carga. Trava guarda o dado novo; aplicada aqui ela julga o velho,
+   e foi exatamente isso que abortou a primeira rodada na VPS. */
 
--- 🔴 `requer-revisao` NAO esta na lista, e e o ponto: a categoria deixou de
---    existir. Se voltar, o banco recusa.
-ALTER TABLE fatos.cnae DROP CONSTRAINT IF EXISTS cnae_anexo_valido;
-ALTER TABLE fatos.cnae ADD CONSTRAINT cnae_anexo_valido
-  CHECK (anexo IN ('III', 'IV', 'III-ou-V', 'nao-se-aplica'));
+/* 🔴 AS TRAVAS MUDARAM DE ARQUIVO — e a razao e o segundo erro que a rodada
+   de 24/09 na VPS expos.
 
-ALTER TABLE fatos.cnae DROP CONSTRAINT IF EXISTS cnae_atendido_tem_anexo;
-ALTER TABLE fatos.cnae ADD CONSTRAINT cnae_atendido_tem_anexo
-  CHECK (NOT atende_me OR anexo <> 'nao-se-aplica');
+   Elas estavam aqui, antes da carga. Mas trava guarda o dado NOVO, e aqui
+   ainda esta o VELHO: `cnae_atendido_tem_anexo` exige que todo CNAE atendido
+   tenha anexo, e o banco tem os **7 `requer-revisao`** que morreram hoje.
+   Aplicar a trava contra o dado velho reprova por construcao — e reprova
+   certo, so que no momento errado.
+
+   A ordem que faz sentido e:  forma → dados → travas.
+
+   Por isso elas foram para `seed/07-cnae-travas.sql`, que roda DEPOIS do
+   `npm run seed:cnae`. */
 
 COMMENT ON COLUMN fatos.cnae.anexo IS
   'III = Anexo III sempre, Fator R nao muda nada · III-ou-V = decidido pelo '
@@ -342,31 +372,25 @@ COMMENT ON FUNCTION fatos.consultar_cnae IS
   'saida certa e pedir mais detalhe, nunca chutar o primeiro da lista.';
 
 -- ════════════════════════════════════════════════════════════════════════════
---  5 · OS PORTOES — cada um ja foi um erro real neste projeto
+--  5 · O QUE ESTE ARQUIVO CONFERE, E O QUE ELE NAO PODE CONFERIR
 -- ════════════════════════════════════════════════════════════════════════════
+--  🔑 Aqui so da para conferir a FORMA. O conteudo ainda e o antigo — a carga
+--     vem depois. Portao sobre dado velho reprova por construcao, que foi
+--     exatamente o erro da primeira versao.
 DO $$
-DECLARE
-  v_total int; v_me int; v_sem_anexo int; v_revisao int;
+DECLARE v_total int; v_colunas int;
 BEGIN
-  SELECT count(*), count(*) FILTER (WHERE atende_me),
-         count(*) FILTER (WHERE atende_me AND anexo = 'nao-se-aplica'),
-         count(*) FILTER (WHERE anexo = 'requer-revisao')
-    INTO v_total, v_me, v_sem_anexo, v_revisao
-    FROM fatos.cnae;
+  SELECT count(*) INTO v_total FROM fatos.cnae;
+  SELECT count(*) INTO v_colunas
+    FROM information_schema.columns
+   WHERE table_schema = 'fatos' AND table_name = 'cnae';
 
   IF v_total < 1300 THEN
-    RAISE EXCEPTION 'so % linhas em fatos.cnae — carga incompleta', v_total;
-  END IF;
-  -- 🔴 Um CNAE que a casa atende e nao tem anexo E o `requer-revisao` voltando
-  --    com outro nome. Se aparecer, para aqui e nao em producao.
-  IF v_sem_anexo > 0 THEN
-    RAISE EXCEPTION '% CNAE(s) atendidos sem anexo definido', v_sem_anexo;
-  END IF;
-  IF v_revisao > 0 THEN
-    RAISE EXCEPTION 'a categoria requer-revisao voltou em % linha(s)', v_revisao;
+    RAISE EXCEPTION 'so % linhas em fatos.cnae — a tabela ja estava incompleta', v_total;
   END IF;
 
-  RAISE NOTICE 'fatos.cnae: % linhas · % atendidos no ME · 0 sem anexo', v_total, v_me;
+  RAISE NOTICE 'forma migrada: % colunas · % linhas (conteudo ainda e o antigo)', v_colunas, v_total;
+  RAISE NOTICE 'proximo passo: npm run seed:cnae, e SO DEPOIS 07-cnae-travas.sql';
 END $$;
 
 COMMIT;

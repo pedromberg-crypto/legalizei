@@ -76,7 +76,7 @@ function palavra(busca, alvo) {
 }
 const LIMIAR = 0.6; // `pg_trgm.word_similarity_threshold`, padrão do Postgres
 
-const B = parse(readFileSync("cnae-leo.csv", "utf8").replace(/^﻿/, "")).filter((l) => l.length > 1);
+const B = parse(readFileSync("_entrega-leo/cnae-leo.csv", "utf8").replace(/^﻿/, "")).filter((l) => l.length > 1);
 const cab = B[0], dados = B.slice(1);
 const g = (l, n) => (l[cab.indexOf(n)] ?? "").trim();
 

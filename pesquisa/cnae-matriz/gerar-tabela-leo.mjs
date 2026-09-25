@@ -80,7 +80,7 @@ const saida = linhas.map((l) => COLUNAS.map(([, f]) => String(f(l) ?? "")));
 const vazias = [];
 saida.forEach((r, i) => r.forEach((v, j) => { if (!v) vazias.push(`${linhas[i][0]} · ${COLUNAS[j][0]}`); }));
 
-const ARQ = TUDO ? "cnae-leo-1332.csv" : "cnae-leo.csv";
+const ARQ = "_entrega-leo/" + (TUDO ? "cnae-leo-1332.csv" : "cnae-leo.csv");
 writeFileSync(ARQ, [COLUNAS.map(([n]) => n).map(escapar).join(","), ...saida.map((r) => r.map(escapar).join(","))].join("\n") + "\n", "utf8");
 
 console.log(`${ARQ} · ${saida.length} linhas × ${COLUNAS.length} colunas`);

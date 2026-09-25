@@ -1,0 +1,168 @@
+MEDIÇÃO DA BUSCA — gerada por testar-busca.mjs em 2026-09-24
+Aproximação local do pg_trgm. Quem mede de verdade é o VPS.
+
+═══ OS 87 QUE ATENDEMOS ═══
+
+"sou sapateiro"
+   1. 9529101  Sapateiro: conserto de calçado e bolsa               0.25
+
+"sou estofador"
+   1. 9529105  Conserto de móveis, estofador e tapeceiro            0.23
+
+"relojoeiro"
+   1. 9529103  Relojoeiro: conserto de relógio                      0.41
+
+"conserto notebook"
+   1. 9511800  Conserto de computador e notebook                    0.56
+   2. 9529106  Conserto de joias                                    0.33
+   3. 9529103  Relojoeiro: conserto de relógio                      0.25
+   4. 9529104  Oficina e conserto de bicicleta                      0.23
+   5. 9512600  Conserto de celular, telefone e câmera               0.20
+
+"dou aula de ingles"
+   1. 8593700  Aulas de idiomas: inglês, espanhol e libras          0.33
+   2. 8592902  Aulas de teatro e artes cênicas                      0.20
+   3. 7410202  Design de interiores                                 0.19
+   4. 8592901  Aulas de dança, ballet e dança de salão              0.17
+   5. 8592999  Aulas de artesanato, pintura e outras artes          0.17
+
+"cursinho pra concurso"
+   1. 8599605  Cursinho preparatório: concurso, vestibular e ENEM   0.36
+   2. 8599603  Curso de informática                                 0.18
+   3. 8599604  Curso profissionalizante, treinamento e palestra     0.16
+
+"faco artesanato"
+   1. 8592999  Aulas de artesanato, pintura e outras artes          0.27
+   2. 8592902  Aulas de teatro e artes cênicas                      0.13
+   3. 8591100  Aulas e escolinha de esporte, natação e artes marciais 0.11
+   4. 9002702  Restauração de obras de arte                         0.11
+
+"dou aula de natacao"
+   1. 8591100  Aulas e escolinha de esporte, natação e artes marciais 0.29
+   2. 8592901  Aulas de dança, ballet e dança de salão              0.20
+   3. 9529106  Conserto de joias                                    0.19
+   4. 8219999  Digitação e preparação de documentos                 0.19
+   5. 9002702  Restauração de obras de arte                         0.18
+
+"sou cantor"
+   1. 9001902  Produção musical, banda, cantor e músico             0.18
+
+"tenho uma banda"
+   1. 9001902  Produção musical, banda, cantor e músico             0.14
+
+"sou ator"
+   1. 9001901  Produção de teatro, companhia teatral e ator         0.12
+
+"sou modelo"
+   1. 7490105  Agente e agenciamento de atleta, modelo e artista    0.16
+   2. 7490199  Consultoria em moda, imagem e outros serviços técnicos 0.07
+
+"alugo fantasia"
+   1. 7723300  Aluguel de roupa, fantasia, traje de noiva e joia    0.28
+
+"help desk"
+   1. 6209100  Suporte técnico, help desk e informática             0.25
+   2. 6201502  Web design: criação de site e página na internet     0.17
+   3. 7410203  Design de produto, desenho industrial e estilista    0.13
+   4. 7410202  Design de interiores                                 0.12
+   5. 8592901  Aulas de dança, ballet e dança de salão              0.09
+
+"cuido de redes sociais"
+   1. 6319400  Portal, site de conteúdo e gestão de redes sociais   0.38
+   2. 7220700  Pesquisa em ciências sociais e humanas               0.18
+   3. 6202300  Desenvolvimento de software customizável             0.15
+   4. 9529103  Relojoeiro: conserto de relógio                      0.14
+   5. 5813100  Edição de revistas                                   0.14
+
+"alugo cadeira de rodas"
+   1. 7729203  Aluguel de material médico, cadeira de rodas e muleta 0.42
+   2. 7723300  Aluguel de roupa, fantasia, traje de noiva e joia    0.16
+   3. 9529101  Sapateiro: conserto de calçado e bolsa               0.15
+   4. 7311400  Agência de publicidade e propaganda                  0.15
+   5. 7722500  Locadora de filme, DVD e CD                          0.15
+
+"filmo casamento"
+   1. 7420004  Filmagem de festa, casamento e evento                0.41
+   2. 5590603  Pensão e casa de cômodos                             0.17
+   3. 7722500  Locadora de filme, DVD e CD                          0.14
+
+"tiro xerox"
+   1. 8219901  Xerox, fotocópia e impressão                         0.18
+   2. 6204000  Consultoria e assessoria em TI e informática         0.04
+
+"servico de digitacao"
+   1. 8219999  Digitação e preparação de documentos                 0.30
+   2. 7490101  Tradutor, tradução e revisão de texto                0.28
+   3. 7420005  Microfilmagem e digitalização de acervo              0.28
+   4. 8299703  Gravação de carimbos                                 0.26
+   5. 5912002  Mixagem e edição de som                              0.21
+
+"analise de credito"
+   1. 8291100  Cobrança, consulta cadastral e crédito               0.18
+   2. 9529106  Conserto de joias                                    0.16
+   3. 9521500  Conserto de eletrodoméstico, eletrônico e antena     0.14
+   4. 5812301  Edição de jornal diário                              0.14
+   5. 5812302  Edição de jornal semanal ou mensal                   0.13
+
+"sou tradutor"
+   1. 7490101  Tradutor, tradução e revisão de texto                0.26
+
+"trabalho com branding"
+   1. 7319004  Consultoria em marketing, publicidade e branding     0.20
+
+"sou estilista"
+   1. 7410203  Design de produto, desenho industrial e estilista    0.21
+
+"edito e-book"
+   1. 5811500  Edição de livro, e-book e apostila                   0.26
+   2. 9511800  Conserto de computador e notebook                    0.16
+   3. 8291100  Cobrança, consulta cadastral e crédito               0.15
+   4. 5912002  Mixagem e edição de som                              0.13
+   5. 9529101  Sapateiro: conserto de calçado e bolsa               0.11
+
+"sou consultor de marketing"
+   1. 7319004  Consultoria em marketing, publicidade e branding     0.38
+   2. 7319003  Marketing direto                                     0.33
+   3. 9529106  Conserto de joias                                    0.18
+   4. 8592903  Aulas de música e conservatório                      0.18
+   5. 6204000  Consultoria e assessoria em TI e informática         0.18
+
+"organizo festa infantil"
+   1. 8230001  Organização de evento, festa infantil e congresso    0.44
+   2. 7420004  Filmagem de festa, casamento e evento                0.12
+
+"sou representante comercial"
+   1. 7490104  Representação comercial e intermediação de negócios  0.38
+   2. 5911102  Produção de vídeo publicitário e comercial de TV     0.16
+
+"sou fotografo"
+   1. 7420001  Fotografia                                           0.47
+   2. 7420003  Laboratório e revelação fotográfica                  0.26
+
+"tenho call center"
+   1. 8220200  Teleatendimento e call center                        0.45
+
+"sou cabeleireira"
+   1. 9602501  Cabeleireiro, manicure e pedicure                    0.29
+   2. 7729203  Aluguel de material médico, cadeira de rodas e muleta 0.08
+
+"chaveiro"
+   1. 9529102  Chaveiro                                             1.00
+
+"faco sites"
+   1. 6311900  Hospedagem de sites e tratamento de dados            0.14
+   2. 6319400  Portal, site de conteúdo e gestão de redes sociais   0.10
+   3. 6201502  Web design: criação de site e página na internet     0.08
+
+"aluguel de pula pula"
+   1. 7729203  Aluguel de material médico, cadeira de rodas e muleta 0.35
+   2. 7721700  Aluguel de brinquedo, pula-pula e equipamento esportivo 0.33
+   3. 7729201  Aluguel de videogame, console e fliperama            0.27
+   4. 7312200  Venda e aluguel de espaço publicitário e outdoor     0.27
+   5. 7722500  Locadora de filme, DVD e CD                          0.25
+
+"sou psicologo"
+   🔴 NADA — a busca devolve vazio, e o Léo improvisa
+
+"sou personal trainer"
+   🔴 NADA — a busca devolve vazio, e o Léo improvisa

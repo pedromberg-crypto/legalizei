@@ -61,6 +61,32 @@ const TITULOS = {
   "8599604": ["Curso profissionalizante, treinamento e palestra", "PALESTRA e TREINAMENTO GERENCIAL são termos do IBGE"],
   "8599605": ["Cursinho preparatório: concurso, vestibular e ENEM", "🔴 a descrição já dizia cursinho/vestibular/ENEM e a busca nunca leu a descrição"],
   // 8592902 e 8599603 ficam: já achavam bem.
+
+  // ── Tecnologia e software (validado 24/09) ─────────────────────────────
+  "6201501": ["Desenvolvimento de software, app e sistema sob encomenda", "'app' e 'sistema' é o que se digita; 'programas de computador' não"],
+  "6201502": ["Web design: criação de site e página na internet", "🔴 'Web design' não continha a palavra SITE, que é o termo nº1 do IBGE aqui"],
+  "6204000": ["Consultoria e assessoria em TI e informática", "ASSESSORIA é palavra diferente de consultoria e não compartilha trigrama"],
+  "6209100": ["Suporte técnico, help desk e informática", "🔴 'help desk' devolvia Design de produto. HELP-DESK é termo do IBGE"],
+  "6319400": ["Portal, site de conteúdo e gestão de redes sociais", "🔴 'cuido de redes sociais' devolvia Pesquisa em ciências sociais. O IBGE tem GESTÃO DE CONTEÚDO RELACIONADO ÀS REDES SOCIAIS PARA TERCEIROS"],
+  // 6202300 e 6203100 ficam: "customizável" é jargão, mas é o que separa os
+  // dois, e não existe sinônimo de rua. 6311900 fica: já achava.
+
+  // ── Arte, cultura e patrimônio (validado 24/09) ────────────────────────
+  "7490105": ["Agente e agenciamento de atleta, modelo e artista", "🔴 'sou modelo' não achava NADA. AGENCIAMENTO DE MODELOS E MANEQUINS e AGENTE DE ATORES são termos do IBGE"],
+  "9001901": ["Produção de teatro, companhia teatral e ator", "🔴 'sou ator' não achava NADA. ATOR INDEPENDENTE é termo do IBGE"],
+  "9001902": ["Produção musical, banda, cantor e músico", "🔴 'sou cantor' e 'tenho uma banda' não achavam NADA. CANTOR e BANDA MUSICAL são termos do IBGE"],
+  "9002701": ["Artista plástico, escritor, jornalista e cartunista", "CARTUNISTA e DESENHISTA são termos do IBGE"],
+  // 9001903, 9001904, 9002702 e 9102302 ficam: já achavam.
+
+  // ── Aluguel de equipamentos (validado 24/09) ───────────────────────────
+  "7721700": ["Aluguel de brinquedo, pula-pula e equipamento esportivo", "TOBOGÃ, PULA-PULA e BRINQUEDOS NÃO ELETRÔNICOS são termos do IBGE — é festa infantil, que o título antigo não alcançava"],
+  "7722500": ["Locadora de filme, DVD e CD", "🔴 faltava a palavra DVD"],
+  "7723300": ["Aluguel de roupa, fantasia, traje de noiva e joia", "🔴 'alugo fantasia' não achava NADA. FANTASIAS e ACESSÓRIOS PARA NOIVAS são termos do IBGE"],
+  "7729201": ["Aluguel de videogame, console e fliperama", "CONSOLES e FLIPERAMAS são termos do IBGE"],
+  "7729203": ["Aluguel de material médico, cadeira de rodas e muleta", "CADEIRAS DE RODA e MULETAS são termos do IBGE; 'alugo cadeira de rodas' sobe para 0.42"],
+  "7729299": ["Aluguel de planta, flor, peruca e outros objetos", "o título antigo era invisível na busca; PLANTAS E FLORES e PERUCA são termos do IBGE"],
+  "7733100": ["Aluguel de computador, impressora e equipamento de escritório", "COMPUTADORES e DATA-SHOW são termos do IBGE"],
+  // 7729202 fica: já cobre móveis, eletrodomésticos e instrumentos.
 };
 const DESCRICOES = {};
 

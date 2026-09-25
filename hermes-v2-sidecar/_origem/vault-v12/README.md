@@ -64,9 +64,9 @@ README.md                       este arquivo                            ⬇ só 
 
 ## Threads abertos
 
-* 🟡 **Limiar de confiança do CNAE.** `11` §3 autoriza afirmar só com `anexo_fator_r_confianca` = `alta` (24 dos 87 atendidos). `09` §4 autoriza os 65 III-fixo. Conflito em 54 códigos, e 54 dos 65 III-fixo são `media`. Decisão do Pedro com a contadora.
+* ✅ **Limiar de confiança do CNAE. FECHADO em 24-25/09, e não por convenção: a categoria indefinida deixou de existir.** A LC 123 tem dois residuais que se completam, então "não achei inciso nominado" passou a ser resposta e não lacuna, e os 7 `requer-revisao` viraram zero. O limiar de `confianca` foi substituído por um gate binário, `pode_afirmar_anexo`, calculado no banco. O `11` foi reescrito inteiro e o `09` §4 ganhou os números medidos (70 fixos, 17 Fator R).
 * 🟡 **`escalacao` §6** segue pendente: a fila de destino não existe no produto.
-* 🟡 **`consultar_cnae`** não está ligada no canal. O `11` já tem o modo degradado escrito.
+* ✅ **`consultar_cnae` está ligada** desde 22/09, e a busca fechou em 21 de 21 casos de aceite em 24/09.
 
 ## Fora de escopo deste vault
 

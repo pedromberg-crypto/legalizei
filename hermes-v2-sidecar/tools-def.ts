@@ -24,6 +24,18 @@ export const TOOLS: DefinicaoTool[] = [
       'nao crave anexo nem aliquota, pergunte o que a pessoa faz no dia a dia e oriente ' +
       'por ai. ' +
       '🔴 SE A BUSCA RETORNAR VAZIA: NUNCA presuma que a casa atende. Se não encontrou, você não sabe. Responda que não encontrou a profissão pelo nome e peça para o cliente detalhar o que faz no dia a dia. ' +
+      /* 🔴 Os dois campos que a doc do vault nao conhecia ate 25/09, e por isso
+         voltavam no payload sem ninguem dizer o que fazer com eles. O
+         `motivo_nao_atende` e o pior dos dois: e a RESPOSTA da recusa, e sem
+         ele o agente dizia "nao atendemos" e improvisava o porque. */
+      '🔴 QUANDO `casa_atende_me` FOR false, O CAMPO `motivo_nao_atende` E A RESPOSTA. ' +
+      'Ele vem numa palavra fechada (comercio-ou-industria, paga-icms, anexo-iv, vedado-simples, ' +
+      'ambiguo-simples, exige-alvara-previo, exige-conselho, exige-registro-setorial). Diga o ' +
+      'limite a partir dele, em portugues de gente, e NUNCA leia a palavra tecnica para o ' +
+      'cliente. Se vier `ambiguo-simples`, nao decida: escale. ' +
+      '🔴 O CAMPO `achou_por` DIZ O QUANTO O CASAMENTO E FORTE. `codigo` e `sinonimo` sao ' +
+      'exatos. `titulo` e forte. `termos` e FRACO: bateu numa palavra solta da lista do IBGE, ' +
+      'e ai voce confirma a atividade com a pessoa antes de concluir qualquer coisa. ' +
       '🔴 DÚVIDA DE CNAE: Se o título retornado não for EXATAMENTE o que o cliente disse (ex: pediu "médico" e voltou "Aluguel de material médico"), NUNCA crave que atende ou não atende. Devolva a dúvida dizendo: "Você quis dizer [Nome do Título Retornado]?". Se o cliente disser que não, diga: "Me conta mais um pouco do seu dia a dia pra eu procurar novamente sua atividade". ' +
       /* 🔴 O VERBO MANDA, e esta regra nasceu de um caso medido em 24/09.
          "vendo roupa" devolvia `7723-3/00 Aluguel de roupa, fantasia, traje

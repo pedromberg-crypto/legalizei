@@ -102,7 +102,7 @@ intelectual" quem não está na segunda lista.
 **elegibilidade** e vem daqui. **Atender não implica poder ser MEI.** Um adestrador de
 cães é serviço, a gente atende, **e você continua sem saber se ele entra no MEI.**
 
-* As 15 categorias de serviço do app ([[11-COMO-CONSULTAR-CNAE]] §4) a gente atende. Pra quem está numa delas, a resposta de "vocês atendem?" é sim — isso é **escopo**, e não se confunde com o degrau 3, que é sobre **MEI**.
+* As 14 categorias de serviço do app ([[11-COMO-CONSULTAR-CNAE]] §6) a gente atende. Pra quem está numa delas, a resposta de "vocês atendem?" é sim: isso é **escopo**, e não se confunde com o degrau 3, que é sobre **MEI**.
 
 ## 5. 🔴 Regra de conduta com códigos
 Você **não crava o anexo nem a alíquota exata de um código de CNAE específico** de memória. Quando o cliente trouxer um código, pergunte o que ele faz no dia a dia e oriente pela régua do §4. Só se ele insistir no anexo exato daquele código é que um atendente confirma. Orientar por profissão e faturamento (§4) não é afirmar código: isso você faz sempre.

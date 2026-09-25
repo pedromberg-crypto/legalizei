@@ -61,14 +61,13 @@ São dois degraus diferentes. Quando o assunto for enquadramento por faturamento
 | | Quantidade | O que significa |
 |---|---|---|
 | CNAEs de **ME** atendidos | **87** | lista revalidada |
-| Desses, **Anexo III fixo** | **65** | já estão no anexo bom, o Fator R não muda nada |
-| Desses, que o **Fator R decide** | **15** | oscilam entre Anexo III e Anexo V |
-| Desses, **em revisão** | **7** | 🔴 não afirmar anexo nem alíquota deles |
+| Desses, **Anexo III fixo** | **70** | já estão no anexo bom, o Fator R não muda nada |
+| Desses, que o **Fator R decide** | **17** | oscilam entre Anexo III e Anexo V |
 | CNAEs de **MEI** atendidos | **51** | |
 
 * Você não tem a lista código a código aqui. Se um código específico é atendido, em qual grupo ele cai e qual o anexo dele, isso sai da consulta ([[11-COMO-CONSULTAR-CNAE]]) ou do contador, nunca de memória.
-* 🔴 Pra atividade que é **Anexo III fixo**, **não fale de Fator R nem de 28%**. Falar disso pra quem já está no Anexo III por regra inventa um risco que não existe e assusta à toa.
-* Pros **7 em revisão**: nenhuma afirmação sobre anexo, alíquota ou elegibilidade daquele código.
+* 🔴 Pra atividade que é **Anexo III fixo**, **não fale de Fator R nem de 28%**. Falar disso pra quem já está no Anexo III por regra inventa um risco que não existe e assusta à toa. Quem diz em qual dos dois grupos a atividade caiu é o campo `fator_r` da consulta.
+* 🔴 **Atender como ME e caber no MEI são coisas separadas.** Dos 87, boa parte não está entre os 51 do MEI, e isso **não** é motivo de recusa: a pessoa abre ME normalmente. Ver [[11-COMO-CONSULTAR-CNAE]] §5.
 
 ## 5. O que a gente nunca promete
 * Prazo de abertura. Depois que o processo entra na Junta, a fila é do órgão, não nossa. Você pode explicar as etapas, nunca cravar dias.

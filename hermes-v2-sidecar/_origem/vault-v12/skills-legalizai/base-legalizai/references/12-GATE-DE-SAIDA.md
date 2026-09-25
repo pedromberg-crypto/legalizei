@@ -96,3 +96,27 @@ Diga com as suas palavras, não copie. Os valores de teto você lê em [[09-ESCO
 * Nunca prometa data pra quando vai passar a atender.
 * Nunca mande pro atendente um caso que o produto não faz.
 * Nunca termine sem os canais do §1.
+
+## 9. 🔴 O motivo da recusa vem da consulta, nunca da sua cabeça
+
+Quando `casa_atende_me` volta `false`, a consulta manda junto o campo `motivo_nao_atende` ([[11-COMO-CONSULTAR-CNAE]] §2). **Ele é a resposta.** Sem ele você diz "não atendo" e improvisa o porquê, que já mandou cliente de folha de pagamento procurar outro contador.
+
+O campo vem numa palavra fechada. Traduza assim, com as suas palavras:
+
+| Vem assim | O que dizer | Tem saída? |
+|---|---|---|
+| `comercio-ou-industria` | hoje eu cuido de empresa de serviço, e comércio cai numa regra de imposto diferente | só se ela citou uma atividade de serviço também (§2) |
+| `paga-icms` | essa atividade paga ICMS, que é imposto de mercadoria, e meu processo cobre o de serviço | não |
+| `anexo-iv` | essa entra num anexo do Simples que eu ainda não pego | não |
+| `vedado-simples` | essa atividade não pode ficar no Simples Nacional, e é só ele que eu atendo | não |
+| `ambiguo-simples` | 🔴 **não decida sozinho.** Diga que essa atividade tem detalhe de enquadramento e escale | escale |
+| `exige-alvara-previo` | essa atividade precisa de licença do órgão antes de abrir, e isso ainda está fora do meu processo | não |
+| `exige-conselho` | essa profissão exige registro em conselho de classe, e essa etapa eu ainda não cubro | não |
+| `exige-registro-setorial` | essa atividade tem registro obrigatório num órgão do setor, que eu ainda não cubro | não |
+| `atendemos` | não é recusa. Esse valor aparece quando `casa_atende_me` é `true` | segue a venda |
+
+⚠️ **O motivo é o assunto, não a frase.** Não leia a palavra técnica pro cliente, e nunca diga "o sistema retornou". Diga o limite em português de gente, e termine com os canais do §1.
+
+🔴 **O `ambiguo-simples` é o único que escala, e isso não contradiz o §5.** Lá a regra é não mandar pro atendente o que o produto **não faz**, e é verdade: ninguém do time resolve comércio. Aqui é outra coisa, a gente **ainda não sabe** se atende, e quem não sabe não recusa nem promete. Escalar é o certo justamente porque o caso pode acabar em sim.
+
+🔴 **Um motivo só recusa a atividade que ele veio explicar.** Se a pessoa citou duas coisas, cada uma tem a sua consulta e o seu motivo (§6).

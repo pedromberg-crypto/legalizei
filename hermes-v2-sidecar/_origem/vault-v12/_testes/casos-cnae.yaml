@@ -89,3 +89,88 @@
         deve: ["(publicidade|ag[êe]ncia)"]
         avaliar: Puxa a família de publicidade/agência.
     max_chars: 450
+
+# ══════════════════════════════════════════════════════════════════════
+#  25/09 · os 5 casos do pacote que corrigiu a documentação do CNAE.
+#
+#  Cada um nasce de uma regra reescrita hoje, e cada um está amarrado a um
+#  código real da tabela. Sem eles as regras envelhecem caladas, que é o
+#  defeito que o `10-CONTRATO` documentou: a nota mais cara de errar era a
+#  menos consultada, e a bateria não tinha um único caso dela.
+# ══════════════════════════════════════════════════════════════════════
+
+  - id: cnae-mei-nao-e-recusa
+    descricao: >
+      🔴 O caso mais caro do pacote. 6201-5/01 (desenvolvimento de software) é
+      atendido como ME e NÃO está entre os 51 do MEI. O RULES mandava recusar e
+      fechar a venda com [FORA_ESCOPO] nessa condição, e 36 dos 87 CNAEs
+      atendidos caem nela, tecnologia e áudio e vídeo inclusive.
+    turnos:
+      - diz: "Sou desenvolvedor de software e queria abrir um MEI."
+        rota: comercial
+        deve: ["(me|microempresa|faturamento|simples)"]
+        nao_deve: ["(n[ãa]o atendo|n[ãa]o atendemos|fora do escopo|n[ãa]o pode ser mei)"]
+        avaliar: >
+          Segue a venda como ME. Não recusa, e não afirma que a ocupação é
+          proibida no MEI, que é regra federal e não está na base.
+    max_chars: 500
+
+  - id: cnae-motivo-vem-do-banco
+    descricao: >
+      8511-2/00 (creche) volta com motivo `exige-alvara-previo`. Antes o Léo
+      dizia "não atendo" e improvisava o porquê, que foi como mandou cliente de
+      folha de pagamento procurar outro contador.
+    turnos:
+      - diz: "Tenho uma creche pequena e quero abrir o CNPJ com vocês."
+        rota: fora_escopo
+        deve: ["(licen[çc]a|alvar[áa]|[óo]rg[ãa]o|autoriza[çc][ãa]o)", "legalizai.com.br"]
+        nao_deve: ["(exige-alvara-previo|o sistema|a base|retorno)"]
+        avaliar: >
+          Diz o limite real (a licença prévia do órgão), em português de gente,
+          sem ler a palavra técnica nem citar sistema, e fecha com os canais.
+    max_chars: 500
+
+  - id: cnae-ambiguo-nao-decide
+    descricao: >
+      4924-8/00 (transporte escolar) volta com motivo `ambiguo-simples`. É o
+      único dos 9 motivos em que a saída é escalar, não recusar: decidir
+      sozinho aqui é inventar enquadramento.
+    turnos:
+      - diz: "Faço transporte escolar com uma van própria, vocês abrem pra mim?"
+        rota: comercial
+        deve: ["(confirm|contador|verific|checar|te retorno|time)"]
+        nao_deve: ["(atendo sim|n[ãa]o atendo|anexo iii|anexo v)"]
+        avaliar: >
+          Não crava nem o sim nem o não. Diz que essa atividade tem detalhe de
+          enquadramento e que alguém confirma.
+    max_chars: 450
+
+  - id: cnae-fator-r-nao-se-fala
+    descricao: >
+      9602-5/01 (cabeleireiro) é Anexo III fixo, `fator_r` false. Falar de
+      Fator R para quem já está no III por regra inventa um risco que não
+      existe. Era o delírio que o Pedro relatou.
+    turnos:
+      - diz: "Sou cabeleireira e tenho meu salão, quanto eu pagaria de imposto no ME?"
+        rota: tecnico
+        deve: ["(simples|das|imposto|aliquota|al[íi]quota)"]
+        nao_deve: ["(fator r|pr[óo]-labore de 28|28%)"]
+        avaliar: >
+          Explica o imposto sem levantar Fator R. A atividade não oscila entre
+          anexos, então o assunto não existe para ela.
+    max_chars: 500
+
+  - id: cnae-verbo-manda
+    descricao: >
+      "Vendo roupa" casava com 7723-3/00 (aluguel de roupa e fantasia), que a
+      casa ATENDE, e o Léo confirmava. O objeto bate e a atividade não: vender
+      é comércio, alugar é serviço.
+    turnos:
+      - diz: "Vendo roupa feminina, vocês abrem minha empresa?"
+        rota: fora_escopo
+        deve: ["(com[ée]rcio|servi[çc]o|mercadoria)", "legalizai.com.br"]
+        nao_deve: ["(aluguel|alugar|fantasia|atendo sim)"]
+        avaliar: >
+          Entende que o verbo é vender, não alugar, e recusa por comércio com
+          os canais no fim.
+    max_chars: 500

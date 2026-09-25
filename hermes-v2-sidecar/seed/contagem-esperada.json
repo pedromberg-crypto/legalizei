@@ -1,10 +1,11 @@
 {
   "_doc": "O portão de contagem da base. Os cartões já tinham o seu (58, cravado no código); as notas não tinham nenhum — parse que achasse 40 em vez de 63 carregava feliz, e trecho que sumiu não avisa, porque quem some não grita.",
   "_como_mudar": "Mudou a base de propósito? Rode `npm run validar:docs`, confira o número que ele imprime, e atualize aqui NO MESMO COMMIT da mudança de conteúdo. Se você está editando este arquivo sozinho, pare: ou o conteúdo mudou junto, ou alguma coisa se perdeu.",
-  "_medido_em": "2026-09-22",
+  "_medido_em": "2026-09-25",
   "cartoes": 55,
   "arquivosDeNota": 13,
-  "trechos": 100,
-  "_ultima_mudanca": "ondas 2 e 3 (22/09): 8 preambulos de doutrina sairam para o RULES §10; o 04 virou uma secao por objecao (3 -> 24) e ganhou as 6 objecoes de preco; o §4 do 05 (4.145 chars) virou 4A/4B/4C/4D; e entraram as respostas curadas pelo Pedro — certificado, e-mail, alvara, IPTU, assinatura, conta PJ, guia unica do MEI e desativar pro-labore. 74 -> 100 trechos.",
+  "trechos": 102,
+  "_ultima_mudanca": "25/09, pacote CNAE: o `11-COMO-CONSULTAR-CNAE` foi reescrito inteiro (5 -> 6 secoes) porque descrevia 9 campos de retorno que nao existem mais desde a refatura de 24/09, e a regra de decisao dele exigia `anexo_fator_r_confianca = alta`, campo que nao volta; e o `12-GATE-DE-SAIDA` ganhou o §9 com a traducao dos 9 valores de `motivo_nao_atende` (8 -> 9 secoes). 100 -> 102 trechos.",
+  "_ultima_mudanca_anterior": "ondas 2 e 3 (22/09): 8 preambulos de doutrina sairam para o RULES §10; o 04 virou uma secao por objecao (3 -> 24) e ganhou as 6 objecoes de preco; o §4 do 05 (4.145 chars) virou 4A/4B/4C/4D; e entraram as respostas curadas pelo Pedro — certificado, e-mail, alvara, IPTU, assinatura, conta PJ, guia unica do MEI e desativar pro-labore. 74 -> 100 trechos.",
   "_correcao_22_09": "Esta linha dizia '3 -> 25' e '74 -> 92'. Os dois estavam errados: `grep -c '^## '` nas 13 notas da 100, e 24 no 04. O campo `trechos` ao lado ja estava certo, entao o portao nunca reprovou — o numero errado vivia so na prosa, que nenhum script le. E o defeito que a trava de defasagem do vault existe para pegar: numero em prosa nao recalcula."
 }

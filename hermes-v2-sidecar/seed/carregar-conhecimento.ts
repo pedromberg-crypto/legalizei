@@ -61,13 +61,26 @@ const ESPERADO_CARTOES = 55
  * normal, e o commit que muda o conteudo atualiza a contagem junto. Editar
  * este arquivo sozinho e o sinal de que alguma coisa se perdeu.
  */
-interface ContagemEsperada {
+export interface ContagemEsperada {
   cartoes: number
   arquivosDeNota: number
   trechos: number
 }
 
-function contagemEsperada(): ContagemEsperada {
+/**
+ * 🔴 EXPORTADA EM 25/09, e a razao e um bloqueio real de deploy.
+ *
+ * O `verificar-carga.ts` tinha o numero 58 CRAVADO no codigo, enquanto este
+ * arquivo dizia 55. Os dois medem a mesma coisa, entao um dos dois so podia
+ * estar errado: em 23/09 o commit `5f05a1e` fundiu 4 cartoes de folha em 1, de
+ * proposito, e so a contagem foi atualizada. A trava ficou para tras, e nove
+ * commits depois ela derrubou o `deploy:docs` inteiro por um motivo que nao
+ * tinha nada a ver com o que estava sendo entregue.
+ *
+ * 🔑 Mesmo principio das colunas geradas da tabela de CNAE: duas coisas que
+ * sao a mesma verdade nao divergem se so uma existir. O numero mora aqui.
+ */
+export function contagemEsperada(): ContagemEsperada {
   return JSON.parse(readFileSync(join(RAIZ, 'seed', 'contagem-esperada.json'), 'utf8'))
 }
 

@@ -3,6 +3,7 @@
   "_como_mudar": "Mudou a base de propósito? Rode `npm run validar:docs`, confira o número que ele imprime, e atualize aqui NO MESMO COMMIT da mudança de conteúdo. Se você está editando este arquivo sozinho, pare: ou o conteúdo mudou junto, ou alguma coisa se perdeu.",
   "_medido_em": "2026-09-25",
   "cartoes": 55,
+  "_cartoes_55_porque": "Nasceram 58 em 20/09, um por funcionalidade core. Em 23/09 o commit 5f05a1e fundiu 4 cartoes de folha (8.2 lancamentos, 8.3 holerite, 8.4 guias, 8.5 obrigacoes) num so, o 8.2 Rotina de Folha de Pagamento: 58 - 4 + 1 = 55. Foi de proposito. O que NAO foi atualizado junto foi o `verificar-carga.ts`, que tinha o 58 cravado em codigo, e nove commits depois ele derrubou o deploy:docs inteiro. Em 25/09 o numero saiu de la e as duas travas passaram a ler ESTE arquivo.",
   "arquivosDeNota": 13,
   "trechos": 102,
   "_ultima_mudanca": "25/09, pacote CNAE: o `11-COMO-CONSULTAR-CNAE` foi reescrito inteiro (5 -> 6 secoes) porque descrevia 9 campos de retorno que nao existem mais desde a refatura de 24/09, e a regra de decisao dele exigia `anexo_fator_r_confianca = alta`, campo que nao volta; e o `12-GATE-DE-SAIDA` ganhou o §9 com a traducao dos 9 valores de `motivo_nao_atende` (8 -> 9 secoes). 100 -> 102 trechos.",

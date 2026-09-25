@@ -2,7 +2,7 @@
  * ════════════════════════════════════════════════════════════════════════════
  *  seed/verificar-carga.ts  ·  o que o banco recusaria, dito antes de tentar
  *
- *  Roda OFFLINE e aplica aos 58 cartoes e aos trechos de nota exatamente os
+ *  Roda OFFLINE e aplica aos cartoes e aos trechos de nota exatamente os
  *  dois predicados dos CHECKs do `schema.sql`. Sai com codigo 1 se algo
  *  passaria a ser recusado.
  *
@@ -23,7 +23,7 @@ import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
 import {
-  parsearCartoes, fatiarNota, sanitizarNumeros,
+  parsearCartoes, fatiarNota, sanitizarNumeros, contagemEsperada,
   PREDICADO_NUMERO, PREDICADO_TRAVESSAO, RAIZ,
 } from './carregar-conhecimento.js'
 
@@ -49,10 +49,18 @@ export function verificar(): Problema[] {
   // ── Cartoes ───────────────────────────────────────────────────────────────
   const cartoes = parsearCartoes(readFileSync(join(RAIZ, 'CARTOES-PRODUTO.md'), 'utf8'))
 
-  if (cartoes.length !== 58) {
+  /* 🔴 O NUMERO NAO MORA MAIS AQUI (25/09). Estava cravado como 58 enquanto o
+     `contagem-esperada.json` dizia 55, e a divergencia derrubou o
+     `deploy:docs` por um motivo sem relacao com a entrega. A causa: em 23/09
+     quatro cartoes de folha viraram um, de proposito, e so uma das duas travas
+     foi atualizada. Agora as duas leem a mesma fonte. */
+  const esperado = contagemEsperada()
+  if (cartoes.length !== esperado.cartoes) {
     problemas.push({
       onde: 'CARTOES-PRODUTO.md',
-      o_que: `o parse achou ${cartoes.length} cartoes, a lista ratificada tem 58`,
+      o_que:
+        `o parse achou ${cartoes.length} cartoes, e o contagem-esperada.json ` +
+        `diz ${esperado.cartoes}. Um dos dois mudou sem o outro`,
       trecho: '',
     })
   }

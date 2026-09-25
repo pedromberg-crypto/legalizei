@@ -10,6 +10,25 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-25 — **81º flow: A TABELA ESTAVA BOA, O MANUAL DE LEITURA É QUE ESTAVA VELHO.**
+>
+> 🧭 **O pedido do Pedro:** *"passa um pente fino no que o Léo usa para consultar dentro dos CNAEs e me diga o que ainda está amarrado ou desconectado... as tabelas estão boas, não quero ajustar CNAE por CNAE."* Ele estava certo nos dois pontos: nada era de CNAE individual, e nada era da tabela.
+>
+> **(1) 🔴 O CONTRATO DA FERRAMENTA DESCREVIA UMA FERRAMENTA QUE NÃO EXISTE.** O `11-COMO-CONSULTAR-CNAE` listava 9 campos de retorno e sobrava **um** em comum com o real: `codigo`. Pior, a regra de decisão exigia `anexo_fator_r_confianca = alta`, campo que não volta: condição **insatisfazível**, então o Léo caía no encaminhamento ou improvisava, raciocinando com `III-fixo` e `requer-revisao`, vocabulário morto desde 24/09. 🔑 **Era a raiz do delírio de Fator R** que o Pedro relatou. O gate real existe e funciona, é o `pode_afirmar_anexo`, e não estava em nota nenhuma.
+>
+> **(2) 🔴 O `RULES` MANDAVA RECUSAR O MIOLO DO NICHO.** Ele fechava a venda com `[FORA_ESCOPO]` quando `casa_atende_mei` fosse `false` — e **36 dos 87 CNAEs que a casa atende estão nessa condição**, incluindo desenvolvimento de software, web design, produção de vídeo e estúdio de gravação. O `tools-def.ts` dizia o contrário na descrição da tool, mas entre dois documentos com ordens opostas ganha o que fecha a venda. `casa_atende_mei` é **escopo comercial nosso**, nunca regra federal.
+>
+> **(3) 7 CAMPOS NOVOS EXISTIAM EM ZERO DOCUMENTOS.** `grep` de `motivo_nao_atende|familia|achou_por|semelhanca|anexo_inciso|titulo_oficial` nas 13 notas + `RULES` + `PERSONA`: **0 ocorrências**. O pior é o `motivo_nao_atende`, que é a **resposta** da recusa (9 valores fechados, de `comercio-ou-industria` a `exige-alvara-previo`): o Léo recebia a palavra e nada dizia o que fazer com ela, então seguia improvisando o porquê. O `12-GATE-DE-SAIDA` ganhou o §9 traduzindo os 9, com `ambiguo-simples` escalando em vez de recusar.
+>
+> **(4) NÚMEROS CONGELADOS.** `09` §4 dizia 65 III-fixo e 15 Fator R: são **70 e 17**. E os **"7 em revisão"**, que são zero desde ontem, ainda carregavam uma proibição ativa, tirando do Léo resposta que ele já pode dar. Categorias eram 15 nos docs contra **14** no app.
+>
+> **(5) 🔒 DUAS TRAVAS DE CONTAGEM DISCORDAVAM, E UMA DERRUBOU O DEPLOY.** O `verificar-carga.ts` tinha **58 cravado em código** e o `contagem-esperada.json` dizia **55**. A errada era a do código: em 23/09 quatro cartões de folha viraram um, de propósito, e só o JSON foi atualizado. Nove commits depois ela matou o `deploy:docs` por motivo sem relação com a entrega. 🔑 Consertado pelo mesmo princípio das colunas geradas: **o número mora em um lugar só**, e agora as duas travas leem o mesmo arquivo.
+>
+> **(6) ✅ NO AR.** `seed:rag` rodou limpo: **55 cartões · 102 trechos · 22 sanitizados · 0 cartões órfãos e 5 trechos removidos** — os 5 são o `11` antigo inteiro, que é exatamente o que tinha que morrer. 5 casos de teste novos entraram no mesmo commit, um por regra, cada um amarrado a um código real.
+>
+> **🔴 ABERTO:** o **restart do serviço** (o `RULES.md` é prompt, não banco, então a regra do `[FORA_ESCOPO]` só passa a valer depois dele) e o nome do serviço segue sem ser levantado · os 5 casos novos só rodam pelo `acervo`, porque a suíte `curta` tem custo calibrado e mexer nela é decisão do Pedro · **11 travessões** nas 13 notas, violando a regra dura de marca e ensinando o contrário por few-shot · a `11` passou de 4.216 para 5.690 chars e vira a 8ª nota acima do limite de poda · 3 yaml de teste da outra LLM seguem descommitados nos dois lados, e o `deploy:docs` recusa enviar por cima deles, com razão.
+>
+> ---
 > **Última atualização:** 2026-09-24 — **80º flow: O `requer-revisao` MORREU, O MOTOR APURA 87/87, E A BUSCA DO LÉO FECHOU 21/21.**
 >
 > 🧭 **A pergunta do Pedro que derrubou a categoria:** *"como a gente consegue ter dúvida sobre um CNAE de design? É o mais padrão e simples de todos."* Estava certo, e a resposta já vivia no vault.

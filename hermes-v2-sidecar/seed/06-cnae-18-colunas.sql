@@ -42,6 +42,9 @@
 --    2. npm run seed:cnae                          ← os DADOS
 --    3. npm run sql seed/07-cnae-travas.sql        ← as TRAVAS
 --
+--  E para ajustar SO a busca depois, sem tocar em estrutura:
+--    npm run sql seed/08-cnae-busca.sql            ← idempotente de proposito
+--
 --  🔴 A ORDEM NAO E PREFERENCIA, E CORRECAO — e a primeira versao errou nisso.
 --     As travas moravam aqui, antes da carga. Mas trava guarda o dado NOVO, e
 --     antes da carga o banco ainda tem o VELHO: `cnae_atendido_tem_anexo` exige
@@ -62,11 +65,35 @@ BEGIN;
 --  para `fatos.cnae(codigo)`, e recriar a tabela levaria a referencia junto.
 
 -- 1.1 · o que so muda de nome
-ALTER TABLE fatos.cnae RENAME COLUMN descricao           TO titulo_oficial;
-ALTER TABLE fatos.cnae RENAME COLUMN anexo_fator_r_grupo TO anexo;
-ALTER TABLE fatos.cnae RENAME COLUMN anexo_fator_r_fonte TO anexo_inciso;
-ALTER TABLE fatos.cnae RENAME COLUMN atende_me_certeza   TO atende_me;
-ALTER TABLE fatos.cnae RENAME COLUMN atende_mei_certeza  TO atende_mei;
+--
+--  🔴 O `RENAME` NAO E IDEMPOTENTE, e isso mordeu em 24/09. Rodar este arquivo
+--     uma segunda vez morria em `column "descricao" does not exist` — e, como
+--     tudo aqui vive numa transacao, derrubava junto a correcao que estava
+--     sendo levada. Migration que so roda uma vez e armadilha: quem descobre
+--     e quem tenta rodar de novo, e ai ja perdeu a rodada.
+--
+--  Agora cada rename so acontece se a coluna velha ainda existir.
+DO $$
+DECLARE
+  r record;
+BEGIN
+  FOR r IN SELECT * FROM (VALUES
+      ('descricao',           'titulo_oficial'),
+      ('anexo_fator_r_grupo', 'anexo'),
+      ('anexo_fator_r_fonte', 'anexo_inciso'),
+      ('atende_me_certeza',   'atende_me'),
+      ('atende_mei_certeza',  'atende_mei')
+    ) AS t(de, para)
+  LOOP
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+                WHERE table_schema = 'fatos' AND table_name = 'cnae'
+                  AND column_name = r.de)
+    THEN
+      EXECUTE format('ALTER TABLE fatos.cnae RENAME COLUMN %I TO %I', r.de, r.para);
+      RAISE NOTICE 'renomeada: % -> %', r.de, r.para;
+    END IF;
+  END LOOP;
+END $$;
 
 -- 1.2 · o que nasce agora
 ALTER TABLE fatos.cnae
@@ -133,9 +160,9 @@ UPDATE fatos.cnae
 --     sim/nao que o Pedro pediu, e sai direto do anexo.
 ALTER TABLE fatos.cnae DROP COLUMN IF EXISTS mei_permitido;
 ALTER TABLE fatos.cnae
-  ADD COLUMN mei_permitido boolean
+  ADD COLUMN IF NOT EXISTS mei_permitido boolean
     GENERATED ALWAYS AS (mei_ocupacoes IS NOT NULL AND mei_ocupacoes <> 'nao-se-aplica') STORED,
-  ADD COLUMN fator_r boolean
+  ADD COLUMN IF NOT EXISTS fator_r boolean
     GENERATED ALWAYS AS (anexo = 'III-ou-V') STORED;
 
 -- 1.6 · o vocabulario de ausencia

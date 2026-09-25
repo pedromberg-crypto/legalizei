@@ -27,6 +27,7 @@
  * ════════════════════════════════════════════════════════════════════════════
  */
 
+import { existsSync, readFileSync } from 'node:fs'
 import pg from 'pg'
 
 /* `espera` diz o que precisa ser verdade, nao qual linha tem que vir. Amarrar
@@ -48,7 +49,16 @@ const CASOS = [
      alargar o alias um dia, estes quatro caem aqui antes de cair no cliente. */
   { q: 'vendo espaco publicitario', espera: { atende: true } },
   { q: 'faco promocao de vendas', espera: { atende: true } },
-  { q: 'sou representante comercial', espera: { codigo: '7490104', atende: true } },
+  /* 🟡 Este NAO cobra codigo, e a razao e honesta: "representante comercial"
+     e ambiguo de verdade entre `7490-1/04` (representacao em geral, servico,
+     a casa atende) e `4512-9/01` (representante de VEICULOS, comercio, a casa
+     nao atende) — e as duas sao leituras legitimas da mesma frase. O banco
+     devolve o `4512-9/01` com 0.85 porque as palavras estao literais no titulo
+     dele, e isso nao e defeito de busca: e a pessoa que precisa desempatar,
+     e a regra do verbo no `tools-def.ts` manda perguntar.
+     🔑 O que este caso GUARDA e outra coisa: que nenhum alias amplo em "venda"
+     ou "comercial" sequestre a frase. Por isso a checagem e sobre o `via`. */
+  { q: 'sou representante comercial', espera: { naoPorSinonimo: true } },
 
   // ── quem a casa atende: tem que achar pelo nome que a pessoa usa ──────────
   { q: 'sou sapateiro', espera: { codigo: '9529101', atende: true } },
@@ -71,6 +81,28 @@ const CASOS = [
 const cliente = new pg.Client({ connectionString: process.env.DATABASE_URL })
 await cliente.connect()
 
+/* 🔴 O PRIMEIRO PORTAO E SOBRE A CARGA, NAO SOBRE A BUSCA.
+   Os sinonimos sao DADO: eles vivem em `cnae-aliases.json` e so chegam ao
+   banco pelo `npm run seed:cnae`. Em 24/09 quatro deles foram adicionados no
+   vault, o teste rodou direto, e "vendo roupa" continuou errando — nao porque
+   a busca estava ruim, mas porque a tabela de sinonimos ainda tinha os 5
+   antigos. Perder uma rodada descobrindo isso e caro; avisar custa uma query. */
+{
+  const { rows } = await cliente.query('SELECT count(*)::int AS n FROM fatos.cnae_sinonimos')
+  const noBanco = rows[0].n
+  const arquivo = new URL('../../pesquisa/cnae-matriz/cnae-aliases.json', import.meta.url)
+  const noArquivo = existsSync(arquivo) ? JSON.parse(readFileSync(arquivo, 'utf8')).length : null
+
+  if (noArquivo != null && noBanco !== noArquivo) {
+    console.log(
+      `\n🔴 SINONIMOS DESATUALIZADOS: ${noBanco} no banco, ${noArquivo} no arquivo.\n` +
+        '   Rode `npm run seed:cnae` antes — os sinonimos sao dado, nao codigo.\n',
+    )
+  } else {
+    console.log(`sinonimos: ${noBanco} carregados\n`)
+  }
+}
+
 let ok = 0
 let a3 = 0
 const falhas = []
@@ -86,6 +118,7 @@ for (const caso of CASOS) {
   } else {
     // 🔴 A3 primeiro, porque errar aqui e o erro caro.
     if (e.atende === false && topo.casa_atende_me === true) veredito = 'A3'
+    else if (e.naoPorSinonimo && topo.achou_por === 'sinonimo') veredito = 'sequestrado'
     else if (e.codigo && topo.codigo.trim() !== e.codigo) veredito = 'outro'
     else if (e.via && topo.achou_por !== e.via) veredito = 'via'
   }

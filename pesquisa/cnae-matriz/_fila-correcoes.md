@@ -164,31 +164,30 @@ Item 12 da SC COSIT 13/2022: *"a análise acima foi da permissão das atividades
 
 ## 🟠 Estrutura — a tabela nova, acordada em 24/09
 
-### 6b. 🆕 🔴 A busca do Léo ignora o campo onde estão as palavras que a pessoa digita
-Aberto em 24/09, ao responder o que se pode editar. `fatos.consultar_cnae`, em `hermes-v2-sidecar/seed/05-cnae-nomes-honestos.sql`:
+### 6b. 🔴 A busca do Léo ignora os 542 caracteres onde estão as palavras reais — **e devolve CNAE nosso pra quem não atendemos**
 
-```sql
-WHERE p_busca <% coalesce(c.titulo_amigavel, c.descricao)
-   OR c.codigo = regexp_replace(p_busca, '\D', '', 'g')
+Aberto em 24/09 ao responder o que se pode editar; **agravado no mesmo dia** ao medir os 1.245.
+
+A `fatos.consultar_cnae` compara contra **um campo de 36 caracteres em média** (`titulo_amigavel`, com o oficial de reserva) e ignora o `atividades`, que tem **542 de média** e é a lista do IBGE com o vocabulário real.
+
+🔴 **O agravante:** os 1.245 que não atendemos **não têm título amigável** — por desenho. A busca cai no título oficial, que é linguagem de IBGE e não fala como ninguém. Medido:
+
+```
+"sou advogado"          →  🔴 nada           (e SERVIÇOS ADVOCATÍCIOS existe)
+"sou engenheiro"        →  🔴 nada
+"sou dentista"          →  Agenciamento de atletas e artistas
+"tenho um restaurante"  →  Restauração de obras de arte   ⭐ NOSSO
+"vendo roupa"           →  Aluguel de roupas, joias       ⭐ NOSSO
+"faço obra"             →  Restauração de obras de arte   ⭐ NOSSO
 ```
 
-Ela compara **só contra o `titulo_amigavel`** (com o título oficial de reserva). Fora da busca:
+🔑 **3 de 6 devolveram um CNAE que a gente ATENDE para quem a gente NÃO atende.** O `motivo_nao_atende` construído hoje **nunca é acionado**: o CNAE certo não aparece, o Léo lê `atende_me = sim` no topo e diz que atende. No pior caso a empresa abre com o CNAE errado.
 
-| Campo | Tamanho médio | Está na busca? |
-|---|---|---|
-| `titulo_amigavel` | **29 chars** | ✅ é o único |
-| `termos_de_busca` (`atividades`) | **542 chars** | 🔴 **não** |
-| `descricao_amigavel` | 83 chars | 🔴 não |
-| `descricao_oficial` (subclasse) | 493 chars | 🔴 não |
+⚠️ **E a solução óbvia tem furo, medido antes de propor.** Pôr o `atividades` na busca traz **referência cruzada para outros CNAEs**: `"dentista"` acha 4 CNAEs e o 1º é `FABRICAÇÃO DE PRODUTOS QUÍMICOS`; `"restaurante"` acha 9 e o 1º é `FABRICAÇÃO DE ARTIGOS DE VIDRO`. É o mesmo erro do regex de lei contra o `atividades` nesta manhã — 101 mudanças, quase todas lixo.
 
-🔑 **O `termos_de_busca` é a lista do IBGE com os termos que a pessoa de fato usa** — `BARBEARIA`, `COIFFURE`, `MANICURA`, `CRIAÇÃO DE LOGO, LOGOTIPO`, `DESIGN DE TEMPLATES PARA USO NA INTERNET`. São 542 caracteres por CNAE de vocabulário real, e a busca **nunca olha para lá**. Ela compara a frase da pessoa contra 29 caracteres.
+🔴 **E um terceiro buraco que campo nenhum resolve:** a palavra **`psicólogo` não existe em lugar nenhum da tabela**. Nem título oficial, nem amigável, nem nos 542 caracteres. Profissão inteira invisível **por ausência de dado**, não por peso de busca — e isso é trabalho daqui, não do VPS.
 
-É isso que faz *"dentista"* devolver `SISAL` e *"faço unhas em casa"* devolver `Pensão e casa de cômodos`: não é o trigrama que é ruim, é o alvo que é curto demais.
-
-⚠️ E tem efeito colateral imediato na lapidação: **mexer no `titulo_amigavel` move a busca; mexer no `descricao_amigavel` não move nada hoje.** O segundo serve para o Léo *responder*, não para *achar*.
-
-> **Pronto quando:** a busca considerar `termos_de_busca` e `descricao_amigavel`, com peso menor que o do título, e as consultas que hoje erram (`dentista`, `faço unhas em casa`, `sou personal trainer`) devolverem algo do ramo certo. 🔴 É mudança no **VPS** — jurisdição dele, critério de aceite daqui.
-
+> **Pronto quando:** os 6 critérios de [[_aceite-busca-de-cnae]] passarem, medidos no VPS contra o banco. 🪟 A mudança é **jurisdição do VPS**; o critério sai daqui e não vira desenho.
 
 ### 7. Campo vazio tem que ser alguma coisa
 Hoje "vazio" significa **quatro coisas diferentes** e não dá para distinguir olhando: *não se aplica* (dependente cujo pai disse não) · *não verificado* · *existe na fonte e nunca foi importado* · *coluna morta*. Foi assim que `registro_setorial` pareceu resolvido em **942 linhas onde ninguém olhou**.

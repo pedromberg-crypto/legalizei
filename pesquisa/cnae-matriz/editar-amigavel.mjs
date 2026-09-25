@@ -64,7 +64,7 @@ const TITULOS = {
 
   // ── Tecnologia e software (validado 24/09) ─────────────────────────────
   "6201501": ["Desenvolvimento de software, app e sistema sob encomenda", "'app' e 'sistema' é o que se digita; 'programas de computador' não"],
-  "6201502": ["Web design: criação de site e página na internet", "🔴 'Web design' não continha a palavra SITE, que é o termo nº1 do IBGE aqui"],
+  "6201502": ["Web design: criação de sites e páginas na internet", "🔴 'Web design' não continha a palavra SITE. 🔄 24/09, medido na VPS: no singular ele perdia 'faço sites' para `6311-9/00 Hospedagem de sites` (0.55 × 0.364) — e Hospedagem é III fixo enquanto Web design é FATOR R, então o erro custava dinheiro. Plural."],
   "6204000": ["Consultoria e assessoria em TI e informática", "ASSESSORIA é palavra diferente de consultoria e não compartilha trigrama"],
   "6209100": ["Suporte técnico, help desk e informática", "🔴 'help desk' devolvia Design de produto. HELP-DESK é termo do IBGE"],
   "6319400": ["Portal, site de conteúdo e gestão de redes sociais", "🔴 'cuido de redes sociais' devolvia Pesquisa em ciências sociais. O IBGE tem GESTÃO DE CONTEÚDO RELACIONADO ÀS REDES SOCIAIS PARA TERCEIROS"],

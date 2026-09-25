@@ -65,6 +65,14 @@ CREATE INDEX IF NOT EXISTS cnae_termos_fts      ON fatos.cnae
 --                             titulos em 24/09 afinou
 --  C · TERMOS por tsvector  → os 542 caracteres, com peso MENOR
 --
+--  🔴 O TETO DO DEGRAU C CAIU DE 0.55 PARA 0.30 EM 24/09, E FOI MEDIDO.
+--     Com 0.55 ele passava na frente de casamento por TITULO, que e justamente
+--     o que o criterio A6 proibe: "sou advogado" devolvia
+--     `9412099 OUTRAS ATIVIDADES ASSOCIATIVAS PROFISSIONAIS` com 0.36 por
+--     termo cruzado, na frente de `6911701 SERVICOS ADVOCATICIOS`, que casava
+--     por titulo com 0.308. O teto agora fica ABAIXO da faixa tipica de
+--     titulo, e nao por convencao: por medicao.
+--
 --  🔴 O PESO MENOR NO DEGRAU C NAO E DETALHE, E O CRITERIO A5 DO ACEITE.
 --     O `termos_de_busca` tem referencia cruzada: "dentista" aparece em 4
 --     CNAEs e o primeiro e FABRICACAO DE PRODUTOS QUIMICOS; "restaurante"
@@ -162,7 +170,7 @@ por_titulo AS (
 --     `word_similarity_threshold` padrao do `<%`).
 por_termos AS (
   SELECT c.*,
-         least(0.55, 0.30 + ts_rank(to_tsvector('portuguese', c.termos_de_busca),
+         least(0.30, 0.15 + ts_rank(to_tsvector('portuguese', c.termos_de_busca),
                                     plainto_tsquery('portuguese', b.q)))::real AS score,
          'termos'::text AS via
     FROM fatos.cnae c, busca b

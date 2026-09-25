@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json && node scripts/copiar-prompts.mjs",
     "check": "tsc -p tsconfig.check.json",
+    "sql": "node --env-file=.env scripts/rodar-sql.mjs",
     "verificar": "npm run build && node .build/seed/verificar-carga.js",
     "seed:cnae": "npm run build && node --env-file=.env .build/seed/carregar-cnae.js",
     "seed:rag": "npm run build && node --env-file=.env .build/seed/carregar-conhecimento.js",

@@ -320,7 +320,15 @@ SELECT t.codigo,
   FROM tudo t
  -- 🔴 O PISO. Abaixo disto e ruido, e devolver ruido e pior que devolver nada.
  WHERE t.score >= 0.25
- ORDER BY t.score DESC, t.atende_me DESC, t.codigo
+ /* 🔴 O DESEMPATE NAO PODE PREFERIR OS NOSSOS — e a primeira versao deste
+    arquivo fazia isso (`t.atende_me DESC`), o que viola o criterio A3 do
+    aceite. Em empate, puxar um CNAE que a casa atende para o topo e
+    exatamente o defeito que a migration existe para matar: "tenho um
+    restaurante" devolvia Restauracao de obras de arte com `atende_me = true`,
+    e o agente dizia que atendia. Errar para "nao atendemos" e barato; errar
+    para "atendemos" abre empresa errada. Empate desempata por codigo, que e
+    arbitrario e NAO e enviesado. */
+ ORDER BY t.score DESC, t.codigo
  LIMIT 5;
 $$;
 

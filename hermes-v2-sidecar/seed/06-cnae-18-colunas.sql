@@ -295,16 +295,42 @@ exato AS (
    WHERE s.termo = b.q OR b.q LIKE '%' || s.termo || '%'
 ),
 -- ── B · o titulo, por trigrama. O peso cheio. ──────────────────────────────
+/* 🔴 O FILTRO AQUI JA FOI ESTREITO DEMAIS, E CUSTOU 4 CASOS DO ACEITE.
+   A primeira versao usava so `b.q <% titulo`, e o `<%` carrega o limiar padrao
+   do `pg_trgm`, que e **0.6**. A funcao ANTIGA tinha quatro condicoes em OR,
+   uma delas `word_similarity > 0.15` — quatro vezes mais permissiva. Trocar
+   uma pela outra derrubou exatamente as frases de MULTIPLAS PALAVRAS contra
+   titulo curto, medido na VPS em 24/09:
+
+     "conserto notebook"      → vazio   (o titulo TEM a palavra notebook)
+     "dou aula de ingles"     → vazio   (o titulo TEM ingles)
+     "cursinho pra concurso"  → vazio   (o titulo TEM cursinho e concurso)
+     "faco sites"             → vazio
+
+   🔑 E o simulador local do vault nao pegou porque ele calcula a cobertura na
+   direcao INVERTIDA — fracao da janela coberta pela busca, nao o contrario.
+   Ele e mais permissivo que o Postgres. Vale para escolher entre dois titulos,
+   nao para prever o corte. Quem mede o corte e este banco. */
 por_titulo AS (
   SELECT c.*,
          greatest(
            word_similarity(b.q, c.titulo_amigavel),
-           word_similarity(b.q, c.titulo_oficial)
+           word_similarity(b.q, c.titulo_oficial),
+           -- 🔑 `similarity` entra no score porque `word_similarity` so olha
+           --    janela CONTIGUA: "conserto notebook" nao forma janela em
+           --    "Conserto de computador e notebook", mas a similaridade do
+           --    conjunto inteiro e alta. As duas medem coisas diferentes.
+           similarity(b.q, c.titulo_amigavel)
          )::real AS score,
          'titulo'::text AS via
     FROM fatos.cnae c, busca b
    WHERE NOT EXISTS (SELECT 1 FROM exato e WHERE e.codigo = c.codigo)
-     AND (b.q <% c.titulo_amigavel OR b.q <% c.titulo_oficial)
+     AND (b.q <% c.titulo_amigavel
+          OR b.q <% c.titulo_oficial
+          OR word_similarity(b.q, c.titulo_amigavel) > 0.2
+          OR word_similarity(b.q, c.titulo_oficial)  > 0.2
+          OR similarity(b.q, c.titulo_amigavel)      > 0.2
+          OR c.titulo_amigavel ILIKE '%' || b.q || '%')
 ),
 -- ── C · os termos do IBGE, por palavra, valendo no maximo 0.55 ─────────────
 --     O teto e deliberado: um casamento so por termo cruzado nunca pode

@@ -105,8 +105,34 @@ if (a3 > 0) {
       '   Nao subir o servico com isso aberto.',
   )
 }
+/* 🔑 DIAGNOSTICO, e ele existe por um motivo especifico: sem ele, ajustar
+   limiar vira chute de longe, e chute de longe e o ciclo vicioso que o
+   `CLAUDE.md` §1.3 descreve. Para cada caso que falhou com codigo esperado,
+   mostra as metricas CRUAS daquele CNAE — assim o proximo ajuste sai de
+   numero, nao de intuicao. */
 for (const f of falhas.filter((x) => x.veredito !== 'A3')) {
-  console.log(`🟡 "${f.q}" — esperava ${f.espera.codigo ?? '?'}, veio ${f.topo?.codigo ?? 'vazio'}`)
+  console.log(`\n🟡 "${f.q}" — esperava ${f.espera.codigo ?? '?'}, veio ${f.topo?.codigo ?? 'vazio'}`)
+  if (!f.espera.codigo) continue
+  const { rows } = await cliente.query(
+    `SELECT titulo_amigavel,
+            word_similarity($1, titulo_amigavel) AS ws_amig,
+            word_similarity($1, titulo_oficial)  AS ws_ofic,
+            similarity($1, titulo_amigavel)      AS sim_amig,
+            ($1 <% titulo_amigavel)              AS passa_op,
+            to_tsvector('portuguese', termos_de_busca)
+              @@ plainto_tsquery('portuguese', $1) AS casa_termos
+       FROM fatos.cnae WHERE codigo = $2`,
+    [f.q, f.espera.codigo],
+  )
+  const d = rows[0]
+  if (!d) { console.log('   (o codigo esperado nao existe na tabela)'); continue }
+  console.log(`   alvo: ${d.titulo_amigavel}`)
+  console.log(
+    `   word_sim amigavel ${Number(d.ws_amig).toFixed(3)} · oficial ${Number(d.ws_ofic).toFixed(3)}` +
+      ` · similarity ${Number(d.sim_amig).toFixed(3)}` +
+      ` · operador <% ${d.passa_op ? 'passa' : 'NAO passa'}` +
+      ` · termos ${d.casa_termos ? 'casam' : 'nao casam'}`,
+  )
 }
 
 await cliente.end()

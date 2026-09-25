@@ -1,27 +1,4 @@
-/* Testa se uma frase de cliente ACHA o CNAE certo — reproduzindo localmente a
-   matemática que o Postgres usa na `fatos.consultar_cnae`.
-
-   🔑 Existe porque "esse título está bom?" não é pergunta de gosto, é pergunta
-   de medida. A função de busca do Léo é:
-
-     WHERE p_busca <% coalesce(c.titulo_amigavel, c.descricao)
-     ORDER BY greatest(similarity(titulo_amigavel, p_busca),
-                       similarity(descricao,       p_busca)) DESC
-     LIMIT 5
-
-   Ou seja: o ÚNICO alvo é o título. Então o critério de um bom título é um só
-   — a frase que a pessoa digita precisa ACHAR ele, e de preferência em 1º.
-
-   ⚠️ Isto é uma APROXIMAÇÃO fiel, não o Postgres. O `pg_trgm` acolchoa cada
-   palavra com 2 espaços na frente e 1 atrás, quebra em trigramas e mede
-   Jaccard (interseção ÷ união). O `<%` (word_similarity) procura a melhor
-   janela de palavras do alvo, e é isso que a função `palavra()` imita.
-   Diferenças de acento e de limiar podem existir; para decidir entre dois
-   títulos, serve. Para afirmar comportamento em produção, roda no VPS.
-
-   Uso:  node testar-busca.mjs "faço unhas em casa" "sou sapateiro" ... */
-
-import { readFileSync } from "node:fs";
+﻿import { readFileSync, existsSync } from "node:fs";
 
 function parse(csv) {
   const o = []; let c = "", l = [], a = false;
@@ -37,9 +14,8 @@ function parse(csv) {
   return o;
 }
 
-// pg_trgm: minúscula, sem acento, não-alfanumérico vira separador,
-// cada palavra ganha "  " na frente e " " atrás, e se quebra em 3.
-const limpar = (s) => (s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const limpar = (s) => (s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
 function trigramas(txt) {
   const set = new Set();
   for (const p of limpar(txt).split(/[^a-z0-9]+/).filter(Boolean)) {
@@ -56,9 +32,6 @@ const jaccard = (A, B) => {
 };
 const similarity = (a, b) => jaccard(trigramas(a), trigramas(b));
 
-/* word_similarity: a melhor janela contígua de palavras do ALVO comparada
-   com a busca inteira. É o que faz "sou sapateiro" casar com um título longo
-   que contenha "sapateiro". */
 function palavra(busca, alvo) {
   const pal = limpar(alvo).split(/[^a-z0-9]+/).filter(Boolean);
   const B = trigramas(busca);
@@ -69,28 +42,67 @@ function palavra(busca, alvo) {
       const t = trigramas(janela);
       let inter = 0;
       for (const g of t) if (B.has(g)) inter++;
-      melhor = Math.max(melhor, inter / t.size); // extensão da janela coberta
+      melhor = Math.max(melhor, inter / t.size);
     }
   }
   return melhor;
 }
-const LIMIAR = 0.6; // `pg_trgm.word_similarity_threshold`, padrão do Postgres
+const LIMIAR = 0.6;
 
-const B = parse(readFileSync("_entrega-leo/cnae-leo.csv", "utf8").replace(/^﻿/, "")).filter((l) => l.length > 1);
+const B = parse(readFileSync("_entrega-leo/cnae-leo-1332.csv", "utf8").replace(/^\uFEFF/, "")).filter((l) => l.length > 1);
 const cab = B[0], dados = B.slice(1);
 const g = (l, n) => (l[cab.indexOf(n)] ?? "").trim();
 
-// Substituições propostas, para comparar antes × depois no mesmo comando.
 const PROPOSTAS = JSON.parse(process.env.PROPOSTAS ?? "{}");
 const titulo = (l) => PROPOSTAS[g(l, "codigo")] ?? g(l, "titulo_amigavel");
 
+let aliases = [];
+if (existsSync("cnae-aliases.json")) {
+    aliases = JSON.parse(readFileSync("cnae-aliases.json", "utf8"));
+}
+
 for (const busca of process.argv.slice(2)) {
+  console.log(`\n"${busca}"`);
+  const bLimpo = limpar(busca);
+  
+  // 1. Checar Alias por substring/presença da palavra
+  // Usamos regex com borda de palavra para garantir que 'personal' não case com 'personalidade'
+  let matchedAlias = null;
+  for (const a of aliases) {
+      const termoLimpo = limpar(a.termo);
+      const regex = new RegExp(`\\b${termoLimpo}\\b`);
+      if (regex.test(bLimpo)) {
+          matchedAlias = a;
+          break;
+      }
+  }
+
+  if (matchedAlias) {
+      const row = dados.find(l => g(l, "codigo").replace(/\D/g, "") === matchedAlias.codigo.replace(/\D/g, ""));
+      if (row) {
+          console.log(`   🌟 ENCONTRADO POR ALIAS: '${matchedAlias.termo}'`);
+          console.log(`   1. ${g(row, "codigo")}  ${titulo(row).padEnd(52)} 1.00`);
+          continue;
+      }
+  }
+
+  // 2. Fallback pro pg_trgm local
   const r = dados
-    .map((l) => ({ l, w: palavra(busca, titulo(l)), s: Math.max(similarity(titulo(l), busca), similarity(g(l, "titulo_oficial"), busca)) }))
+    .map((l) => {
+        const wAmigavel = palavra(busca, titulo(l));
+        const wAtividades = palavra(busca, g(l, "termos_de_busca"));
+        // Simulando a combinação do tsvector (que olha termos de busca) + trgm (amigavel)
+        const w = Math.max(wAmigavel, wAtividades * 0.5); // Aproximação grosseira para o teste local
+        const sAmigavel = similarity(titulo(l), busca);
+        const sOficial = similarity(g(l, "titulo_oficial"), busca);
+        const sAtividades = similarity(g(l, "termos_de_busca"), busca) * 0.3; 
+        const s = Math.max(sAmigavel, sOficial, sAtividades);
+        return { l, w, s: sAmigavel > sOficial ? sAmigavel : sOficial }; 
+    })
     .filter((x) => x.w >= LIMIAR)
     .sort((a, b) => b.s - a.s)
     .slice(0, 5);
-  console.log(`\n"${busca}"`);
+  
   if (!r.length) { console.log("   🔴 NADA — a busca devolve vazio, e o Léo improvisa"); continue; }
   r.forEach((x, i) => console.log(`   ${i + 1}. ${g(x.l, "codigo")}  ${titulo(x.l).padEnd(52)} ${x.s.toFixed(2)}`));
 }

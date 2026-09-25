@@ -37,6 +37,44 @@ Esses três são a camada que segura a conexão com o WhatsApp. `server.ts` é o
 processo que consome a fila; `bridge.js` é a ponte Baileys que detém a sessão
 pareada; os `.service` são o que o systemd usa para subir os dois.
 
+### 1.0 🔑 AS UNIDADES SÃO DE USUÁRIO, e o escopo errado esconde tudo
+
+> Levantado em 25/09, depois de uma hora perdida procurando serviço que existia
+> o tempo todo.
+
+| | |
+|---|---|
+| `leo-sidecar.service` | 🟢 o motor de atendimento. **É este que se reinicia** |
+| `whatsapp-bridge.service` | 🔴 a ponte Baileys. **Intocável**, é ela que detém a sessão |
+| `hermes-gateway-leo.service` | ⚫ `failed`, motor v1 aposentado em 21/09 |
+| `hermes-gateway.service` | ⚫ `not-found`: unidade fantasma, referenciada e sem arquivo |
+
+```bash
+systemctl --user list-units --type=service --all   # ver
+systemctl --user restart leo-sidecar               # reiniciar o motor
+```
+
+🔴 **O `--user` não é detalhe, é o que faz a diferença entre achar e não achar.**
+`systemctl list-units | grep -i hermes` devolve **vazio**, porque olha o escopo
+do sistema, e as duas unidades vivem sob o `systemd --user` (PID 2459, ativo
+desde 16/09). Vazio ali foi lido como "não existe serviço", e a conclusão errada
+levou a subir o server na mão.
+
+🔴 **E existe supervisor: `kill` no server não o mata, o systemd o traz de
+volta em segundos.** Em 25/09 o processo foi morto, o systemd reiniciou em 11
+segundos, e o restart manual subiu um SEGUNDO servidor: dois processos
+consumindo a mesma fila, os dois em polling de 1500ms. O jeito certo de
+reiniciar é `systemctl --user restart leo-sidecar`, nunca `kill` mais `nohup`.
+
+🔑 **O que descobre a verdade quando a dúvida aparece é `ps -ef --forest`.** Ele
+mostra o pai de cada processo, e foi ele que apontou o `systemd --user` como pai
+dos dois. `ps aux` sozinho mostra o processo e esconde quem o segura.
+
+⚠️ **O `server.js` no ar não usa `--env-file`:** as variáveis vêm do
+`EnvironmentFile` da unidade. Antes de qualquer subida manual, confira que o
+`.env` do disco bate com o ambiente do processo comparando **comprimento e os 4
+últimos caracteres** (§1.1), nunca o valor.
+
 O motivo de `bridge.js` estar nesta lista é específico: a pasta de sessão é um
 aparelho registrado no WhatsApp. Quebrá-la não se conserta com `git revert` —
 exige re-parear por QR, presencialmente, com o número fora do ar até alguém

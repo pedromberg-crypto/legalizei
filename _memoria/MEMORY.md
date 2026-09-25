@@ -5,8 +5,13 @@
 - [A base do Leo: o fatiador e as 3 ondas](legalize-base-do-leo-fatiador-e-ondas.md) — 22/09: 5.922 chars invisiveis (a tabela do dossie inteira); 63 -> 100 trechos; busca 9/10 -> 12/12.
 - [Descricao de tool nao move chamada](legalize-descricao-de-tool-nao-move-chamada.md) — 22/09: 4 tools dizem OBRIGATORIA e estao em zero; proibir string funciona, mandar chamar nao. Codigo move.
 - [O numero do Leo esta em TESTE](legalize-leo-numero-em-teste.md) — 22/09 travado: sem cliente real; restart/build sem janela de silencio. Intocavel e a SESSAO pareada, nao o server.
+- [Os servicos do Leo sao de USUARIO](legalize-servicos-do-leo-sao-de-usuario.md) — 25/09: `systemctl --user restart leo-sidecar`. Sem `--user` da vazio e parece nao existir; ha supervisor, e `kill` + `nohup` criou 2 servers na mesma fila.
 - [O Leo trocou de motor, e esta em producao](legalize-sidecar-em-producao.md) — 21/09 02:20: Node+Postgres+pgvector no ar; o codigo de producao NAO esta no repo.
 - [Regra negativa nao impede alucinacao](legalize-regra-negativa-nao-impede-alucinacao.md) — 21/09 medido 4x: obrigar a consulta antes da afirmacao, sim.
+- [A busca de CNAE fechou em 21/21, com 3 camadas](legalize-busca-cnae-tres-camadas.md) — 24/09: teto de 0.30 no termo cruzado + bonus de corroboracao + sinonimo. Alias e DADO: so entra por `seed:cnae`, nunca por deploy.
+- [A doc do agente envelhece CALADA](legalize-doc-do-agente-envelhece-calada.md) — 25/09: campo inexistente numa regra vira condicao insatisfazivel; o RULES recusava 36 dos 87 atendidos.
+- [Numero mora em UM lugar so](legalize-numero-mora-em-um-lugar-so.md) — 25/09: 58 cravado x 55 em arquivo derrubou o deploy 9 commits depois.
+- [Sinonimo e FRASE, nao verbo solto](legalize-sinonimo-cnae-e-frase-nao-verbo.md) — 24/09 travado: 4 dos 87 tem venda na propria atividade; alias amplo troca A3 por falso negativo pior.
 
 ## Motor fiscal e estado do CNPJ
 - [O CONTADOR VALIDA O MOTOR](legalize-contador-valida-o-motor.md) — 16/09: 1a validacao por contador (~5h, 293k caracteres).

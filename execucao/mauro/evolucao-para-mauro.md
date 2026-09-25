@@ -14,29 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **22/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **25/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **337** |
-| Entradas no log | 67 |
-| **Dias trabalhados** | **64** |
-| Período | 07/07/2026 → 22/09/2026 |
-| Dias corridos no período | 78 |
+| **Entregas reportadas** | **348** |
+| Entradas no log | 68 |
+| **Dias trabalhados** | **66** |
+| Período | 07/07/2026 → 25/09/2026 |
+| Dias corridos no período | 81 |
 | Média de entregas por dia trabalhado | 5,3 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **241** | 71,5% |
-| ✅ estava parado, foi resolvido | **15** | 4,5% |
-| 🟡 em curso / parcial | **27** | 8,0% |
-| 🔴 trava ou precisa de você | **5** | 1,5% |
+| 🟢 pronto / entregue | **249** | 71,6% |
+| ✅ estava parado, foi resolvido | **17** | 4,9% |
+| 🟡 em curso / parcial | **28** | 8,0% |
+| 🔴 trava ou precisa de você | **5** | 1,4% |
 | 🕓 aguarda pessoa | **2** | 0,6% |
-| sem marca | 47 | 13,9% |
+| sem marca | 47 | 13,5% |
 
 ### Ritmo, mês a mês
 
@@ -44,13 +44,13 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 20 | 20 | 🔴 **1** |
+| setembro/2026 | 22 | 23 | 🔴 **2** |
 
 ### ⚠️ O que o sócio não viu
 
-**1** dia(s) com trabalho commitado e **sem entrada** neste log:
+**2** dia(s) com trabalho commitado e **sem entrada** neste log:
 
-`18/09/2026`
+`18/09/2026` · `23/09/2026`
 
 > 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
 >
@@ -1545,4 +1545,37 @@ Virada de arquitetura, feita e no ar. O robô do WhatsApp deixou de ler document
 - Já sei quanto custa: *1,5 centavo de dólar* por conversa completa. Liguei um cache que derrubou 78% do custo. Custo não é problema aqui
 - Ele ganhou 32 testes automáticos, incluindo um que confere o cálculo do DAS centavo por centavo contra a lei
 - Do seu lado nada trava essa semana. A decisão dos CNAEs com a contadora segue aberta e é a que mais destrava
+```
+
+## Semana 24–25/09/2026 — o Léo estava delirando com Fator R, e a culpa não era da tabela
+
+O Pedro chegou dizendo que o robô errava o enquadramento de algumas atividades. Fui procurar na tabela de CNAEs e ela estava certa. O defeito estava no **manual de leitura** que o robô usa, que tinha ficado três semanas para trás.
+
+| # | O que foi feito | Detalhe | Status |
+|---|---|---|---|
+| 1 | **A categoria "precisa revisar" acabou, e o motor passou a calcular 87 de 87** | Eram **7 CNAEs** em que a gente não sabia dizer o anexo, e o robô travava neles. A Lei do Simples tem **dois artigos de sobra** que se completam: um manda tudo que não está nomeado para o Anexo III, o outro pega as atividades intelectuais. 🔑 **Não achar o artigo nominado É a resposta**, não a falta dela. Zero indefinidos | 🟢 |
+| 2 | **A busca por atividade passou a acertar 21 de 21 casos, sem nenhum erro grave** | Antes, **3 de 6 frases** de quem a gente **não** atende voltavam com um CNAE que a gente **atende** em primeiro lugar. *"Tenho um restaurante"* devolvia **restauração de obras de arte**, e o robô lia "atendemos" e dizia que sim. No pior caso a empresa abre com a atividade errada | 🟢 |
+| 3 | 🔴 **O caso mais caro: *"faço sites"* devolvia a atividade errada, e a diferença é 6% contra 15,5% de imposto** | Voltava hospedagem de site (que tem alíquota fixa) na frente de web design (que é Fator R). Não é ranking feio, é o imposto do cliente | 🟢 |
+| 4 | 🔴 **O manual do robô descrevia uma ferramenta que não existe mais** | A tabela mudou em 24/09 e o documento ficou em 04/09. Ele listava **9 campos** de resposta e sobrava **um** em comum com o real. E a regra de decisão citava um campo que não volta mais, o que a torna **impossível de cumprir**: o robô não erra com erro nesse caso, ele improvisa. **Era a raiz do delírio de Fator R** | ✅ |
+| 5 | 🔴 **Uma regra mandava recusar justamente o miolo do nosso nicho** | O robô encerrava a venda quando a atividade não estava confirmada para MEI. **36 dos 87 CNAEs que a gente atende** estão nessa condição: desenvolvimento de software, web design, produção de vídeo, estúdio de gravação. Ele mandava esse pessoal embora | ✅ |
+| 6 | **A recusa parou de ser improvisada** | Quando a gente não atende, a consulta agora manda **o motivo** junto, e ele virou frase de gente: *"essa atividade precisa de licença do órgão antes de abrir"*. Antes o robô dizia só "não atendo" e inventava o porquê, e foi assim que mandou um cliente de folha de pagamento procurar outro contador | 🟢 |
+| 7 | **Tudo no ar, e o Pedro validou no WhatsApp** | Testou salão de beleza e fotógrafo. Os dois certos. No do fotógrafo o cliente **puxou** o Fator R e o robô **negou que se aplica e explicou por quê**, fez mais do que a regra pedia | 🟢 |
+| 8 | 🔴 **Duas travas internas discordavam e derrubaram a publicação** | Uma dizia 58 e a outra 55, medindo a mesma coisa. Quatro documentos do robô tinham virado um, de propósito, e só uma das travas soube. Agora as duas leem o mesmo lugar | 🟢 |
+| 9 | 🔴 **Subi um segundo robô sem querer, e ele ficou minutos no ar** | Procurei o serviço no lugar errado do sistema, concluí que não existia supervisor e reiniciei na mão. Existia: o sistema já tinha reiniciado sozinho em **11 segundos**, e ficaram **dois** robôs atendendo a mesma fila. Sem estrago porque o número ainda é de teste, e agora está escrito onde procurar | 🟢 |
+| 10 | 🛠️ **Agora dá pra ver a conversa real do robô com o raciocínio ao lado** | Mostra, turno a turno, o que ele consultou antes de responder. Serve pra saber se ele acertou **porque pesquisou** ou acertou de sorte, que é o problema que a gente já mediu antes | 🟢 |
+| 11 | **Falta conferir se o fotógrafo foi acerto ou sorte** | A resposta dele está certa no dado, mas não sei se ele **consultou** ou respondeu de memória. E *"fotografia é serviço e a gente cobre"* generaliza uma família que tem exceção dentro: **fotografia aérea (drone) a gente não atende** | 🟡 |
+
+**O que fica com você:** nada trava do seu lado esta semana. Continua de pé a decisão dos CNAEs com a contadora, e entraram **6 casos** para a mesma conversa: atividades em que o código do IBGE junta duas coisas que a lei separa. É a mesma decisão, com mais material.
+
+### 📱 WhatsApp (25/09)
+```
+*Update Legalizai* 📣
+- O Léo estava errando o enquadramento de algumas atividades, e a culpa *não era da tabela*: o manual de leitura dele tinha ficado 3 semanas pra trás
+- Ele listava 9 campos de resposta e sobrava *um* em comum com o real. E a regra de decisão citava um campo que não existe mais, o que a torna impossível de cumprir. Robô nesse caso não erra com erro, ele improvisa
+- Achei uma regra que mandava recusar *justamente o nosso nicho*: 36 dos 87 CNAEs que a gente atende caíam nela. Software, web design, vídeo, estúdio
+- A busca por atividade saiu de 3 erros graves em 6 frases pra *21 de 21 sem erro*
+- O pior caso era "faço sites": devolvia hospedagem no lugar de web design. Não é ranking feio, é *6% contra 15,5%* de imposto do cliente
+- Acabou a categoria "precisa revisar": eram 7 atividades sem anexo definido e o motor travava nelas. Agora calcula 87 de 87
+- Testei no WhatsApp: salão de beleza e fotógrafo, os dois certos. No do fotógrafo o cliente puxou o Fator R e ele *negou que se aplica e explicou por quê*
+- Nada trava do seu lado. A decisão dos CNAEs com a contadora segue aberta, e ganhou 6 casos novos pra mesma conversa
 ```

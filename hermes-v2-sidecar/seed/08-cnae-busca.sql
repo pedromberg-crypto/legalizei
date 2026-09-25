@@ -145,24 +145,43 @@ exato AS (
    nao para prever o corte. Quem mede o corte e este banco. */
 por_titulo AS (
   SELECT c.*,
-         greatest(
-           word_similarity(b.q, c.titulo_amigavel),
-           word_similarity(b.q, c.titulo_oficial),
-           -- 🔑 `similarity` entra no score porque `word_similarity` so olha
-           --    janela CONTIGUA: "conserto notebook" nao forma janela em
-           --    "Conserto de computador e notebook", mas a similaridade do
-           --    conjunto inteiro e alta. As duas medem coisas diferentes.
-           similarity(b.q, c.titulo_amigavel)
+         (
+           greatest(
+             word_similarity(b.q, coalesce(a.amig, c.titulo_oficial)),
+             word_similarity(b.q, c.titulo_oficial),
+             -- 🔑 `similarity` entra porque `word_similarity` so olha janela
+             --    CONTIGUA: "conserto notebook" nao forma janela em "Conserto
+             --    de computador e notebook", mas a similaridade do conjunto
+             --    inteiro e alta. As duas medem coisas diferentes.
+             similarity(b.q, coalesce(a.amig, c.titulo_oficial))
+           )
+           /* 🔑 O BONUS DE CORROBORACAO, e ele nasceu de um caso medido.
+              "sou advogado" devolvia `1610205` (0.31 por titulo) na frente de
+              `6911701 SERVICOS ADVOCATICIOS` (0.308) — dois milesimos, e o
+              certo perdia. Mas os dois sinais nao valem o mesmo: no 6911701 a
+              palavra "advogado" tambem esta nos TERMOS do IBGE, e no 1610205
+              nao. Dois sinais independentes concordando e evidencia melhor que
+              um sozinho, e o bonus e o que diz isso em numero. */
+           + CASE WHEN c.termos_de_busca <> 'nao-se-aplica'
+                   AND to_tsvector('portuguese', c.termos_de_busca)
+                       @@ plainto_tsquery('portuguese', b.q)
+                  THEN 0.15 ELSE 0 END
          )::real AS score,
          'titulo'::text AS via
-    FROM fatos.cnae c, busca b
+    FROM fatos.cnae c
+    CROSS JOIN busca b
+    /* 🔴 `nao-se-aplica` NAO e titulo, e comparar contra ele produz ruido: os
+       1.245 que a casa nao atende tem esse texto no lugar do amigavel, e a
+       similaridade contra ele e barulho puro. Aqui ele vira NULL, e o oficial
+       assume. */
+    CROSS JOIN LATERAL (SELECT nullif(c.titulo_amigavel, 'nao-se-aplica') AS amig) a
    WHERE NOT EXISTS (SELECT 1 FROM exato e WHERE e.codigo = c.codigo)
-     AND (b.q <% c.titulo_amigavel
+     AND (b.q <% coalesce(a.amig, c.titulo_oficial)
           OR b.q <% c.titulo_oficial
-          OR word_similarity(b.q, c.titulo_amigavel) > 0.2
-          OR word_similarity(b.q, c.titulo_oficial)  > 0.2
-          OR similarity(b.q, c.titulo_amigavel)      > 0.2
-          OR c.titulo_amigavel ILIKE '%' || b.q || '%')
+          OR word_similarity(b.q, coalesce(a.amig, c.titulo_oficial)) > 0.2
+          OR word_similarity(b.q, c.titulo_oficial)                   > 0.2
+          OR similarity(b.q, coalesce(a.amig, c.titulo_oficial))      > 0.2
+          OR coalesce(a.amig, c.titulo_oficial) ILIKE '%' || b.q || '%')
 ),
 -- ── C · os termos do IBGE, por palavra, valendo no maximo 0.55 ─────────────
 --     O teto e deliberado: um casamento so por termo cruzado nunca pode

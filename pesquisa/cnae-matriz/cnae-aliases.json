@@ -1,1 +1,12 @@
-[{ "termo": "psicologo", "codigo": "8650003" }, { "termo": "psicóloga", "codigo": "8650003" }, { "termo": "psicologia", "codigo": "8650003" }, { "termo": "personal trainer", "codigo": "9313100" }, { "termo": "personal", "codigo": "9313100" }]
+[
+  { "termo": "psicologo", "codigo": "8650003" },
+  { "termo": "psicóloga", "codigo": "8650003" },
+  { "termo": "psicologia", "codigo": "8650003" },
+  { "termo": "personal trainer", "codigo": "9313100" },
+  { "termo": "personal", "codigo": "9313100" },
+
+  { "termo": "vendo roupa", "codigo": "4781400" },
+  { "termo": "vendo roupas", "codigo": "4781400" },
+  { "termo": "revenda", "codigo": "4789099" },
+  { "termo": "revendo", "codigo": "4789099" }
+]

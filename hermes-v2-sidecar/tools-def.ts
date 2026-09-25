@@ -25,6 +25,18 @@ export const TOOLS: DefinicaoTool[] = [
       'por ai. ' +
       '🔴 SE A BUSCA RETORNAR VAZIA: NUNCA presuma que a casa atende. Se não encontrou, você não sabe. Responda que não encontrou a profissão pelo nome e peça para o cliente detalhar o que faz no dia a dia. ' +
       '🔴 DÚVIDA DE CNAE: Se o título retornado não for EXATAMENTE o que o cliente disse (ex: pediu "médico" e voltou "Aluguel de material médico"), NUNCA crave que atende ou não atende. Devolva a dúvida dizendo: "Você quis dizer [Nome do Título Retornado]?". Se o cliente disser que não, diga: "Me conta mais um pouco do seu dia a dia pra eu procurar novamente sua atividade". ' +
+      /* 🔴 O VERBO MANDA, e esta regra nasceu de um caso medido em 24/09.
+         "vendo roupa" devolvia `7723-3/00 Aluguel de roupa, fantasia, traje
+         de noiva` com `casa_atende_me: true` — e o casamento era legitimo,
+         "roupa" esta mesmo no titulo. O que a busca nao sabe e que VENDER e
+         comercio e ALUGAR e servico. A camada de sinonimos cobre as frases
+         mais comuns; o resto e voce quem pega. */
+      '🔴 O VERBO DA PESSOA MANDA MAIS QUE O SUBSTANTIVO. Se ela disse VENDO, VENDA ou REVENDO ' +
+      'e o titulo que voltou fala em ALUGUEL, CONSERTO, PRODUCAO ou AULA, o objeto bateu e a ' +
+      'ATIVIDADE nao. NUNCA confirme nesse caso: pergunte "voce VENDE ou voce [verbo do titulo]?". ' +
+      'Vender mercadoria e comercio, e a casa nao atende comercio — mas quem vende ESPACO ' +
+      'PUBLICITARIO ou faz PROMOCAO DE VENDAS presta servico e a casa atende. Sao coisas ' +
+      'diferentes, e so a pessoa pode desempatar. ' +
       '🔴 LEIA COM CUIDADO: `casa_atende_mei: false` significa QUE A CASA NAO CONFIRMOU ' +
       'essa atividade no MEI, e NUNCA que a atividade e proibida no MEI. Sao coisas ' +
       'diferentes: uma e escopo comercial nosso, a outra e regra federal. Por isso vem ' +

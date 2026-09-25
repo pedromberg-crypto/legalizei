@@ -39,7 +39,16 @@ const CASOS = [
   { q: 'sou engenheiro', espera: { atende: false } },
   { q: 'sou dentista', espera: { atende: false } },
   { q: 'tenho um restaurante', espera: { atende: false } },
-  { q: 'vendo roupa', espera: { atende: false, podeSerVazio: true } },
+  { q: 'vendo roupa', espera: { codigo: '4781400', atende: false, via: 'sinonimo' } },
+
+  /* 🔴 OS QUATRO QUE PROVAM QUE O SINONIMO NAO PODE SER VERBO SOLTO.
+     Estes CNAEs sao dos 87, e a atividade deles E vender. Um alias amplo em
+     "vendo" mandaria cliente embora — trocaria uma violacao de A3 por um falso
+     negativo pior: dizer "nao atendemos" a quem a casa atende. Se alguem
+     alargar o alias um dia, estes quatro caem aqui antes de cair no cliente. */
+  { q: 'vendo espaco publicitario', espera: { atende: true } },
+  { q: 'faco promocao de vendas', espera: { atende: true } },
+  { q: 'sou representante comercial', espera: { codigo: '7490104', atende: true } },
 
   // ── quem a casa atende: tem que achar pelo nome que a pessoa usa ──────────
   { q: 'sou sapateiro', espera: { codigo: '9529101', atende: true } },

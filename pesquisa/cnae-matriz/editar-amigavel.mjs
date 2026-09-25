@@ -87,6 +87,49 @@ const TITULOS = {
   "7729299": ["Aluguel de planta, flor, peruca e outros objetos", "o título antigo era invisível na busca; PLANTAS E FLORES e PERUCA são termos do IBGE"],
   "7733100": ["Aluguel de computador, impressora e equipamento de escritório", "COMPUTADORES e DATA-SHOW são termos do IBGE"],
   // 7729202 fica: já cobre móveis, eletrodomésticos e instrumentos.
+
+  // ── Foto, vídeo e áudio (validado 24/09) ───────────────────────────────
+  "7420004": ["Filmagem de festa, casamento e evento", "🔴 'filmo casamento' devolvia Pensão e casa de cômodos — 'casamento' casava com 'casa'"],
+  // Os outros 6 ficam: "sou fotógrafo" já dá 0.47 com "Fotografia" sozinho, e
+  // "Dublagem" é a palavra exata. Acrescentar só diluiria.
+
+  // ── Apoio administrativo (validado 24/09) ──────────────────────────────
+  "8211300": ["Escritório, recepção e arquivo de documentos", "ARQUIVAMENTO DE DOCUMENTOS e RECEPÇÃO são termos do IBGE"],
+  "8219901": ["Xerox, fotocópia e impressão", "🔴 'tiro xerox' devolvia Consultoria em TI com 0.04. O IBGE diz CÓPIA XEROGRÁFICA, e ninguém digita 'xerográfica'"],
+  "8219999": ["Digitação e preparação de documentos", "🔴 'serviço de digitação' devolvia Microfilmagem. ⚠️ Cortei 'e apoio administrativo' do fim: COM o sufixo ele perdia para a Microfilmagem, sem ele ganha por 0.30 × 0.28"],
+  "8291100": ["Cobrança, consulta cadastral e crédito", "🔑 escolha de compromisso, medida em 3 versões: nenhuma ganha em tudo, porque cada palavra a mais rouba nota das outras. Esta acerta 'cobrança', 'crédito' e 'consulta cadastral' sem nenhuma brilhar"],
+  // 8220200 ("call center" já dá 0.45), 8292000 e 8299703 ficam.
+
+  // ── Marketing e publicidade (validado 24/09) ───────────────────────────
+  "5911102": ["Produção de vídeo publicitário e comercial de TV", "COMERCIAIS DE TELEVISÃO e FILMES INSTITUCIONAIS são termos do IBGE"],
+  "7311400": ["Agência de publicidade e propaganda", "EMPRESA DE PROPAGANDA é termo do IBGE"],
+  "7312200": ["Venda e aluguel de espaço publicitário e outdoor", "BUSDOOR e ALUGUEL DE ESPAÇO FÍSICO PARA PUBLICIDADE são termos do IBGE"],
+  // 🔴 A LINHA MAIS CARA DA LAPIDAÇÃO INTEIRA. "sou consultor de marketing"
+  //    caía em `7319-0/03` Marketing direto, que é III FIXO — quando o certo
+  //    é este, que é FATOR R. Errar aqui é cobrar 6% de quem é 15,5%.
+  "7319004": ["Consultoria em marketing, publicidade e branding", "🔴 erro FISCAL corrigido. BRANDING (GESTÃO DE MARCAS) e CONSULTORIA EM MARKETING são termos do IBGE"],
+  // 7319002 e 7319003 ficam.
+
+  // ── Consultoria, pesquisa e tradução (validado 24/09) ──────────────────
+  "7490101": ["Tradutor, tradução e revisão de texto", "🔴 'sou tradutor' não achava NADA e 'faço revisão de texto' devolvia Edição de revistas. TRADUTOR, REVISÃO GRAMATICAL e COPYWRITING são termos do IBGE"],
+  "7490104": ["Representação comercial e intermediação de negócios", "'representante comercial' é a profissão, e não estava no título"],
+  "7490199": ["Consultoria em moda, imagem e outros serviços técnicos", "🔑 ASSESSORIA E CONSULTORIA EM MODA E IMAGEM PESSOAL e SOMMELIER estão no IBGE — consultoria de imagem é mercado real e estava invisível"],
+  // 7210000, 7220700 e 7320300 ficam.
+
+  // ── Design (validado 24/09) ────────────────────────────────────────────
+  "7410203": ["Design de produto, desenho industrial e estilista", "🔴 'sou estilista' não achava NADA. DESENHO DE ROUPAS e DESENHO INDUSTRIAL são termos do IBGE"],
+  /* 7410202 e 7410299 ficam. ⚠️ Mas o 7410202 tem questão ABERTA que não é de
+     título: ele está como Fator R, e o §5º-C I (Anexo IV, FORA do escopo)
+     nomeia "serviços de paisagismo e decoração de interiores" — que é
+     literalmente o termo do IBGE nesse CNAE. Foi pro contador. */
+
+  // ── Edição e mídia (validado 24/09) ────────────────────────────────────
+  "5811500": ["Edição de livro, e-book e apostila", "🔴 'edito e-book' devolvia Conserto de computador. E-BOOKS, AUDIOLIVROS e APOSTILAS são termos do IBGE"],
+  // os outros 5 ficam.
+
+  // ── Eventos e entretenimento (validado 24/09) ──────────────────────────
+  "8230001": ["Organização de evento, festa infantil e congresso", "ORGANIZAÇÃO DE FESTAS INFANTIS é termo do IBGE; sobe de 0.28 para 0.44"],
+  // os outros 4 ficam.
 };
 const DESCRICOES = {};
 

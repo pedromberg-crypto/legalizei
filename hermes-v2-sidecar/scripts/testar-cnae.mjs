@@ -72,9 +72,13 @@ const CASOS = [
   { q: 'cuido de redes sociais', espera: { codigo: '6319400', atende: true } },
   { q: 'sou tradutor', espera: { codigo: '7490101', atende: true } },
 
-  // 🔴 Este falha hoje e o vault sabe: "faco sites" devolve Hospedagem e Portal
-  //    (Anexo III fixo) e o Web design (FATOR R) fica atras. Nao e UX, e a
-  //    diferenca entre 6% e 15,5%. Fica na lista para nao sumir do radar.
+  /* ✅ RESOLVIDO em 24/09, e vale guardar o que era: "faco sites" devolvia
+     Hospedagem e Portal (Anexo III FIXO) e deixava o Web design (FATOR R)
+     atras. Nao era UX — era a diferenca entre 6% e 15,5% na conta do cliente.
+     Duas coisas somadas consertaram: o titulo no PLURAL ("criacao de sites")
+     e o bonus de corroboracao, que premia quem casa no titulo E nos termos.
+     Passa hoje com 0.55, e e justamente a margem apertada que faz este caso
+     valer mais que os outros: qualquer mexida em limiar cai aqui primeiro. */
   { q: 'faco sites', espera: { codigo: '6201502', atende: true } },
 ]
 

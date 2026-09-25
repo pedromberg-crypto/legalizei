@@ -10,7 +10,7 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
-> **Última atualização:** 2026-09-24 — **80º flow: O `requer-revisao` MORREU, E O MOTOR APURA 87/87.**
+> **Última atualização:** 2026-09-24 — **80º flow: O `requer-revisao` MORREU, O MOTOR APURA 87/87, E A BUSCA DO LÉO FECHOU 21/21.**
 >
 > 🧭 **A pergunta do Pedro que derrubou a categoria:** *"como a gente consegue ter dúvida sobre um CNAE de design? É o mais padrão e simples de todos."* Estava certo, e a resposta já vivia no vault.
 >
@@ -26,7 +26,13 @@ data: 2026-07-16
 >
 > **(6) OS 449 §5º-F REPROCESSADOS.** Só **54 estão dentro dos 87**. A cascata **confirma 51 em III** e propõe 3: `6391-7/00` agências de notícias (§5º-I X, evidência forte) e `7210-0/00`/`7220-7/00` P&D experimental (§5º-I XII, julgamento). **Nada aplicado** — mover CNAE que já tinha anexo é decisão fiscal, não faxina de script.
 >
-> **🔴 ABERTO:** os 3 acima esperam decisão · `8020002` com cascata × irmão em contradição · **o export `cnae-atendemos-certeza.csv` ainda NÃO foi regerado** (as originais seguem intactas por combinação), então o motor só vira 87/87 quando ele for · os 2 documentos de BH (Decreto 17.245 com 111 de 276 itens, Portaria SMSA 0221 não obtida) seguem sendo a lacuna real, e não se resolvem com pesquisa.
+> **(7) 🧱 A TABELA VIROU 18 COLUNAS E SUBIU PRO BANCO.** Renomes (`descricao` → `titulo_oficial`, `atividades` → `termos_de_busca`), `fator_r` e `mei_permitido` viraram **colunas geradas** (duas colunas que são a mesma verdade não divergem se só uma existir), e o vazio ganhou vocabulário (`nao-se-aplica` · `nao-verificado` · `sem-previsao-na-fonte`) — antes "vazio" significava quatro coisas e o Léo lia ausência como negação. 🔴 **O buraco que isso destapou:** o `carregar-cnae.ts` lia as tabelas **originais**, então nada da curadoria do dia chegava ao banco. 🔑 **A ordem da migração é forma → dados → travas**, e eu aprendi errando: constraint aplicada antes da carga julga o dado **velho** e derruba a rodada.
+>
+> **(8) ✅ A BUSCA DO LÉO FECHOU EM 21 DE 21, ZERO VIOLAÇÃO DE A3.** Ela comparava a frase do cliente contra **36 caracteres** e ignorava os **542** onde estão as palavras que a pessoa digita — e o efeito não era devolver vazio, era devolver **CNAE nosso pra quem não atendemos** (3 de 6 frases medidas: *"tenho um restaurante"* → Restauração de obras de arte). Três camadas consertaram: **termos de busca com teto de 0.30** (abaixo da faixa de título, pra termo cruzado nunca ganhar), **bônus de corroboração +0.15** quando título e termos casam, e **sinônimo** pro que não existe em campo nenhum. 🔑 **`faco sites` é o caso que mais vale:** devolvia Hospedagem e Portal (Anexo III **fixo**) à frente de Web design (**Fator R**) — não é ranking feio, é 6% contra 15,5% na conta do cliente. Veredito com score por frase em [[_aceite-busca-de-cnae]].
+>
+> **(9) 🔴 SINÔNIMO É FRASE, NUNCA VERBO SOLTO — e medir antes salvou a rodada.** Eu ia mapear `vendo`/`venda`/`comercializo` para comércio. Medi: **4 dos 87 têm venda na própria atividade** (espaço publicitário, promoção de vendas, representação, comercial de TV). O alias amplo trocaria uma violação de A3 por um falso negativo **pior** — dizer "não atendemos" a quem a casa atende. ⚠️ **E uma rodada deu 19/21 por carga, não por busca:** alias é **dado**, só chega ao banco por `npm run seed:cnae`; `git pull` + restart não carrega. O teste agora conta os dois lados e avisa antes.
+>
+> **🔴 ABERTO:** os 3 do item (6) esperam decisão · `8020002` com cascata × irmão em contradição · **o export `cnae-atendemos-certeza.csv` ainda NÃO foi regerado** (as originais seguem intactas por combinação), então o motor só vira 87/87 quando ele for · **o serviço do Léo não foi reiniciado** — o nome não foi levantado e eu não adivinho nem crio `.service`, porque o risco ali é perder o pareamento do WhatsApp · os 6 CNAEs do contador (`8591-1/00`, `8592-9/01`, `6209-1/00`, `9002-7/01`, `6391-7/00`, `7410-2/02`) · o ISS de BH com 66 valores ainda sujos (curadoria, não bloqueia) · os 2 documentos de BH (Decreto 17.245 com 111 de 276 itens, Portaria SMSA 0221 não obtida) seguem sendo a lacuna real, e não se resolvem com pesquisa.
 >
 > ---
 > **Última atualização:** 2026-09-22 — **79º flow: CNAE CIRÚRGICO, [FORA_ESCOPO] NO ROTEADOR E TESTES DE FUNCIONALIDADES.**

@@ -164,7 +164,11 @@ Item 12 da SC COSIT 13/2022: *"a análise acima foi da permissão das atividades
 
 ## 🟠 Estrutura — a tabela nova, acordada em 24/09
 
-### 6b. 🔴 A busca do Léo ignora os 542 caracteres onde estão as palavras reais — **e devolve CNAE nosso pra quem não atendemos**
+### 6b. ~~A busca do Léo ignora os 542 caracteres~~ — ✅ **FECHADO em 24/09. 21 de 21 medidos no banco, zero violação de A3.**
+
+> Veredito completo, com score por frase, em [[_aceite-busca-de-cnae]]. Três camadas entraram: os **termos de busca** com teto de 0.30 (abaixo da faixa típica de título, para o termo cruzado nunca ganhar), o **bônus de corroboração** de +0.15 quando título **e** termos casam, e os **sinônimos** para o que não existe em campo nenhum. Os 6 critérios passaram.
+>
+> 🟡 **O que não fechou junto:** a pergunta de embedding segue aberta — foi adiada, não respondida. E 21 frases provam que os casos medidos como quebrados pararam de quebrar, não que o ranking está bom fora delas.
 
 Aberto em 24/09 ao responder o que se pode editar; **agravado no mesmo dia** ao medir os 1.245.
 

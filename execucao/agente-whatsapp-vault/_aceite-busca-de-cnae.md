@@ -121,5 +121,28 @@ O `pesquisa/cnae-matriz/testar-busca.mjs` reproduz localmente a matemática do `
 
 ---
 
+# ✅ Veredito — medido no banco em 24/09
+
+**21 de 21**, contra `fatos.consultar_cnae` na VPS, por `npm run teste:cnae`. **Zero violação de A3.**
+
+| Frase | Volta | |
+|---|---|---|
+| `sou psicologo` · `sou personal trainer` · `vendo roupa` | sinônimo 1.00 | recusa com motivo |
+| `sou advogado` | `6911701` título 0.46 | `anexo-iv` |
+| `sou engenheiro` | `7112000` título 0.55 | `exige-conselho` |
+| `sou dentista` · `tenho um restaurante` | título 0.50 / 0.67 | `comercio-ou-industria` |
+| `vendo espaco publicitario` · `faco promocao de vendas` | `7312200` / `7319002` | **atende** |
+| `sou representante comercial` | `4512901` título 0.85 | não por sinônimo ✅ |
+| os 10 de quem a casa atende | `relojoeiro` 1.00 · `sapateiro` 0.92 · `tradutor` 0.84 | todos em 1º |
+| `faco sites` | `6201502` **0.55** | 🔑 o que estava quebrado |
+
+🔑 **O `faco sites` é o caso que mais vale, e a razão não é a frase.** Ele devolvia Hospedagem e Portal, que são **Anexo III fixo**, deixando o Web design, que é **Fator R**, atrás. Não era ranking feio: era 6% contra 15,5% na conta do cliente. Consertaram duas coisas somadas — o título no **plural** (*criação de sites*) e o **bônus de corroboração**, que premia casar no título **e** nos termos. Passa com 0.55, margem apertada de propósito: qualquer mexida em limiar cai aqui antes de cair em outro lugar.
+
+⚠️ **A rodada anterior deu 19 de 21, e a causa não era a busca.** Os sinônimos são **dado**: vivem em `cnae-aliases.json` e só chegam ao banco pelo `npm run seed:cnae`. Quatro tinham sido adicionados no vault e o teste rodou contra os cinco antigos. O `testar-cnae.mjs` agora conta os dois lados e avisa antes de rodar caso nenhum — perder uma rodada descobrindo isso custa caro, avisar custa uma query.
+
+🟡 **O que este 21/21 NÃO prova:** que o ranking está bom fora destas 21 frases. Ele prova que os casos medidos como quebrados em 24/09 pararam de quebrar, e que nenhum CNAE dos 87 vai à frente para quem a casa não atende. A pergunta de embedding logo acima **continua aberta** — ela não foi respondida, foi adiada.
+
+---
+
 ## Links
 [[_aceite-lastro-na-resposta]] · [[_fila-correcoes]] · [[legalize-regua-de-prova-fonte-oficial]]

@@ -14,29 +14,29 @@ tags: [reporte, evolucao, sociedade]
 
 ## 📊 Placar geral
 
-> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **25/09/2026**.
+> 🤖 **Este bloco é gerado.** Ele se reconta sozinho a cada `/fechar`, a partir das tabelas abaixo — nenhum número aqui é digitado. Gerado em **26/09/2026**.
 
 ### O que rendeu
 
 | | |
 |---|---:|
-| **Entregas reportadas** | **348** |
-| Entradas no log | 68 |
-| **Dias trabalhados** | **66** |
-| Período | 07/07/2026 → 25/09/2026 |
-| Dias corridos no período | 81 |
+| **Entregas reportadas** | **355** |
+| Entradas no log | 69 |
+| **Dias trabalhados** | **67** |
+| Período | 07/07/2026 → 26/09/2026 |
+| Dias corridos no período | 82 |
 | Média de entregas por dia trabalhado | 5,3 |
 
 ### Placar por status
 
 | Status | Itens | % |
 |---|---:|---:|
-| 🟢 pronto / entregue | **249** | 71,6% |
-| ✅ estava parado, foi resolvido | **17** | 4,9% |
-| 🟡 em curso / parcial | **28** | 8,0% |
+| 🟢 pronto / entregue | **253** | 71,3% |
+| ✅ estava parado, foi resolvido | **18** | 5,1% |
+| 🟡 em curso / parcial | **30** | 8,5% |
 | 🔴 trava ou precisa de você | **5** | 1,4% |
 | 🕓 aguarda pessoa | **2** | 0,6% |
-| sem marca | 47 | 13,5% |
+| sem marca | 47 | 13,2% |
 
 ### Ritmo, mês a mês
 
@@ -44,7 +44,7 @@ tags: [reporte, evolucao, sociedade]
 |---|---:|---:|---:|
 | julho/2026 | 24 | 20 | — |
 | agosto/2026 | 20 | 20 | — |
-| setembro/2026 | 22 | 23 | 🔴 **2** |
+| setembro/2026 | 23 | 23 | 🔴 **2** |
 
 ### ⚠️ O que o sócio não viu
 
@@ -54,7 +54,7 @@ tags: [reporte, evolucao, sociedade]
 
 > 🔑 O **git** é a fonte independente do que foi trabalhado. Dia com commit e sem entrada aqui é entrega que não chegou ao sócio — e o placar prefere confessar a omissão a repeti-la com cara de número.
 >
-> ⚠️ O contrário também existe e **não é erro**: 5 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
+> ⚠️ O contrário também existe e **não é erro**: 6 dia(s) têm entrada sem commit (reunião, pesquisa, decisão — trabalho que não vira código).
 
 ---
 
@@ -1578,4 +1578,33 @@ O Pedro chegou dizendo que o robô errava o enquadramento de algumas atividades.
 - Acabou a categoria "precisa revisar": eram 7 atividades sem anexo definido e o motor travava nelas. Agora calcula 87 de 87
 - Testei no WhatsApp: salão de beleza e fotógrafo, os dois certos. No do fotógrafo o cliente puxou o Fator R e ele *negou que se aplica e explicou por quê*
 - Nada trava do seu lado. A decisão dos CNAEs com a contadora segue aberta, e ganhou 6 casos novos pra mesma conversa
+```
+
+## Semana 25–26/09/2026 — o cérebro do robô virou biblioteca, com uma lei contra repetição
+
+O Léo vai deixar de ser um manual único e enorme para virar um **supervisor que consulta especialistas de bastidor**. A arquitetura ficou travada, e esta rodada construiu a biblioteca que eles vão consultar.
+
+| # | O que foi feito | Detalhe | Status |
+|---|---|---|---|
+| 1 | **A base de conhecimento do robô foi refeita do zero, organizada por especialista** | 10 documentos, 113 assuntos: quem a gente atende · como dizer não · comercial · objeções · fiscal · órgãos · o app · suporte · contrato · conduta. A tabela de atividades não foi tocada, é assunto fechado | 🟢 |
+| 2 | 🔴 **A regra "nada repetido em dois lugares" tem uma pegadinha, e ela apareceu antes da primeira linha** | Se eu copiasse o conteúdo antigo pra pasta nova, os dois iriam pro mesmo lugar e **a mesma informação existiria duas vezes**. Seria quebrar a regra ao tentar cumpri-la. Por isso a pasta nova **substitui** a antiga, e escrevi o mapa de onde foi parar cada pedaço pra você decidir o corte com evidência | 🟡 |
+| 3 | **Cinco repetições que já existiam foram desfeitas** | A pior: **anexo e Fator R estavam explicados duas vezes**, em dois documentos, com os mesmos números escritos de formas um pouco diferentes. E o **certificado digital aparecia em três lugares** | 🟢 |
+| 4 | ✅ **Entrou o que não existia escrito em lugar nenhum** | Como explicar cada motivo de recusa em português de gente · o que fazer quando a atividade é ambígua · spam e provocação · e o caso mais comum do WhatsApp, que é **a pessoa mandar quatro perguntas num áudio só** | ✅ |
+| 5 | 🔒 **"Eu revisei e não achei repetição" é opinião, então virou programa** | Um script confere 22 informações que só podem ter um dono. Achou **1 erro real** meu e 2 coincidências legítimas (o mesmo número descrevendo coisas diferentes). E ele **se acusou**: o documento que avisa sobre a coincidência precisa escrever o número pra poder avisar | 🟢 |
+| 6 | 🎭 **Descobri que o grupo de personas certo pra testar o robô não é o que a gente usava** | As personas do aplicativo são **só formulário**: nome, CPF, o que digitar. Quem tem **jeito de falar** são as de marketing, com a seção "Voz própria" que você mesmo mandou criar em agosto. Caso bom é **voz + situação**, e 4 profissões já têm os dois lados prontos | 🟢 |
+| 7 | 🟡 **Falta a sua decisão pra publicar** | A base nova está pronta e conferida. Publicar junto com a antiga faria as duas conviverem repetidas, que é exatamente o que a regra proíbe. Ou corta a antiga, ou convivem **com prazo marcado** | 🟡 |
+
+**O que fica com você:** o item 7. É uma decisão de uma linha e ela destrava a publicação. E continua de pé a decisão dos CNAEs com a contadora.
+
+### 📱 WhatsApp (26/09)
+```
+*Update Legalizai* 📣
+- O Léo vai deixar de ser um manual único e gigante pra virar um supervisor que consulta especialistas nos bastidores
+- Construí a biblioteca que eles vão consultar: *10 documentos, 113 assuntos*, organizados por especialista
+- A regra era "nada repetido em dois lugares". Ela tem uma pegadinha que apareceu antes da primeira linha: copiar o conteúdo antigo pra pasta nova faria a informação existir *duas vezes*
+- Desfiz 5 repetições que já existiam. A pior: anexo e Fator R estavam explicados duas vezes, com os mesmos números escritos diferente
+- Entrou o que não existia: como explicar cada recusa em português de gente, o que fazer quando a atividade é ambígua, e o caso mais comum do WhatsApp, que é a pessoa mandar 4 perguntas num áudio só
+- "Eu revisei e não achei repetição" é opinião, então virou programa. Achou 1 erro meu, e *se acusou* no processo
+- Descobri que as personas que a gente usava pra testar o robô são só formulário. Quem tem jeito de falar são as de marketing
+- 🟡 Falta uma decisão sua de uma linha pra publicar: corta a base antiga ou as duas convivem com prazo marcado
 ```

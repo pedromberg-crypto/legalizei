@@ -10,6 +10,25 @@ data: 2026-07-16
 
 ## 📍 Agora (torre de controle — mantida via `/fechar`)
 
+> **Última atualização:** 2026-09-26 — **82º flow: O NÍVEL 3 DO SUPER LÉO, E A LEI ZERO VIROU SCRIPT.**
+>
+> 🧭 **O pedido do Pedro:** a arquitetura do Léo foi travada em `hermes-v2-sidecar/ARQUITETURA-SUPER-LEO.md` (25/09). Um Supervisor único com prompt estático, sub-agentes como **Tools** para não quebrar o Context Caching, e uma pasta de conhecimento robusta para vetorizar. A missão desta janela foi construir essa pasta, com a **Lei Zero** por cima: *"proibido trazer a mesma informação em dois arquivos"*.
+>
+> **(1) 🧱 NASCEU `hermes-v2-sidecar/dossie-leo/`: 10 arquivos, 113 seções, 84 mil caracteres.** Um por consultor de bastidor mais os transversais: `01-escopo` · `02-triagem` · `03-comercial` · `04-objecoes` · `05-fiscal` · `06-orgaos` · `07-produto` · `08-suporte` · `09-contrato` · `10-conduta`. 🔴 **Os 1.332 CNAEs não foram tocados**, por instrução explícita: estrutura própria, já validada.
+>
+> **(2) 🔴 A LEI ZERO TEM UMA CONSEQUÊNCIA QUE PRECISOU SER RESOLVIDA ANTES DA PRIMEIRA LINHA.** Copiar os fatos das 13 notas para a pasta nova faz as duas irem **para a mesma tabela vetorizada**: o mesmo fato passa a existir duas vezes, e a lei morre no ato de cumpri-la. Por isso a pasta é **sucessora, não irmã**, e `_MIGRACAO.md` traz o mapa dos 102 trechos para a decisão de corte sair com evidência. 🔴 **Isso é decisão aberta do Pedro:** corte (as 13 saem da carga) ou convívio **com prazo declarado**. O que não é opção é as duas rodando sem decisão.
+>
+> **(3) 🧹 CINCO REDUNDÂNCIAS DESFEITAS, E ELAS JÁ EXISTIAM.** A maior: **anexos e Fator R estavam explicados duas vezes**, no `05` e no `06`, com os mesmos números escritos de formas ligeiramente diferentes. O **certificado digital aparecia em três notas** e virou **dois fatos distintos** (composição de plano × contrapartida contratual) em vez de um repetido três vezes. Os **tetos apareciam em quatro**.
+>
+> **(4) 🆕 ENTROU O QUE NÃO EXISTIA EM DOCUMENTO NENHUM.** A tradução dos **9 motivos de recusa** · a mecânica de **desambiguação** com a regra do verbo · **generalizar pra dizer SIM como defeito** (o caso do fotógrafo) · **spam e tentativa de sequestro de instrução** · a ordem de qualificação · e a **mensagem com 4 perguntas juntas**, que é o caso normal no WhatsApp e não tinha tratamento.
+>
+> **(5) 🔒 "EU REVISEI E NÃO ACHEI REPETIÇÃO" É OPINIÃO, ENTÃO VIROU SCRIPT.** `node dossie-leo/_auditar.mjs` varre 22 fatos com dono declarado. Pegou **1 defeito real** (o teto do ME morava no escopo E no fiscal) e **2 coincidências legítimas**: `30%` é margem do Fator R num lado e multa no outro; `12 meses` é janela do RBT12 num lado e fidelidade no outro. Números iguais, fatos diferentes, veredito registrado pra não ser re-litigado. 🔑 **E ele se acusou ao rodar:** a tabela que documenta a coincidência precisa escrever o número pra poder avisar. Arquivos `_` são meta, não entram na carga, e passaram a ser ignorados.
+>
+> **(6) 🎭 O ELENCO PARA TESTAR O LÉO É O DE MARKETING, NÃO O DO FLUTTER.** O Pedro perguntou qual persona tem personalidade e apostou no Flutter. É o contrário: os 24 do Flutter são **fixture de formulário** (*"o que digitar, o que clicar, e onde parar"*), zero voz. Quem tem voz são as **5 dorsais + 18 volantes** de `pesquisa/personas-de-mercado/`, com a seção **"Voz própria"** que nasceu de uma correção do próprio Pedro em 26/08. 🔑 O caso bom é **voz × situação**: a voz vem do volante, a situação vem do dossiê. Os 5 casos que escrevi em 25/09 são situação pura, em frase limpa que ninguém digita no WhatsApp.
+>
+> **🔴 ABERTO:** 🎯 **a decisão de corte das 13 notas** (item 2), que é o que destrava o deploy do dossiê · gerar os casos **voz × situação** (4 volantes já têm os dois lados prontos: cabeleireira, designer, fotógrafo, sapateiro) · 🟡 as dorsais **C, D e E** têm a seção de voz uma vez só, contra duas em A e B, então podem estar rasas · ⚠️ o `ARQUITETURA-SUPER-LEO.md` §1.2 diz que a busca vetorial de CNAE **"continua"**, e ela não existe: a busca de hoje é lexical e foi ela que fechou 21/21. Não é manter, é construir · segue aberto o `ver:conversa` nos turnos já testados, os travessões nas notas antigas e as 2 unidades `hermes-gateway` em `failed`.
+>
+> ---
 > **Última atualização:** 2026-09-25 — **81º flow: A TABELA ESTAVA BOA, O MANUAL DE LEITURA É QUE ESTAVA VELHO.**
 >
 > 🧭 **O pedido do Pedro:** *"passa um pente fino no que o Léo usa para consultar dentro dos CNAEs e me diga o que ainda está amarrado ou desconectado... as tabelas estão boas, não quero ajustar CNAE por CNAE."* Ele estava certo nos dois pontos: nada era de CNAE individual, e nada era da tabela.

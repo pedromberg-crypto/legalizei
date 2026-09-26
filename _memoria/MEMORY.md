@@ -10,6 +10,8 @@
 - [Regra negativa nao impede alucinacao](legalize-regra-negativa-nao-impede-alucinacao.md) — 21/09 medido 4x: obrigar a consulta antes da afirmacao, sim.
 - [A busca de CNAE fechou em 21/21, com 3 camadas](legalize-busca-cnae-tres-camadas.md) — 24/09: teto de 0.30 no termo cruzado + bonus de corroboracao + sinonimo. Alias e DADO: so entra por `seed:cnae`, nunca por deploy.
 - [A doc do agente envelhece CALADA](legalize-doc-do-agente-envelhece-calada.md) — 25/09: campo inexistente numa regra vira condicao insatisfazivel; o RULES recusava 36 dos 87 atendidos.
+- [Lei Zero: o dossie-leo e SUCESSORA das 13 notas](legalize-lei-zero-dossie-leo.md) — 25/09: copiar fato pra pasta nova duplica na mesma tabela vetorizada. `_auditar.mjs` varre 22 fatos com dono.
+- [Qual persona tem VOZ](legalize-qual-persona-tem-voz.md) — 25/09: o elenco do Flutter e fixture sem voz; caso bom e voz (volante) x situacao (dossie).
 - [Numero mora em UM lugar so](legalize-numero-mora-em-um-lugar-so.md) — 25/09: 58 cravado x 55 em arquivo derrubou o deploy 9 commits depois.
 - [Sinonimo e FRASE, nao verbo solto](legalize-sinonimo-cnae-e-frase-nao-verbo.md) — 24/09 travado: 4 dos 87 tem venda na propria atividade; alias amplo troca A3 por falso negativo pior.
 
